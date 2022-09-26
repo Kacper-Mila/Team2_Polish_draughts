@@ -2,6 +2,7 @@ package draughts;
 
 public class Pawn {
 
+    private Coordinates position;
 
     //The Pawn class contains a method that validates the move (whether it is within the game rules) before it is performed.
     public boolean validateMove(int x, int y, Board board){
@@ -36,6 +37,20 @@ public class Pawn {
      */
     public int[] getColor(){
         return new int [0];
+    }
+
+    private class Coordinates {
+        int x;
+        int y;
+    }
+
+    /**
+     * [Extra]
+     * 'field' that returns true if a pawn is crowned.
+     * @return
+     */
+    public boolean isCrowded(){
+        return false;
     }
 
 }
