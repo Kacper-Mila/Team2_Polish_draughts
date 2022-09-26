@@ -29,4 +29,13 @@ public class Pawn {
         }
         return true;
     }
+
+    /**
+     * method that returns the color of the pawn(white or black).
+     * @return colors as numbers??? eg white = 0, black =1
+     */
+    public int[] getColor(){
+        return new int [0];
+    }
+
 }
