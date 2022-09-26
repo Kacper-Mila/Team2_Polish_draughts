@@ -33,4 +33,15 @@ public class Game {
 
     }
 
+    /**
+     * There is a method that checks if the starting position from user input
+     * is a valid pawn and if the ending position is within board boundaries.
+     * If so, it calls tryToMakeMove() on pawn instance.
+     * @see Pawn#tryToMakeMove()
+     */
+    public void checkStartingPosition(){
+
+
+    }
+
 }

@@ -53,4 +53,14 @@ public class Pawn {
         return false;
     }
 
+    /**
+     * There is a method that checks if the starting position from user input
+     * is a valid pawn and if the ending position is within board boundaries.
+     * If so, it calls tryToMakeMove() on pawn instance.
+     * NOT SURE IF THIS METHOD SHOULD BE HERE OR IN GAME/BOARD CLASS.
+     */
+    public void tryToMakeMove(){
+
+    }
+
 }
