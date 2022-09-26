@@ -1,10 +1,12 @@
+import java.awt.*;
+
 public class Pawn {
 
-    public String getColor(int player) {
+    public Color getColor(int player) {
         if (player == 1) {
-            return "white";
+            return Color.white;
         } else {
-            return "black";
+            return Color.black;
         }
     }
 }
