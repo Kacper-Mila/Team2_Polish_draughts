@@ -1,3 +1,5 @@
+package draughts;
+
 public class Board {
     public void removePawn(Pawn pawn, Coordinates coordinates){
         if(this.fielsds[coordinates.getX()][coordinates.getY()].equals(pawn)){
