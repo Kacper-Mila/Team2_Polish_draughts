@@ -66,4 +66,21 @@ public class Board {
         char charWhere = where.charAt(0);
         return new int[4];
     }
+
+    /**
+     * Print current board.
+     * This method marks rows as numbers and columns as letters.
+     * @return String representing board
+     */
+    @Override
+    public String toString() {
+        return "Board{}";
+    }
+
+    /**
+     * method that removes pawns from the specified position.
+     */
+    public void removePawn(){
+    }
+
 }
