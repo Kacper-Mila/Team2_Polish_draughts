@@ -3,11 +3,22 @@ package draughts;
 public class Pawn {
 
     private Coordinates position;
+    private int color;
+    private boolean isCrowned;
+
+    public Pawn(Coordinates position, int color ){
+        this.color = color;
+        this.position = position;
+    }
 
     //The Pawn class contains a method that validates the move (whether it is within the game rules) before it is performed.
-    public boolean validateMove(int x, int y, Board board){
+    // missing other rules. Chapter 'Moves and captures' from https://en.wikipedia.org/wiki/International_draughts
+    // separate method for each condition all merged inside one??
+    public boolean validateMove(Coordinates startPosition, Coordinates endPosition, Board board){
         boolean repeat = true;
-        int[] move = {x, y};
+        //int[] move = {x, y};
+        int x = startPosition.getX();
+        int y = startPosition.getY();
         Pawn [][] fields = board.getFields();
 
         while(repeat){
@@ -35,13 +46,8 @@ public class Pawn {
      * method that returns the color of the pawn(white or black).
      * @return colors as numbers??? eg white = 0, black =1
      */
-    public int[] getColor(){
-        return new int [0];
-    }
-
-    private class Coordinates {
-        int x;
-        int y;
+    public int getColor(){
+        return 0;
     }
 
     /**
@@ -49,18 +55,12 @@ public class Pawn {
      * 'field' that returns true if a pawn is crowned.
      * @return
      */
-    public boolean isCrowded(){
-        return false;
+    public boolean isCrowned(){
+        return this.isCrowned;
     }
 
-    /**
-     * There is a method that checks if the starting position from user input
-     * is a valid pawn and if the ending position is within board boundaries.
-     * If so, it calls tryToMakeMove() on pawn instance.
-     * NOT SURE IF THIS METHOD SHOULD BE HERE OR IN GAME/BOARD CLASS.
-     */
-    public void tryToMakeMove(){
-
+    public void setCrowned(){
+        this.isCrowned = true;
     }
 
 }

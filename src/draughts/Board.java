@@ -12,15 +12,15 @@ public class Board {
         int numberOfPawns = 2 * n;
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < n; j=j+2) {
-                Pawn pawn = new Pawn();
+
                 if (i % 2 == 0) {
                     if (numberOfPawns > 0) {
-                        this.fields[i][j + 1] = pawn;
+                        this.fields[i][j + 1] = new Pawn(new Coordinates(i,j),1);
                         numberOfPawns--;
                     }
                 } else {
                     if (numberOfPawns > 0) {
-                        this.fields[i][j] = pawn;
+                        this.fields[i][j] = new Pawn(new Coordinates(i,j),1);
                         numberOfPawns--;
                     }
                 }
@@ -31,15 +31,15 @@ public class Board {
         numberOfPawns = 2 * n;
         for (int i = n-1; i > n-5; i--) {
             for (int j = 0; j < n; j=j+2) {
-                Pawn pawn = new Pawn();
+
                 if (i % 2 == 0) {
                     if (numberOfPawns > 0) {
-                        this.fields[i][j + 1] = pawn;
+                        this.fields[i][j + 1] = new Pawn(new Coordinates(i,j),2);
                         numberOfPawns--;
                     }
                 } else {
                     if (numberOfPawns > 0) {
-                        this.fields[i][j] = pawn;
+                        this.fields[i][j] = new Pawn(new Coordinates(i,j),2);
                         numberOfPawns--;
                     }
                 }
@@ -56,14 +56,18 @@ public class Board {
     }
     public static Scanner scanner = new Scanner(System.in);
     //There is a movePawn() method that moves pawns from a specified position to another field.
-    public int[] movePawn(){
-        System.out.println("Which pawn you want to move?");
-        String whichPawn = scanner.nextLine().toLowerCase().trim();
-        System.out.println("Where do you want to move it?");
-        String where = scanner.nextLine().toLowerCase().trim();
+    //I think user interface method is Game.tryTomakeMove()
+    //This method is just changing pawns coordinates
+    public int[] movePawn(Coordinates startPosition, Coordinates endPosition){
+        //removes pawn from startPosition and moves it to endPosition
 
-        char charWhitchPawn = whichPawn.charAt(0);
-        char charWhere = where.charAt(0);
+//        System.out.println("Which pawn you want to move?");
+//        String whichPawn = scanner.nextLine().toLowerCase().trim();
+//        System.out.println("Where do you want to move it?");
+//        String where = scanner.nextLine().toLowerCase().trim();
+//
+//        char charWhitchPawn = whichPawn.charAt(0);
+//        char charWhere = where.charAt(0);
         return new int[4];
     }
 
