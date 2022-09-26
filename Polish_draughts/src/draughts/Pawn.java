@@ -1,8 +1,16 @@
 package draughts;
 
+import java.awt.*;
 import java.sql.SQLOutput;
 
 public class Pawn {
+    public Color getColor(int player) {
+        if (player == 1) {
+            return Color.white;
+        } else {
+            return Color.black;
+        }
+    }
 //
 //
 //    //The Pawn class contains a method that validates the move (whether it is within the game rules) before it is performed.
