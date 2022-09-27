@@ -3,6 +3,7 @@ package draughts;
 public class Game {
 
     private Board board;
+    private int drawCondition = 15;
     public Game(int n){
         this.board = new Board(n);
     }
@@ -14,22 +15,37 @@ public class Game {
      * method that starts game between players.
      */
     public void start(){
+        //instrukcja/powitalna wiadomosc
+        do{
+            playRound();
+        }while (!(checkForWinner(2)||checkForWinner(1)||drawCondition==0));
+        //remis zachodzi gdy ostatnie bicie nastapilo nie pozniej niz 15 ruchow
     }
 
     /**
-     *  determines one-round actions that is, checks which player is next and whether
-     *  there is a winner.
+     * determines one-round actions that is, checks which player is next and whether
+     * there is a winner.
+     *
+     * @return
      */
     public void playRound(){
-        //do-while loop calling game's methods
+        //ruch 1 gracza
+        checkStartingPosition(1);
+        if (checkForWinner(1)) return;
+        //ruch 2 gracza
+        checkStartingPosition(2);
+        checkForWinner(2);
     }
 
     /**
      * method that checks whether there is a winner after each round.
      * also checks for draws.
      */
-    public int checkForWinner(){
-        return 0;//1 if first player wins, 2 if second, 0 if neither.
+    public boolean checkForWinner(int player){
+        //sprawdza czy podany gracz spelnil warunki zakonczenia gry
+        //sprawdza czy zostaly pionki przeciwnika
+        //dla gracza = 0 sprawdza czy gra zakonczyla sie remisem??
+        return false;
     }
 
     /**
@@ -38,13 +54,16 @@ public class Game {
      * If so, it calls tryToMakeMove() on pawn instance.
      */
     public void checkStartingPosition(int player){
-        //ask user for start position
-        //ask user for end position
+        //do{
+        //ask user for start position (pawn)
+        //ask user for end position sekwencja ruchów. max liczba ruchow to liczba pionkow przeciwnika
         //map inserted data to Coordinates class
         //use Pawn's method to validate:
         //  - if starting position is valid pawn (if at selected coordinates there is pawn, and it colors matches player)
         //  - if end position is within boundaries (is separate method needed? if so should it be implemented inside Board?)
         // if it is valid call tryToMakeMove()
+        // }while(!tryToMakeMove()) "masz do wykonania lepszy ruch"
+
     }
 
     /**
@@ -55,9 +74,20 @@ public class Game {
      */
     public boolean tryToMakeMove(Coordinates pawnPosition, Coordinates endPosition){
         //try to move pawn according to game rules (Pawn.validateMove())
-        //verify here all the game rules:
-        //  crowning (separate method ?)
-        //  capture (separate method ?)
+        //if (Pawn.validateMove()){
+        //  logika wykonania ruchu.
+        //  sa dwi mozliwosci:
+        //      etap 1 logiki:
+            //      wykonuje board.makeMove() albo,
+            //      bicie pionków i przesuniecie pionka.
+            //      jezeli bicie nastapilo to ustawiamy licznik drawCondition na 15
+        //          jezeli bicia nie bylo licznik zmniejszamy o 1
+        //      etap 2 logiki:
+        //          Sprawdzanie wszystkie mozliwe bicia przez rekurencyjne sprawdzanie warunku dla kazdego z pionkow
+        //          sciezka bicia = sciezka z nadluzszego stosu.
+        //
+        //  }else return false // zwroc false jezeli ruch nie moze zostac wykonany
+        //
         return false;
     }
 

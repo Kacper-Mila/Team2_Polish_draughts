@@ -2,8 +2,14 @@ package draughts;
 
 import java.util.Scanner;
 
+import static java.awt.Color.black;
+import static java.awt.Color.white;
+
 public class Board {
     private Pawn[][] fields;
+    private int whitePawnsCounter;
+    private int blackPawnsCounter;
+
     public Board(int n) {
         if (n >= 10 && n <= 20) {
             this.fields = new Pawn[n][n];
@@ -11,16 +17,16 @@ public class Board {
         // one side of the board
         int numberOfPawns = 2 * n;
         for (int i = 0; i < n; i++) {
-            for (int j = 0; j < n; j=j+2) {
-
+            for (int j = 0; j < n; j = j + 2) {
+                Pawn pawn = new Pawn(new Coordinates(i, j), black);
                 if (i % 2 == 0) {
                     if (numberOfPawns > 0) {
-                        this.fields[i][j + 1] = new Pawn(new Coordinates(i,j),1);
+                        this.fields[i][j + 1] = pawn;
                         numberOfPawns--;
                     }
                 } else {
                     if (numberOfPawns > 0) {
-                        this.fields[i][j] = new Pawn(new Coordinates(i,j),1);
+                        this.fields[i][j] = pawn;
                         numberOfPawns--;
                     }
                 }
@@ -29,17 +35,17 @@ public class Board {
 
         // other side of the board
         numberOfPawns = 2 * n;
-        for (int i = n-1; i > n-5; i--) {
-            for (int j = 0; j < n; j=j+2) {
-
+        for (int i = n - 1; i > n - 5; i--) {
+            for (int j = 0; j < n; j = j + 2) {
+                Pawn pawn = new Pawn(new Coordinates(i, j), white);
                 if (i % 2 == 0) {
                     if (numberOfPawns > 0) {
-                        this.fields[i][j + 1] = new Pawn(new Coordinates(i,j),2);
+                        this.fields[i][j + 1] = pawn;
                         numberOfPawns--;
                     }
                 } else {
                     if (numberOfPawns > 0) {
-                        this.fields[i][j] = new Pawn(new Coordinates(i,j),2);
+                        this.fields[i][j] = pawn;
                         numberOfPawns--;
                     }
                 }
@@ -85,6 +91,7 @@ public class Board {
      * method that removes pawns from the specified position.
      */
     public void removePawn(){
+        //zmniejsza o 1 licznik pionkow w klasie board
     }
 
 }

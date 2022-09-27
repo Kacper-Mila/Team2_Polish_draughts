@@ -1,12 +1,14 @@
 package draughts;
 
+import java.awt.*;
+
 public class Pawn {
 
     private Coordinates position;
-    private int color;
+    private Color color;
     private boolean isCrowned;
 
-    public Pawn(Coordinates position, int color ){
+    public Pawn(Coordinates position, Color color ){
         this.color = color;
         this.position = position;
     }
@@ -14,6 +16,9 @@ public class Pawn {
     //The Pawn class contains a method that validates the move (whether it is within the game rules) before it is performed.
     // missing other rules. Chapter 'Moves and captures' from https://en.wikipedia.org/wiki/International_draughts
     // separate method for each condition all merged inside one??
+    //TODO: metoda weryfikuje zasady gry (nie sprawdza czy ruch zawiera sie w obrebie planszy
+    //sprawdza czy moge sie przesunac na podane pole (galaz Sandry)
+    //sprawdzanie bicia po przekatnej jest jako extra
     public boolean validateMove(Coordinates startPosition, Coordinates endPosition, Board board){
         boolean repeat = true;
         //int[] move = {x, y};
@@ -46,8 +51,16 @@ public class Pawn {
      * method that returns the color of the pawn(white or black).
      * @return colors as numbers??? eg white = 0, black =1
      */
-    public int getColor(){
-        return 0;
+    public Color getColor(){ //wersja z gałęzi Sandry/Dominiki
+        return this.color;
+    }
+
+    public Color setColor(int player) {
+        if (player == 1) {
+            return Color.white;
+        } else {
+            return Color.black;
+        }
     }
 
     /**
@@ -62,5 +75,7 @@ public class Pawn {
     public void setCrowned(){
         this.isCrowned = true;
     }
+
+
 
 }
