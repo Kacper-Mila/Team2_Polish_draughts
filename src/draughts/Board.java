@@ -58,16 +58,50 @@ public class Board {
      */
     @Override
     public String toString() {
-        //TODO: zweryfikować poprawność działania na dalszym etapie prac!
+        final String ANSI_GREY_BACKGROUND = "\u001B[47m";
+        final String ANSI_WHITE_BACKGROUND = "\u001B[107m";
+        final String ANSI_BLACK = "\u001B[30m";
+        final String ANSI_RESET = "\u001B[0m";
+        final String ANSI_WHITE = "\u001B[97m";
+        final String ANSI_BOLD = "\u001B[1m";
         Pawn [][] board = this.fields;
         StringBuilder result = new StringBuilder();
-        char col;
-        int row;
-        for(int i =0;i<board.length;i++){
-            row = i+1;
-            for(int j=0;j<board[0].length;j++){
-                col = (char) (65 + j);
-                result.append(row).append(col).append(" ");
+        for(int i =0;i<board.length+1;i++){
+            for(int j=0;j<board[0].length+1;j++){
+                if(i>0&&j>0){
+                    String pawn = " ";
+                    if(board[i-1][j-1]!=null){
+                        if(board[i-1][j-1].isCrowned()){
+                            pawn = "X";
+                        }else{
+                            pawn = "O";
+                        }
+                        if(board[i-1][j-1].getColor()==black) {
+                            pawn = ANSI_BOLD + ANSI_WHITE +" "+ pawn+" ";
+                        }else{
+                            pawn = ANSI_BOLD + ANSI_BLACK  +" "+ pawn + " ";
+                        }
+                    }
+                    if(i%2==0) {
+                        if (j % 2 == 0) {
+                            result.append(ANSI_WHITE_BACKGROUND);
+                        } else {
+                            result.append(ANSI_GREY_BACKGROUND);
+                        }
+                    }else{
+                        if (j % 2 == 0) {
+                            result.append(ANSI_GREY_BACKGROUND);
+                        } else {
+                            result.append(ANSI_WHITE_BACKGROUND);
+                        }
+                    }
+                    result.append(String.format("%3.40s",pawn)).append(ANSI_RESET);
+                }else{
+                    char col = (char) (64 + j);
+                    if(i==0&&j==0) result.append("   ");
+                    if(i==0&&j>0) result.append(String.format("%-3.3s"," " + col));
+                    if(j==0&&i>0) result.append(String.format("%-3.3s",i));
+                }
             }
             result.append("\n");
         }
