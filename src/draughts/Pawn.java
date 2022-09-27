@@ -19,63 +19,54 @@ public class Pawn {
     //TODO: metoda weryfikuje zasady gry (nie sprawdza czy ruch zawiera sie w obrebie planszy
     //sprawdza czy moge sie przesunac na podane pole (galaz Sandry)
     //sprawdzanie bicia po przekatnej jest jako extra
-    public boolean validateMove(Coordinates startPosition, Coordinates endPosition, Board board){
-        boolean repeat = true;
-        //int[] move = {x, y};
-        int x = startPosition.getX();
-        int y = startPosition.getY();
-        Pawn [][] fields = board.getFields();
+    public boolean validateMove(Board board, Coordinates position){
+        Pawn[][] fields = board.getFields();
+        int startX = this.position.getX();
+        int startY = this.position.getY();
+        int goalX = position.getX();
+        int goalY = position.getY();
 
-        while(repeat){
-            if (x < 0 || x >= fields.length){
-                System.out.println("Incorrect coordinates");
-                continue;
+        // if the goal field is empty check if move is diagonally by one square
+        if ((fields[goalX][goalY]) == null) {
+            if     (((goalX == startX - 1) && (goalY == startY - 1)) ||
+                    ((goalX == startX + 1) && (goalY == startY - 1)) ||
+                    ((goalX == startX - 1) && (goalY == startY + 1)) ||
+                    ((goalX == startX + 1) && (goalY == startY + 1))) {
+                return true;
             }
-            if (y < 0 || y >= fields[0].length){
-                System.out.println("Incorrect coordinates");
-                continue;
+            // if the goal is not empty check for pawn color and whether you can jump
+        } else {
+            if (fields[goalX][goalY].getColor() != fields[startX][startY].getColor()) {
+                if     (((goalX == startX - 2) && (goalY == startY - 2)) ||
+                        ((goalX == startX + 2) && (goalY == startY - 2)) ||
+                        ((goalX == startX - 2) && (goalY == startY + 2)) ||
+                        ((goalX == startX + 2) && (goalY == startY + 2))) {
+
+                    return true;
+                }
             }
-            if (fields[x][y] != null){
-                System.out.println("Position already taken");
-                continue;
-            }
-//            if (move[0]) {
-//
-//            }
-            repeat = false;
         }
-        return true;
+        return false;
     }
 
     /**
      * method that returns the color of the pawn(white or black).
      * @return colors as numbers??? eg white = 0, black =1
      */
-    public Color getColor(){ //wersja z gałęzi Sandry/Dominiki
-        return this.color;
+    public Color getColor() {
+        return color;
     }
 
-    public Color setColor(int player) {
-        if (player == 1) {
-            return Color.white;
-        } else {
-            return Color.black;
-        }
+    public Coordinates getPosition() {
+        return position;
     }
 
-    /**
-     * [Extra]
-     * 'field' that returns true if a pawn is crowned.
-     * @return
-     */
-    public boolean isCrowned(){
+    public boolean isCrowned() {
         return this.isCrowned;
     }
 
-    public void setCrowned(){
+    public void setCrowned() {
         this.isCrowned = true;
     }
-
-
 
 }

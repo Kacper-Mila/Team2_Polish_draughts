@@ -53,13 +53,8 @@ public class Board {
         }
     }
 
-    public Pawn[][] getFields() {
-        return fields;
-    }
 
-    public void setFields(Pawn[][] fields) {
-        this.fields = fields;
-    }
+
     public static Scanner scanner = new Scanner(System.in);
     //There is a movePawn() method that moves pawns from a specified position to another field.
     //I think user interface method is Game.tryTomakeMove()
@@ -90,8 +85,37 @@ public class Board {
     /**
      * method that removes pawns from the specified position.
      */
-    public void removePawn(){
+    public void removePawn(Pawn pawn, Coordinates coordinates){
         //zmniejsza o 1 licznik pionkow w klasie board
+        if(this.fields[coordinates.getX()][coordinates.getY()].equals(pawn)){
+            fields[coordinates.getX()][coordinates.getY] = null;
+        } else{
+            System.out.println("this Pawn is not in that position");
+        }
+    }
+
+    public Pawn[][] getFields() {
+        return fields;
+    }
+
+    public void setFields(Pawn[][] fields) {
+        this.fields = fields;
+    }
+
+    public void removePawn(Pawn pawn) {
+        int x = pawn.getPosition().getX();
+        int y = pawn.getPosition().getY();
+        this.fields[x][y] = null;
+
+    }
+
+    public void movePawn(Pawn pawn, Coordinates position){
+        int startX = pawn.getPosition().getX();
+        int startY = pawn.getPosition().getY();
+        this.fields[startX][startY] = null;
+        int goalX = position.getX();
+        int goalY = position.getY();
+        this.fields[goalX][goalY] = pawn;
     }
 
 }
