@@ -1,14 +1,12 @@
 package draughts;
 
-import java.util.Scanner;
-
 import static java.awt.Color.black;
 import static java.awt.Color.white;
 
 public class Board {
     private Pawn[][] fields;
-    private int whitePawnsCounter;
-    private int blackPawnsCounter;
+    private int whitePawnsCounter; // number of white pawns in the game at the moment
+    private int blackPawnsCounter; // same as above but black one
 
     public Board(int n) {
         if (n >= 10 && n <= 20) {
@@ -53,25 +51,6 @@ public class Board {
         }
     }
 
-
-
-    public static Scanner scanner = new Scanner(System.in);
-    //There is a movePawn() method that moves pawns from a specified position to another field.
-    //I think user interface method is Game.tryTomakeMove()
-    //This method is just changing pawns coordinates
-    public int[] movePawn(Coordinates startPosition, Coordinates endPosition){
-        //removes pawn from startPosition and moves it to endPosition
-
-//        System.out.println("Which pawn you want to move?");
-//        String whichPawn = scanner.nextLine().toLowerCase().trim();
-//        System.out.println("Where do you want to move it?");
-//        String where = scanner.nextLine().toLowerCase().trim();
-//
-//        char charWhitchPawn = whichPawn.charAt(0);
-//        char charWhere = where.charAt(0);
-        return new int[4];
-    }
-
     /**
      * Print current board.
      * This method marks rows as numbers and columns as letters.
@@ -79,19 +58,20 @@ public class Board {
      */
     @Override
     public String toString() {
-        return "Board{}";
-    }
-
-    /**
-     * method that removes pawns from the specified position.
-     */
-    public void removePawn(Pawn pawn, Coordinates coordinates){
-        //zmniejsza o 1 licznik pionkow w klasie board
-        if(this.fields[coordinates.getX()][coordinates.getY()].equals(pawn)){
-            fields[coordinates.getX()][coordinates.getY] = null;
-        } else{
-            System.out.println("this Pawn is not in that position");
+        //TODO: zweryfikować poprawność działania na dalszym etapie prac!
+        Pawn [][] board = this.fields;
+        StringBuilder result = new StringBuilder();
+        char col;
+        int row;
+        for(int i =0;i<board.length;i++){
+            row = i+1;
+            for(int j=0;j<board[0].length;j++){
+                col = (char) (65 + j);
+                result.append(row).append(col).append(" ");
+            }
+            result.append("\n");
         }
+        return result.toString();
     }
 
     public Pawn[][] getFields() {
@@ -103,13 +83,16 @@ public class Board {
     }
 
     public void removePawn(Pawn pawn) {
+        //zmniejsza o 1 licznik pionkow w klasie board, zgodnie z kolorem jaki zawiera obiekt pawn
         int x = pawn.getPosition().getX();
         int y = pawn.getPosition().getY();
         this.fields[x][y] = null;
-
     }
 
     public void movePawn(Pawn pawn, Coordinates position){
+        //There is a movePawn() method that moves pawns from a specified position to another field.
+        //This method is just changing pawns coordinates
+        //removes pawn from startPosition and moves it to endPosition
         int startX = pawn.getPosition().getX();
         int startY = pawn.getPosition().getY();
         this.fields[startX][startY] = null;

@@ -15,9 +15,7 @@ public class Pawn {
 
     //The Pawn class contains a method that validates the move (whether it is within the game rules) before it is performed.
     // missing other rules. Chapter 'Moves and captures' from https://en.wikipedia.org/wiki/International_draughts
-    // separate method for each condition all merged inside one??
-    //TODO: metoda weryfikuje zasady gry (nie sprawdza czy ruch zawiera sie w obrebie planszy
-    //sprawdza czy moge sie przesunac na podane pole (galaz Sandry)
+    //sprawdza czy moge sie przesunac na podane pole
     //sprawdzanie bicia po przekatnej jest jako extra
     public boolean validateMove(Board board, Coordinates position){
         Pawn[][] fields = board.getFields();
@@ -49,10 +47,6 @@ public class Pawn {
         return false;
     }
 
-    /**
-     * method that returns the color of the pawn(white or black).
-     * @return colors as numbers??? eg white = 0, black =1
-     */
     public Color getColor() {
         return color;
     }
