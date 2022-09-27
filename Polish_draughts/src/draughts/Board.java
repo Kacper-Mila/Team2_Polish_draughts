@@ -1,13 +1,8 @@
 package draughts;
 
+import java.util.Scanner;
+
 public class Board {
-    public void removePawn(Pawn pawn, Coordinates coordinates){
-        if(this.fielsds[coordinates.getX()][coordinates.getY()].equals(pawn)){
-            fields[coordinates.getX()][coordinates.getY] = null;
-        } else{
-            System.out.println("this Pawn is not in that position");
-        }
-    }
     private Pawn[][] fields;
     public Board(int n) {
         if (n >= 10 && n <= 20) {
@@ -58,5 +53,17 @@ public class Board {
 
     public void setFields(Pawn[][] fields) {
         this.fields = fields;
+    }
+    public static Scanner scanner = new Scanner(System.in);
+    //There is a movePawn() method that moves pawns from a specified position to another field.
+    public int[] movePawn(){
+        System.out.println("Which pawn you want to move?");
+        String whichPawn = scanner.nextLine().toLowerCase().trim();
+        System.out.println("Where do you want to move it?");
+        String where = scanner.nextLine().toLowerCase().trim();
+
+        char charWhitchPawn = whichPawn.charAt(0);
+        char charWhere = where.charAt(0);
+        return new int[4];
     }
 }
