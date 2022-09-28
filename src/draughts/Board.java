@@ -133,6 +133,7 @@ public class Board {
         int goalX = position.getX();
         int goalY = position.getY();
         this.fields[goalX][goalY] = pawn;
+
     }
 
 }
