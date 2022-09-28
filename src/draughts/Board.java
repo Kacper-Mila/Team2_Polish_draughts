@@ -54,6 +54,7 @@ public class Board {
     /**
      * Print current board.
      * This method marks rows as numbers and columns as letters.
+     *
      * @return String representing board
      */
     @Override
@@ -64,43 +65,43 @@ public class Board {
         final String ANSI_RESET = "\u001B[0m";
         final String ANSI_WHITE = "\u001B[97m";
         final String ANSI_BOLD = "\u001B[1m";
-        Pawn [][] board = this.fields;
+        Pawn[][] board = this.fields;
         StringBuilder result = new StringBuilder();
-        for(int i =0;i<board.length+1;i++){
-            for(int j=0;j<board[0].length+1;j++){
-                if(i>0&&j>0){
+        for (int i = 0; i < board.length + 1; i++) {
+            for (int j = 0; j < board[0].length + 1; j++) {
+                if (i > 0 && j > 0) {
                     String pawn = " ";
-                    if(board[i-1][j-1]!=null){
-                        if(board[i-1][j-1].isCrowned()){
+                    if (board[i - 1][j - 1] != null) {
+                        if (board[i - 1][j - 1].isCrowned()) {
                             pawn = "X";
-                        }else{
+                        } else {
                             pawn = "O";
                         }
-                        if(board[i-1][j-1].getColor()==black) {
-                            pawn = ANSI_BOLD + ANSI_WHITE +" "+ pawn+" ";
-                        }else{
-                            pawn = ANSI_BOLD + ANSI_BLACK  +" "+ pawn + " ";
+                        if (board[i - 1][j - 1].getColor() == black) {
+                            pawn = ANSI_BOLD + ANSI_WHITE + " " + pawn + " ";
+                        } else {
+                            pawn = ANSI_BOLD + ANSI_BLACK + " " + pawn + " ";
                         }
                     }
-                    if(i%2==0) {
+                    if (i % 2 == 0) {
                         if (j % 2 == 0) {
                             result.append(ANSI_WHITE_BACKGROUND);
                         } else {
                             result.append(ANSI_GREY_BACKGROUND);
                         }
-                    }else{
+                    } else {
                         if (j % 2 == 0) {
                             result.append(ANSI_GREY_BACKGROUND);
                         } else {
                             result.append(ANSI_WHITE_BACKGROUND);
                         }
                     }
-                    result.append(String.format("%3.40s",pawn)).append(ANSI_RESET);
-                }else{
+                    result.append(String.format("%3.40s", pawn)).append(ANSI_RESET);
+                } else {
                     char col = (char) (64 + j);
-                    if(i==0&&j==0) result.append("   ");
-                    if(i==0&&j>0) result.append(String.format("%-3.3s"," " + col));
-                    if(j==0&&i>0) result.append(String.format("%-3.3s",i));
+                    if (i == 0 && j == 0) result.append("   ");
+                    if (i == 0 && j > 0) result.append(String.format("%-3.3s", " " + col));
+                    if (j == 0 && i > 0) result.append(String.format("%-3.3s", i));
                 }
             }
             result.append("\n");
@@ -117,13 +118,16 @@ public class Board {
     }
 
     public void removePawn(Pawn pawn) {
-        //zmniejsza o 1 licznik pionkow w klasie board, zgodnie z kolorem jaki zawiera obiekt pawn
         int x = pawn.getPosition().getX();
         int y = pawn.getPosition().getY();
         this.fields[x][y] = null;
+        if (pawn.getColor().equals(white)) {
+            whitePawnsCounter--;
+        } else blackPawnsCounter--;
     }
 
-    public void movePawn(Pawn pawn, Coordinates position){
+
+    public void movePawn(Pawn pawn, Coordinates position) {
         //There is a movePawn() method that moves pawns from a specified position to another field.
         //This method is just changing pawns coordinates
         //removes pawn from startPosition and moves it to endPosition
