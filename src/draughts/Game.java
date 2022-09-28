@@ -15,7 +15,9 @@ public class Game {
      * method that starts game between players.
      */
     public void start(){
-        //instrukcja/powitalna wiadomosc
+
+        System.out.println("Enter coordinates in format [letter][number], e.g. A5.");
+        this.board.createBoard();
         do{
             playRound();
         }while (!(checkForWinner(2)||checkForWinner(1)||drawCondition==0));
