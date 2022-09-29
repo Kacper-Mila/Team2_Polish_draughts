@@ -103,9 +103,7 @@ public class Pawn {
                     }
                 }
             } else if (this.color.equals(white)) {
-                System.out.println("jestem w ifie");
                 if ((goalX == startX - 2) && (goalY == startY - 2)) {
-                    System.out.println("jestem w drugim ifie");
                     if (fields[startX - 1][startY - 1].color.equals(black)) {
                         return fields[startX - 1][startY - 1];
                     }
