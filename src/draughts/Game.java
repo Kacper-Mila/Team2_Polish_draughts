@@ -1,11 +1,19 @@
 package draughts;
 
+import java.awt.*;
+import java.util.Scanner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 public class Game {
 
     private Board board;
     private int drawCondition = 15;
-    public Game(int n){
-        this.board = new Board(n);
+    private int sizeBoard;
+    public Game(int sizeBoard){
+
+        this.board = new Board(sizeBoard);
+        this.sizeBoard = sizeBoard;
     }
     public Board getBoard(){
         return this.board;
@@ -39,10 +47,15 @@ public class Game {
      * method that checks whether there is a winner after each round.
      * also checks for draws.
      */
-    public boolean checkForWinner(int player){
-        //sprawdza czy podany gracz spelnil warunki zakonczenia gry
-        //sprawdza czy zostaly pionki przeciwnika
-        return false;
+    public boolean checkForWinner(int player) {
+        //jesli pionek 3 razy na jednym polu to remis
+        if (drawCondition == 0) {
+            System.out.println("It's draw! Game over! ");
+            return false;
+        }
+        if(player == 1 && board.getBlackPawnsCounter() ==0){
+          return true;
+        } else return player == 2 && board.getWhitePawnsCounter() == 0;
     }
 
     /**
@@ -50,20 +63,80 @@ public class Game {
      * is a valid pawn and if the ending position is within board boundaries.
      * If so, it calls tryToMakeMove() on pawn instance.
      */
+    public boolean isValidCoordinate(String inputCoordinate){
+        Pattern r = Pattern.compile("(?i)([a-z])(\\d+)");
+        Matcher m;
+        m = r.matcher(inputCoordinate);
+
+         if(m.matches()) return true;
+         else return false;
+    }
     public void checkStartingPosition(int player){
-        //do{
-        //ask user for start position (pawn)
-        //ask user for end position. sekwencja ruchów. max liczba ruchow to liczba pionkow przeciwnika
-        //map inserted data to Coordinates class
-        //use Pawn's method to validate:
-        //  - if starting position is valid pawn (if at selected coordinates there is pawn, and it colors matches player)
-        //  - if end position is within boundaries (is separate method needed? if so should it be implemented inside Board?)
-        // if it is valid call tryToMakeMove()
-        // }while(!tryToMakeMove()) "masz do wykonania lepszy ruch"
-        //etap 1:
-        //  zapytaj o pierwsze wspolrzedne
+        Scanner scanner = new Scanner(System.in);
+        String startCoordinate;
+        String endCoordinate;
+        int startColAsNumber;
+        int startRowAsNumber;
+        int endColAsNumber;
+        int endRowAsNumber;
+        String lastCol=Integer.toString(sizeBoard + 'a' -1);
+        String regex= String.format("(?i)[a-%s]", lastCol);
+        Coordinates newPosition;
+        //sprawdzam poprawnosc poczatkowych wspolrzednych
+        do {
+            do {
+                System.out.println("Podaj współrzędne pionka, którym chcesz wykonać ruch, np. A1");
+                startCoordinate = scanner.nextLine();
+                if (!isValidCoordinate(startCoordinate)) {
+                    System.out.println("Niepoprawne współrzędne");
+                    continue;
+                }
+
+                String startCol = startCoordinate.substring(0, 1);
+                int startRow = Integer.parseInt(startCoordinate.substring(1));
+                startColAsNumber = ((int) (startCol.toUpperCase().charAt(0))) - (int) 'A';
+                startRowAsNumber = startRow - 1;
+                if (!startCol.matches(regex) || startRow <= 0 || startRow > sizeBoard) {
+                    System.out.println("Współrzędne poza zakresem");
+                    continue;
+                }
+                if ((board.getFields()[startRowAsNumber][startColAsNumber] == null)) {
+                    System.out.println("To pole jest puste, wybierz pole z Twoim pionkiem");
+                    continue;
+                }
+                if ((player == 1 && board.getFields()[startRowAsNumber][startColAsNumber].getColor() != Color.WHITE) ||
+                        (player == 2 && board.getFields()[startRowAsNumber][startColAsNumber].getColor() != Color.BLACK)) {
+                    System.out.println("To jest pionek przeciwnika, wybierz swój pionek");
+                    continue;
+                }
+
+                break;
+            } while (true);
+
+            //sprawdzam poprawnosc koncowych wspolrzednych
+            do {
+                System.out.println("Podaj współrzędne pola, na które chcesz wykonać ruch, np. A1");
+                endCoordinate = scanner.nextLine();
+                if (!isValidCoordinate(endCoordinate)) {
+                    System.out.println("Niepoprawne współrzędne");
+                    continue;
+                }
+                String endCol = endCoordinate.substring(0, 1);
+                int endRow = Integer.parseInt(endCoordinate.substring(1));
+                endColAsNumber = ((int) (endCol.toUpperCase().charAt(0))) - (int) 'A';
+                endRowAsNumber = endRow - 1;
+                if (!endCol.matches(regex) || endRow <= 0 || endRow > sizeBoard) {
+                    System.out.println("Współrzędne poza zakresem");
+                    continue;
+                }
+                break;
+            } while (true);
+
+            newPosition = new Coordinates(endRowAsNumber, endColAsNumber);
+        } while( tryToMakeMove(board.getFields()[startRowAsNumber][startColAsNumber], newPosition));
+        //TODO
         //etap 2:
-        //  zapytaj o liste wspolrzednych
+        //zapytaj o liste wspolrzednych
     }
 
     /**
