@@ -163,8 +163,6 @@ public class Game {
      * @return true if move is possible and executed, otherwise false.
      */
     public boolean tryToMakeMove(Pawn pawn, Coordinates movePosition) {
-        //try to move pawn according to game rules (Pawn.validateMove())
-        //if (Pawn.validateMove()){
         if (pawn.validateMove(board, movePosition)) {
             //nastepuje sam ruch, bez bicia
             board.movePawn(pawn, movePosition);
@@ -172,12 +170,11 @@ public class Game {
             return true;
         }
         //sprawdz czy ruch jest o dwa pola a miedzy nimi jest pionek przeciwnika
-
-        Pawn pionekDoBicia = pawn.validateMoveWithCapture(board, movePosition);
-        if (pionekDoBicia != null) {
+        Pawn pawnToCapture = pawn.validateMoveWithCapture(board, movePosition);
+        if (pawnToCapture != null) {
             //wykonaj ruch z biciem
             board.movePawn(pawn, movePosition);
-            board.removePawn(pionekDoBicia);
+            board.removePawn(pawnToCapture);
             drawCondition = 15;
             return true;
         }
