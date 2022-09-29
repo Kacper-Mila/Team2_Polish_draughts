@@ -7,15 +7,15 @@ public class Main {
         Game game = new Game(getBoardSize());
         game.start();
     }
+
     private static int getBoardSize() {
-        Scanner readBoardSize= new Scanner(System.in);
+        Scanner readBoardSize = new Scanner(System.in);
         String boardSize;
         String regex = "1[0-9]|20";
         do {
-            //TODO: n musi byc parzyste. uzytkownik musi podac parzyste n w zakresie 10 - 20
-            System.out.println("Podaj wielkosc tablicy z zakresu od 10 do 20");
+            System.out.println("Podaj wielkosc tablicy z zakresu od 10 do 20, liczba musi być parzysta");
             boardSize = readBoardSize.nextLine();
-        }while(!boardSize.matches(regex));
+        } while (!boardSize.matches(regex) || Integer.parseInt(boardSize) % 2 != 0);
         return Integer.parseInt(boardSize);
     }
 }
