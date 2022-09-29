@@ -81,8 +81,8 @@ public class Game {
         int startRowAsNumber;
         int endColAsNumber;
         int endRowAsNumber;
-        String lastCol=Integer.toString(sizeBoard + 'a' -1);
-        String regex= String.format("(?i)[a-%s]", lastCol);
+        char lastCol=(char)(sizeBoard + (int)'a' -1);
+        String regex= String.format("(?i)[a-%s]", String.valueOf(lastCol));
         Coordinates newPosition;
         //sprawdzam poprawnosc poczatkowych wspolrzednych
         do {
