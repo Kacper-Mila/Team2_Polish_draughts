@@ -38,9 +38,12 @@ public class Game {
      */
     public void playRound(){
         //ruch 1 gracza
+        System.out.println(board.toString());
         System.out.println("Ruch gracza 1 - białe");
         checkStartingPosition(1);
         if (checkForWinner(1)) return;
+
+        System.out.println(board.toString());
         //ruch 2 gracza
         System.out.println("Ruch gracza 2 - czarne");
         checkStartingPosition(2);
