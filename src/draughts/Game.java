@@ -35,8 +35,13 @@ public class Game {
         boolean win1 = checkForWinner(1);
         boolean win2 = checkForWinner(2);
         if(win1|| win2 || drawCondition == 0){
-            //drzewko ifow(switch lepiej) w zaleznosci od warunkow powyzej
-            //TODO: pokaz rezultat gry np gratulacje gracz 1 wygral// oj remis
+            if (win1) {
+                System.out.println("Player 1 won. Congratulations!");
+            } else if (win2) {
+                System.out.println("Player 2 won. Congratulations!");
+            } else if (drawCondition == 0) {
+                System.out.println("It's a draw!");
+            }
             return true;
         }
         return false;
