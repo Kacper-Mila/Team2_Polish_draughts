@@ -9,54 +9,11 @@ public class Board {
     private int whitePawnsCounter; // number of white pawns in the game at the moment
     private int blackPawnsCounter; // same as above but black one
 
-    public int getWhitePawnsCounter() {
-        return whitePawnsCounter;
-    }
-
-    public int getBlackPawnsCounter() {
-        return blackPawnsCounter;
-    }
-
     public Board(int n) {
         if (n >= 10 && n <= 20) {
             this.fields = new Pawn[n][n];
-        }
-        // one side of the board
-        int numberOfPawns = 2 * n;
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < n; j = j + 2) {
-                Pawn pawn = new Pawn(new Coordinates(i, j), black);
-                if (i % 2 == 0) {
-                    if (numberOfPawns > 0) {
-                        this.fields[i][j + 1] = pawn;
-                        numberOfPawns--;
-                    }
-                } else {
-                    if (numberOfPawns > 0) {
-                        this.fields[i][j] = pawn;
-                        numberOfPawns--;
-                    }
-                }
-            }
-        }
-
-        // other side of the board
-        numberOfPawns = 2 * n;
-        for (int i = n - 1; i > n - 5; i--) {
-            for (int j = 0; j < n; j = j + 2) {
-                Pawn pawn = new Pawn(new Coordinates(i, j), white);
-                if (i % 2 == 0) {
-                    if (numberOfPawns > 0) {
-                        this.fields[i][j + 1] = pawn;
-                        numberOfPawns--;
-                    }
-                } else {
-                    if (numberOfPawns > 0) {
-                        this.fields[i][j] = pawn;
-                        numberOfPawns--;
-                    }
-                }
-            }
+            whitePawnsCounter = 2 * n;
+            blackPawnsCounter = 2 * n;
         }
     }
 
@@ -154,7 +111,6 @@ public class Board {
         } else blackPawnsCounter--;
     }
 
-
     public void movePawn(Pawn pawn, Coordinates position){
         //There is a movePawn() method that moves pawns from a specified position to another field.
         //This method is just changing pawns coordinates
@@ -167,4 +123,45 @@ public class Board {
         this.fields[goalX][goalY] = pawn;
     }
 
+    public void createBoard(){
+        // one side of the board
+        int n = this.fields.length;
+        int numberOfPawns = n * 2;
+
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j = j + 2) {
+                Pawn pawn = new Pawn(new Coordinates(i, j), black);
+                if (i % 2 == 0) {
+                    if (numberOfPawns > 0) {
+                        this.fields[i][j + 1] = pawn;
+                        numberOfPawns--;
+                    }
+                } else {
+                    if (numberOfPawns > 0) {
+                        this.fields[i][j] = pawn;
+                        numberOfPawns--;
+                    }
+                }
+            }
+        }
+
+        // other side of the board
+        numberOfPawns = 2 * n;
+        for (int i = n - 1; i > n - 5; i--) {
+            for (int j = 0; j < n; j = j + 2) {
+                Pawn pawn = new Pawn(new Coordinates(i, j), white);
+                if (i % 2 == 0) {
+                    if (numberOfPawns > 0) {
+                        this.fields[i][j + 1] = pawn;
+                        numberOfPawns--;
+                    }
+                } else {
+                    if (numberOfPawns > 0) {
+                        this.fields[i][j] = pawn;
+                        numberOfPawns--;
+                    }
+                }
+            }
+        }
+    }
 }
