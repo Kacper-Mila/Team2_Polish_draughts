@@ -9,6 +9,14 @@ public class Board {
     private int whitePawnsCounter; // number of white pawns in the game at the moment
     private int blackPawnsCounter; // same as above but black one
 
+    public int getWhitePawnsCounter() {
+        return whitePawnsCounter;
+    }
+
+    public int getBlackPawnsCounter() {
+        return blackPawnsCounter;
+    }
+
     public Board(int n) {
         if (n >= 10 && n <= 20) {
             this.fields = new Pawn[n][n];
