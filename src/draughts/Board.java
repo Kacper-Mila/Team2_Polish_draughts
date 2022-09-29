@@ -138,15 +138,14 @@ public class Board {
 
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < n; j = j + 2) {
-                Pawn pawn = new Pawn(new Coordinates(i, j), black);
                 if (i % 2 == 0) {
                     if (numberOfPawns > 0) {
-                        this.fields[i][j + 1] = pawn;
+                        this.fields[i][j + 1] = new Pawn(new Coordinates(i, j+1), black);
                         numberOfPawns--;
                     }
                 } else {
                     if (numberOfPawns > 0) {
-                        this.fields[i][j] = pawn;
+                        this.fields[i][j] = new Pawn(new Coordinates(i, j), black);
                         numberOfPawns--;
                     }
                 }
@@ -157,15 +156,14 @@ public class Board {
         numberOfPawns = 2 * n;
         for (int i = n - 1; i > n - 5; i--) {
             for (int j = 0; j < n; j = j + 2) {
-                Pawn pawn = new Pawn(new Coordinates(i, j), white);
                 if (i % 2 == 0) {
                     if (numberOfPawns > 0) {
-                        this.fields[i][j + 1] = pawn;
+                        this.fields[i][j + 1] = new Pawn(new Coordinates(i, j+1), white);
                         numberOfPawns--;
                     }
                 } else {
                     if (numberOfPawns > 0) {
-                        this.fields[i][j] = pawn;
+                        this.fields[i][j] = new Pawn(new Coordinates(i, j), white);
                         numberOfPawns--;
                     }
                 }
