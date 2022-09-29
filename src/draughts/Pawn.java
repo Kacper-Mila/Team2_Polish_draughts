@@ -16,6 +16,18 @@ public class Pawn {
         this.position = position;
     }
 
+    public void setPosition(Coordinates position) {
+        this.position = position;
+    }
+
+    public void setColor(Color color) {
+        this.color = color;
+    }
+
+    public void setCrowned(boolean crowned) {
+        isCrowned = crowned;
+    }
+
     //The Pawn class contains a method that validates the move (whether it is within the game rules) before it is performed.
     // missing other rules. Chapter 'Moves and captures' from https://en.wikipedia.org/wiki/International_draughts
     //sprawdza czy moge sie przesunac na podane pole

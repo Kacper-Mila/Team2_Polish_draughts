@@ -49,10 +49,15 @@ public class Game {
      * method that checks whether there is a winner after each round.
      * also checks for draws.
      */
-    public boolean checkForWinner(int player){
-        //sprawdza czy podany gracz spelnil warunki zakonczenia gry
-        //sprawdza czy zostaly pionki przeciwnika
-        return false;
+    public boolean checkForWinner(int player) {
+        //jesli pionek 3 razy na jednym polu to remis
+        if (drawCondition == 0) {
+            System.out.println("It's draw! Game over! ");
+            return false;
+        }
+        if(player == 1 && board.getBlackPawnsCounter() ==0){
+          return true;
+        } else return player == 2 && board.getWhitePawnsCounter() == 0;
     }
 
     /**
