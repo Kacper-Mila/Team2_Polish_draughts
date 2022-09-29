@@ -24,7 +24,7 @@ public class Game {
      */
     public void start(){
 
-        System.out.println("Enter coordinates in format [letter][number], e.g. A5.");
+       // System.out.println("Enter coordinates in format [letter][number], e.g. A5.");
         this.board.createBoard();
         do{
             playRound();
@@ -38,9 +38,11 @@ public class Game {
      */
     public void playRound(){
         //ruch 1 gracza
+        System.out.println("Ruch gracza 1 - białe");
         checkStartingPosition(1);
         if (checkForWinner(1)) return;
         //ruch 2 gracza
+        System.out.println("Ruch gracza 2 - czarne");
         checkStartingPosition(2);
         checkForWinner(2);
     }
