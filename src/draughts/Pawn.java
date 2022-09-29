@@ -34,8 +34,7 @@ public class Pawn {
     //sprawdzanie bicia po przekatnej jest jako extra
 
     /**
-     *
-     * @param board game's board instance
+     * @param board    game's board instance
      * @param position coordinates of pawn move
      * @return true if move is valid, otherwise false
      */
@@ -73,32 +72,62 @@ public class Pawn {
 
     public Pawn validateMoveWithCapture(Board board, Coordinates position) {
         Pawn[][] fields = board.getFields();
-        //todo: null point exception prawdopodobnie juz nie aktualne -> blad rozwiazany ale nalezy zweryfikowac
-//        error reason:
-//        Podaj współrzędne pionka, którym chcesz wykonać ruch, np. A1
-//        a10
-//        Podaj współrzędne pola, na które chcesz wykonać ruch, np. A1
-//                b10
-//        ERROR:
-//        Exception in thread "main" java.lang.NullPointerException: Cannot read field "color" because "fields[goalX][goalY]" is null
-//        at draughts.Pawn.validateMoveWithCapture(Pawn.java:75)
-//        at draughts.Game.tryToMakeMove(Game.java:175)
-//        at draughts.Game.checkStartingPosition(Game.java:152)
-//        at draughts.Game.playRound(Game.java:51)
-//        at draughts.Game.start(Game.java:31)
-//        at draughts.Main.main(Main.java:8)
+
         int startX = this.position.getX();
+
         int startY = this.position.getY();
         int goalX = position.getX();
         int goalY = position.getY();
-        Color startColor = this.color;
+        Pawn goalPawn = fields[goalX][goalY];
 
-        //TODO:sprawdz czy wybrane pole jest o dwa pola oraz czy jest puste po przekatnej dalej oraz czy miedzy nimi jest
-        // pionek przeciwnego koloru,jezeli tak to zwroc pionek do bicia, w przeciwnym razie zwroc null
-        //hint rozubodowana validacja z ValidateMove()
+        // if goal field is empty
+        if (goalPawn == null) {
+            // if my color is black
+            if (this.color.equals(black)) {
+                // if my goal move is 2 fields diagonally away
+                if ((goalX == startX - 2) && (goalY == startY - 2)) {
+                    if (fields[startX - 1][startY - 1].color.equals(white)) {
+                        return fields[startX - 1][startY - 1];
+                    }
+                } else if ((goalX == startX + 2) && (goalY == startY - 2)) {
+                    if (fields[startX + 1][startY - 1].color.equals(white)) {
+                        return fields[startX + 1][startY - 1];
+                    }
+                } else if ((goalX == startX - 2) && (goalY == startY + 2)) {
+                    if (fields[startX - 1][startY + 1].color.equals(white)) {
+                        return fields[startX - 1][startY + 1];
+                    }
+                } else if ((goalX == startX + 2) && (goalY == startY + 2)) {
+                    if (fields[startX + 1][startY + 1].color.equals(white)) {
+                        return fields[startX + 1][startY + 1];
+                    }
+                }
+            } else if (this.color.equals(white)) {
+                System.out.println("jestem w ifie");
+                if ((goalX == startX - 2) && (goalY == startY - 2)) {
+                    System.out.println("jestem w drugim ifie");
+                    if (fields[startX - 1][startY - 1].color.equals(black)) {
+                        return fields[startX - 1][startY - 1];
+                    }
+                } else if ((goalX == startX + 2) && (goalY == startY - 2)) {
+                    if (fields[startX + 1][startY - 1].color.equals(black)) {
+                        return fields[startX + 1][startY - 1];
+                    }
+                } else if ((goalX == startX - 2) && (goalY == startY + 2)) {
+                    if (fields[startX - 1][startY + 1].color.equals(black)) {
+                        return fields[startX - 1][startY + 1];
+                    }
+                } else if ((goalX == startX + 2) && (goalY == startY + 2)) {
+                     if (fields[startX + 1][startY + 1].color.equals(black)) {
+                         return fields[startX + 1][startY + 1];
+                     }
+                }
+            }
+        } else {
+             return null;
+        }
         return null;
     }
-
     public Color getColor() {
         return color;
     }
@@ -114,5 +143,6 @@ public class Pawn {
     public void setCrowned() {
         this.isCrowned = true;
     }
+
 
 }
