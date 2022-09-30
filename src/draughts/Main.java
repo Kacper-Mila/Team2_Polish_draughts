@@ -11,7 +11,7 @@ public class Main {
     private static int getBoardSize() {
         Scanner readBoardSize = new Scanner(System.in);
         String boardSize;
-        String regex = "1[0-9]|20";
+        String regex = "^(1[0-9]|20)$";
         do {
             System.out.println("Enter the board size, it must be larger or equal 10 and smaller or equal 20, also even.");
             boardSize = readBoardSize.nextLine();

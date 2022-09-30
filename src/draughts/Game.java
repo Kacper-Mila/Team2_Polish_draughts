@@ -12,7 +12,6 @@ public class Game {
     private int sizeBoard;
 
     public Game(int sizeBoard) {
-
         this.board = new Board(sizeBoard);
         this.sizeBoard = sizeBoard;
     }
@@ -34,7 +33,7 @@ public class Game {
     public boolean showResults(){
         boolean win1 = checkForWinner(1);
         boolean win2 = checkForWinner(2);
-        if(win1|| win2 || drawCondition == 0){
+        if(win1|| win2 || drawCondition == 0){ //TODO drawCondition do rozbudowania
             if (win1) {
                 System.out.println("Player 1 won. Congratulations!");
             } else if (win2) {
@@ -68,7 +67,6 @@ public class Game {
      * also checks for draws.
      */
     public boolean checkForWinner(int player) {
-        //jesli pionek 3 razy na jednym polu to remis
         if (drawCondition == 0) {
             System.out.println("It's draw! Game over! ");
             return false;
@@ -84,11 +82,7 @@ public class Game {
      * If so, it calls tryToMakeMove() on pawn instance.
      */
     public boolean isValidCoordinate(String inputCoordinate) {
-        Pattern r = Pattern.compile("(?i)([a-z])(\\d+)");
-        Matcher m;
-        m = r.matcher(inputCoordinate);
-
-        return m.matches();
+        return Pattern.compile("^((?i)([a-z])(\\d+))$").matcher(inputCoordinate).matches();
     }
 
     public void checkStartingPosition(int player) {
@@ -102,7 +96,10 @@ public class Game {
         char lastCol = (char) (sizeBoard + (int) 'a' - 1);
         String regex = String.format("(?i)[a-%s]", String.valueOf(lastCol));
         Coordinates newPosition;
+        //TODO
         //sprawdzam poprawnosc poczatkowych wspolrzednych
+        //w osobnej metodzie wczytac dane a w osobnej dokonac ich validacji
+        //podzielic na mniejsze metody
         do {
 
             do {
@@ -180,7 +177,7 @@ public class Game {
             //wykonaj ruch z biciem
             board.movePawn(pawn, movePosition);
             board.removePawn(pawnToCapture);
-            drawCondition = 15;
+            drawCondition = 15; //TODO opracowac funkcje
             return true;
         }
         System.out.println("Your move is incorrect");
