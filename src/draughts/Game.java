@@ -53,12 +53,12 @@ public class Game {
      */
     public void playRound() {
         //ruch 1 gracza
-        System.out.println("Ruch gracza 1 - białe");
+        System.out.println("Player 1 move - white");
         checkStartingPosition(1);
         if (checkForWinner(1)) return;
 
         //ruch 2 gracza
-        System.out.println("Ruch gracza 2 - czarne");
+        System.out.println("Player 2 move- black");
         checkStartingPosition(2);
         checkForWinner(2);
     }
@@ -107,10 +107,10 @@ public class Game {
 
             do {
                 System.out.println(board);
-                System.out.println("Podaj współrzędne pionka, którym chcesz wykonać ruch, np. A1");
+                System.out.println("Enter coordinates of the pawn you want to move. (eg. A1)");
                 startCoordinate = scanner.nextLine();
                 if (!isValidCoordinate(startCoordinate)) {
-                    System.out.println("Niepoprawne współrzędne");
+                    System.out.println("Coordinates are incorrect");
                     continue;
                 }
                 String startCol = startCoordinate.substring(0, 1);
@@ -118,16 +118,16 @@ public class Game {
                 startColAsNumber = ((int) (startCol.toUpperCase().charAt(0))) - (int) 'A';
                 startRowAsNumber = startRow - 1;
                 if (!startCol.matches(regex) || startRow <= 0 || startRow > sizeBoard) {
-                    System.out.println("Współrzędne poza zakresem");
+                    System.out.println("Coordinates are out of the size of the board");
                     continue;
                 }
                 if ((board.getFields()[startRowAsNumber][startColAsNumber] == null)) {
-                    System.out.println("To pole jest puste, wybierz pole z Twoim pionkiem");
+                    System.out.println("Selected field is empty, choose one with your pawn");
                     continue;
                 }
                 if ((player == 1 && board.getFields()[startRowAsNumber][startColAsNumber].getColor() != Color.WHITE) ||
                         (player == 2 && board.getFields()[startRowAsNumber][startColAsNumber].getColor() != Color.BLACK)) {
-                    System.out.println("To jest pionek przeciwnika, wybierz swój pionek");
+                    System.out.println("Selected pawn belongs to the enemy, choose one with your pawn");
                     continue;
                 }
 
@@ -136,10 +136,10 @@ public class Game {
 
             //sprawdzam poprawnosc koncowych wspolrzednych
             do {
-                System.out.println("Podaj współrzędne pola, na które chcesz wykonać ruch, np. A1");
+                System.out.println("Enter coordinates where you want to move your pawn. (eg. B2)");
                 endCoordinate = scanner.nextLine();
                 if (!isValidCoordinate(endCoordinate)) {
-                    System.out.println("Niepoprawne współrzędne");
+                    System.out.println("Coordinates are incorrect");
                     continue;
                 }
                 String endCol = endCoordinate.substring(0, 1);
@@ -147,7 +147,7 @@ public class Game {
                 endColAsNumber = ((int) (endCol.toUpperCase().charAt(0))) - (int) 'A'; //error
                 endRowAsNumber = endRow - 1; //zwieksza 0 1
                 if (!endCol.matches(regex) || endRow <= 0 || endRow > sizeBoard) {
-                    System.out.println("Współrzędne poza zakresem");
+                    System.out.println("Selected pawn belongs to the enemy, choose one with your pawn");
                     continue;
                 }
                 break;
