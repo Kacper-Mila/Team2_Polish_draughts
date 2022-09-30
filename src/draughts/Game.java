@@ -39,7 +39,7 @@ public class Game {
                 System.out.println("Player 1 won. Congratulations!");
             } else if (win2) {
                 System.out.println("Player 2 won. Congratulations!");
-            } else if (drawCondition == 0) {
+            } else {
                 System.out.println("It's a draw!");
             }
             return true;
