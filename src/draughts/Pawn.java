@@ -86,39 +86,55 @@ public class Pawn {
             if (this.color.equals(black)) {
                 // if my goal move is 2 fields diagonally away
                 if ((goalX == startX - 2) && (goalY == startY - 2)) {
-                    if (fields[startX - 1][startY - 1].color.equals(white)) {
-                        return fields[startX - 1][startY - 1];
+                    if (fields[startX - 1][startY - 1] != null) {
+                        if (fields[startX - 1][startY - 1].color.equals(white)) {
+                            return fields[startX - 1][startY - 1];
+                        }
                     }
                 } else if ((goalX == startX + 2) && (goalY == startY - 2)) {
-                    if (fields[startX + 1][startY - 1].color.equals(white)) {
-                        return fields[startX + 1][startY - 1];
+                    if (fields[startX + 1][startY - 1] !=  null) {
+                        if (fields[startX + 1][startY - 1].color.equals(white)) {
+                            return fields[startX + 1][startY - 1];
+                        }
                     }
                 } else if ((goalX == startX - 2) && (goalY == startY + 2)) {
-                    if (fields[startX - 1][startY + 1].color.equals(white)) {
-                        return fields[startX - 1][startY + 1];
+                    if (fields[startX - 1][startY + 1] != null) {
+                        if (fields[startX - 1][startY + 1].color.equals(white)) {
+                            return fields[startX - 1][startY + 1];
+                        }
                     }
                 } else if ((goalX == startX + 2) && (goalY == startY + 2)) {
-                    if (fields[startX + 1][startY + 1].color.equals(white)) {
-                        return fields[startX + 1][startY + 1];
+                    if (fields[startX + 1][startY + 1] != null) {
+                        if (fields[startX + 1][startY + 1].color.equals(white)) {
+                            return fields[startX + 1][startY + 1];
+                        }
                     }
                 }
             } else if (this.color.equals(white)) {
                 if ((goalX == startX - 2) && (goalY == startY - 2)) {
-                    if (fields[startX - 1][startY - 1].color.equals(black)) {
-                        return fields[startX - 1][startY - 1];
+                    if (fields[startX - 1][startY - 1] != null) {
+                        if (fields[startX - 1][startY - 1].color.equals(black)) {
+                            return fields[startX - 1][startY - 1];
+                        }
                     }
                 } else if ((goalX == startX + 2) && (goalY == startY - 2)) {
-                    if (fields[startX + 1][startY - 1].color.equals(black)) {
-                        return fields[startX + 1][startY - 1];
+                    if (fields[startX + 1][startY - 1] != null) {
+                        if (fields[startX + 1][startY - 1].color.equals(black)) {
+                            return fields[startX + 1][startY - 1];
+                        }
                     }
                 } else if ((goalX == startX - 2) && (goalY == startY + 2)) {
-                    if (fields[startX - 1][startY + 1].color.equals(black)) {
-                        return fields[startX - 1][startY + 1];
+                    if (fields[startX - 1][startY + 1] != null){
+                        if (fields[startX - 1][startY + 1].color.equals(black)) {
+                            return fields[startX - 1][startY + 1];
+                        }
                     }
                 } else if ((goalX == startX + 2) && (goalY == startY + 2)) {
-                     if (fields[startX + 1][startY + 1].color.equals(black)) {
-                         return fields[startX + 1][startY + 1];
-                     }
+                    if (fields[startX + 1][startY + 1] != null) {
+                        if (fields[startX + 1][startY + 1].color.equals(black)) {
+                            return fields[startX + 1][startY + 1];
+                        }
+                    }
                 }
             }
         } else {
