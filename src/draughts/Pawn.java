@@ -52,17 +52,9 @@ public class Pawn {
         // if the goal field is empty check if move is diagonally by one square
         if ((fields[goalX][goalY]) == null) {
             if (startColor.equals(black)) {
-                if (((goalX == startX + 1) && (goalY == startY - 1)) || ((goalX == startX + 1) && (goalY == startY + 1))) {
-                    return true;
-                } else {
-                    return false;
-                }
+                return ((goalX == startX + 1) && (goalY == startY - 1)) || ((goalX == startX + 1) && (goalY == startY + 1));
             } else if (startColor.equals(white)) {
-                if (((goalX == startX - 1) && (goalY == startY - 1)) || ((goalX == startX - 1) && (goalY == startY + 1))) {
-                    return true;
-                } else {
-                    return false;
-                }
+                return ((goalX == startX - 1) && (goalY == startY - 1)) || ((goalX == startX - 1) && (goalY == startY + 1));
             }
         } else {
             return false;
@@ -71,6 +63,7 @@ public class Pawn {
     }
 
     public Pawn validateMoveWithCapture(Board board, Coordinates position) {
+        //TODO: przeniesc metody validacji ruchu do klasy Board
         Pawn[][] fields = board.getFields();
 
         int startX = this.position.getX();

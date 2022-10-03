@@ -11,9 +11,9 @@ public class Main {
     private static int getBoardSize() {
         Scanner readBoardSize = new Scanner(System.in);
         String boardSize;
-        String regex = "1[0-9]|20";
+        String regex = "^(1[0-9]|20)$";
         do {
-            System.out.println("Podaj wielkosc tablicy z zakresu od 10 do 20, liczba musi być parzysta");
+            System.out.println("Enter the board size, it must be larger or equal 10 and smaller or equal 20, also even.");
             boardSize = readBoardSize.nextLine();
         } while (!boardSize.matches(regex) || Integer.parseInt(boardSize) % 2 != 0);
         return Integer.parseInt(boardSize);
