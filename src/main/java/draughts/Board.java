@@ -24,7 +24,9 @@ public class Board {
             blackPawnsCounter = 2 * n;
         }
     }
-
+    public int getBoardSize(){
+        return fields.length;
+    }
     /**
      * Print current board.
      * This method marks rows as numbers and columns as letters.
@@ -134,7 +136,7 @@ public class Board {
 
     public void createBoard(){
         // one side of the board
-        int n = this.fields.length;
+        int n = this.getBoardSize();
         int numberOfPawns = n * 2;
 
         for (int i = 0; i < n; i++) {

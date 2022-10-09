@@ -9,13 +9,21 @@ public class Game {
 
     private Board board;
     private int drawCondition = 15;
-    private int sizeBoard;
 
-    public Game(int sizeBoard) {
-        this.board = new Board(sizeBoard);
-        this.sizeBoard = sizeBoard;
+
+    public Game() {
+        this.board = new Board(getBoardSizeFromUser());
     }
-
+    private static int getBoardSizeFromUser() {
+        Scanner readBoardSize = new Scanner(System.in);
+        String boardSize;
+        String regex = "^(1[0-9]|20)$";
+        do {
+            System.out.println("Enter the board size, it must be larger or equal 10 and smaller or equal 20, also even.");
+            boardSize = readBoardSize.nextLine();
+        } while (!boardSize.matches(regex) || Integer.parseInt(boardSize) % 2 != 0);
+        return Integer.parseInt(boardSize);
+    }
     public Board getBoard() {
         return this.board;
     }
@@ -93,7 +101,7 @@ public class Game {
         int startRowAsNumber;
         int endColAsNumber;
         int endRowAsNumber;
-        char lastCol = (char) (sizeBoard + (int) 'a' - 1);
+        char lastCol = (char) (board.getBoardSize() + (int) 'a' - 1);
         String regex = String.format("(?i)[a-%s]", String.valueOf(lastCol));
         Coordinates newPosition;
         //TODO
@@ -114,8 +122,8 @@ public class Game {
                 int startRow = Integer.parseInt(startCoordinate.substring(1));
                 startColAsNumber = ((int) (startCol.toUpperCase().charAt(0))) - (int) 'A';
                 startRowAsNumber = startRow - 1;
-                if (!startCol.matches(regex) || startRow <= 0 || startRow > sizeBoard) {
-                    System.out.println("Coordinates are out of the size of the board");
+                if (!startCol.matches(regex) || startRow <= 0 || startRow > board.getBoardSize()) {
+                    System.out.println("CoordFinates are out of the size of the board");
                     continue;
                 }
                 if ((board.getFields()[startRowAsNumber][startColAsNumber] == null)) {
@@ -143,7 +151,7 @@ public class Game {
                 int endRow = Integer.parseInt(endCoordinate.substring(1));
                 endColAsNumber = ((int) (endCol.toUpperCase().charAt(0))) - (int) 'A'; //error
                 endRowAsNumber = endRow - 1; //zwieksza 0 1
-                if (!endCol.matches(regex) || endRow <= 0 || endRow > sizeBoard) {
+                if (!endCol.matches(regex) || endRow <= 0 || endRow > board.getBoardSize()) {
                     System.out.println("Selected pawn belongs to the enemy, choose one with your pawn");
                     continue;
                 }
