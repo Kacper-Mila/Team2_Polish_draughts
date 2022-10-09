@@ -1,4 +1,4 @@
-package draughts;
+package main.java.draughts;
 
 public class Coordinates {
     //Use it as format of passing coordinates data between methods/classes
