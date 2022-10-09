@@ -1,4 +1,4 @@
-package draughts;
+package main.java.draughts;
 
 import java.awt.*;
 
