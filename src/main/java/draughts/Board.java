@@ -33,8 +33,9 @@ public class Board {
     @Override
     public String toString() {
         final String ANSI_GREY_BACKGROUND = "\u001B[47m";
+        final String YELLOW_BACKGROUND = "\033[43m";
         final String ANSI_WHITE_BACKGROUND = "\u001B[107m";
-        final String ANSII_BLACK_BACKGROUND = "\u001B[40m";
+        final String ANSI_BLACK_BACKGROUND = "\u001B[40m";
         final String ANSI_BLACK = "\u001B[30m";
         final String ANSI_RESET = "\u001B[0m"; //resets all formatting
         final String ANSI_WHITE = "\u001B[97m";
@@ -88,11 +89,18 @@ public class Board {
                             pawn = " "+ANSI_WHITE + ANSI_PAWN + " "; //empty field
                         }
                     }
-                    result.append(String.format(FORMAT,ANSI_BOLD+pawn)).append(ANSI_RESET);
+                    if(i == 2 && j == 3 || i == 3 && j == 4){ //condition should check pawn's field isHighlighted that
+                        //would be triggered on the main class if needed. I guess it should be turned off after it is
+                        // highlighted to simplify its use
+                        pawn = YELLOW_BACKGROUND + " " +pawn.substring(pawn.length()-2);
+                        result.append(String.format(FORMAT,ANSI_BOLD+pawn)).append(ANSI_RESET);
+                    }else{
+                        result.append(String.format(FORMAT,ANSI_BOLD+pawn)).append(ANSI_RESET);
+                    }
                 }else{
                     char col = (char) (64 + j);
                     if(i==0&&j==0) result.append(String.format(FORMAT,"   "));//empty field in left up corner
-                    if(i==0&&j>0) result.append(String.format(FORMAT,ANSII_BLACK_BACKGROUND+ANSI_BOLD+ " "+col+ANSI_BLACK+ANSI_PAWN+ANSI_RESET));// Letters row
+                    if(i==0&&j>0) result.append(String.format(FORMAT,ANSI_BLACK_BACKGROUND+ANSI_BOLD+ " "+col+ANSI_BLACK+ANSI_PAWN+ANSI_RESET));// Letters row
                     if(j==0&&i>0) result.append(String.format(FORMAT,i));// Numbers column
                 }
             }
