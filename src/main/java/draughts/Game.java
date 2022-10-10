@@ -14,6 +14,7 @@ public class Game {
     public Game() {
         this.board = new Board(getBoardSizeFromUser());
     }
+
     private static int getBoardSizeFromUser() {
         Scanner readBoardSize = new Scanner(System.in);
         String boardSize;
@@ -123,7 +124,7 @@ public class Game {
                 startColAsNumber = ((int) (startCol.toUpperCase().charAt(0))) - (int) 'A';
                 startRowAsNumber = startRow - 1;
                 if (!startCol.matches(regex) || startRow <= 0 || startRow > board.getBoardSize()) {
-                    System.out.println("CoordFinates are out of the size of the board");
+                    System.out.println("Coordinates are out of the size of the board");
                     continue;
                 }
                 if ((board.getFields()[startRowAsNumber][startColAsNumber] == null)) {
