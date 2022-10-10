@@ -1,1 +1,1 @@
-# Team2_Polish_draughts
+# Suggestion how to add fields highlight feature to the board
