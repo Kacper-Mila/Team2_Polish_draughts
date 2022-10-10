@@ -2,19 +2,19 @@ package main.java.draughts;
 
 public class Coordinates {
     //Use it as format of passing coordinates data between methods/classes
-    private int x;
-    private int y;
+    private int row; // x -> row
+    private int col; // y -> col
 
-    public Coordinates(int x, int y){
-        this.x = x;
-        this.y = y;
+    public Coordinates(int row, int col){
+        this.row = row;
+        this.col = col;
     }
 
-    public int getX() {
-        return x;
-    }
+    public int getRow() {
+        return row;
+    } // getX -> getRow
 
-    public int getY() {
-        return y;
-    }
+    public int getCol() {
+        return col;
+    } // getY -> getCol
 }

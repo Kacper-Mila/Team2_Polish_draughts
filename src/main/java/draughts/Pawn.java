@@ -43,18 +43,18 @@ public class Pawn {
         // jednego pola po przekatnej do przodu
         Pawn[][] fields = board.getFields();
 
-        int startX = this.position.getX();
-        int startY = this.position.getY();
-        int goalX = position.getX();
-        int goalY = position.getY();
+        int startRow = this.position.getRow();
+        int startCol = this.position.getCol();
+        int goalRow = position.getRow();
+        int goalCol = position.getCol();
         Color startColor = this.color;
 
         // if the goal field is empty check if move is diagonally by one square
-        if ((fields[goalX][goalY]) == null) {
+        if ((fields[goalRow][goalCol]) == null) {
             if (startColor.equals(black)) {
-                return ((goalX == startX + 1) && (goalY == startY - 1)) || ((goalX == startX + 1) && (goalY == startY + 1));
+                return ((goalRow == startRow + 1) && (goalCol == startCol - 1)) || ((goalRow == startRow + 1) && (goalCol == startCol + 1));
             } else if (startColor.equals(white)) {
-                return ((goalX == startX - 1) && (goalY == startY - 1)) || ((goalX == startX - 1) && (goalY == startY + 1));
+                return ((goalRow == startRow - 1) && (goalCol == startCol - 1)) || ((goalRow == startRow - 1) && (goalCol == startCol + 1));
             }
         } else {
             return false;
@@ -66,66 +66,66 @@ public class Pawn {
         //TODO: przeniesc metody validacji ruchu do klasy Board
         Pawn[][] fields = board.getFields();
 
-        int startX = this.position.getX();
+        int startRow = this.position.getRow();
 
-        int startY = this.position.getY();
-        int goalX = position.getX();
-        int goalY = position.getY();
-        Pawn goalPawn = fields[goalX][goalY];
+        int startCol = this.position.getCol();
+        int goalRow = position.getRow();
+        int goalCol = position.getCol();
+        Pawn goalPawn = fields[goalRow][goalCol];
 
         // if goal field is empty
         if (goalPawn == null) {
             // if my color is black
             if (this.color.equals(black)) {
                 // if my goal move is 2 fields diagonally away
-                if ((goalX == startX - 2) && (goalY == startY - 2)) {
-                    if (fields[startX - 1][startY - 1] != null) {
-                        if (fields[startX - 1][startY - 1].color.equals(white)) {
-                            return fields[startX - 1][startY - 1];
+                if ((goalRow == startRow - 2) && (goalCol == startCol - 2)) {
+                    if (fields[startRow - 1][startCol - 1] != null) {
+                        if (fields[startRow - 1][startCol - 1].color.equals(white)) {
+                            return fields[startRow - 1][startCol - 1];
                         }
                     }
-                } else if ((goalX == startX + 2) && (goalY == startY - 2)) {
-                    if (fields[startX + 1][startY - 1] !=  null) {
-                        if (fields[startX + 1][startY - 1].color.equals(white)) {
-                            return fields[startX + 1][startY - 1];
+                } else if ((goalRow == startRow + 2) && (goalCol == startCol - 2)) {
+                    if (fields[startRow + 1][startCol - 1] !=  null) {
+                        if (fields[startRow + 1][startCol - 1].color.equals(white)) {
+                            return fields[startRow + 1][startCol - 1];
                         }
                     }
-                } else if ((goalX == startX - 2) && (goalY == startY + 2)) {
-                    if (fields[startX - 1][startY + 1] != null) {
-                        if (fields[startX - 1][startY + 1].color.equals(white)) {
-                            return fields[startX - 1][startY + 1];
+                } else if ((goalRow == startRow - 2) && (goalCol == startCol + 2)) {
+                    if (fields[startRow - 1][startCol + 1] != null) {
+                        if (fields[startRow - 1][startCol + 1].color.equals(white)) {
+                            return fields[startRow - 1][startCol + 1];
                         }
                     }
-                } else if ((goalX == startX + 2) && (goalY == startY + 2)) {
-                    if (fields[startX + 1][startY + 1] != null) {
-                        if (fields[startX + 1][startY + 1].color.equals(white)) {
-                            return fields[startX + 1][startY + 1];
+                } else if ((goalRow == startRow + 2) && (goalCol == startCol + 2)) {
+                    if (fields[startRow + 1][startCol + 1] != null) {
+                        if (fields[startRow + 1][startCol + 1].color.equals(white)) {
+                            return fields[startRow + 1][startCol + 1];
                         }
                     }
                 }
             } else if (this.color.equals(white)) {
-                if ((goalX == startX - 2) && (goalY == startY - 2)) {
-                    if (fields[startX - 1][startY - 1] != null) {
-                        if (fields[startX - 1][startY - 1].color.equals(black)) {
-                            return fields[startX - 1][startY - 1];
+                if ((goalRow == startRow - 2) && (goalCol == startCol - 2)) {
+                    if (fields[startRow - 1][startCol - 1] != null) {
+                        if (fields[startRow - 1][startCol - 1].color.equals(black)) {
+                            return fields[startRow - 1][startCol - 1];
                         }
                     }
-                } else if ((goalX == startX + 2) && (goalY == startY - 2)) {
-                    if (fields[startX + 1][startY - 1] != null) {
-                        if (fields[startX + 1][startY - 1].color.equals(black)) {
-                            return fields[startX + 1][startY - 1];
+                } else if ((goalRow == startRow + 2) && (goalCol == startCol - 2)) {
+                    if (fields[startRow + 1][startCol - 1] != null) {
+                        if (fields[startRow + 1][startCol - 1].color.equals(black)) {
+                            return fields[startRow + 1][startCol - 1];
                         }
                     }
-                } else if ((goalX == startX - 2) && (goalY == startY + 2)) {
-                    if (fields[startX - 1][startY + 1] != null){
-                        if (fields[startX - 1][startY + 1].color.equals(black)) {
-                            return fields[startX - 1][startY + 1];
+                } else if ((goalRow == startRow - 2) && (goalCol == startCol + 2)) {
+                    if (fields[startRow - 1][startCol + 1] != null){
+                        if (fields[startRow - 1][startCol + 1].color.equals(black)) {
+                            return fields[startRow - 1][startCol + 1];
                         }
                     }
-                } else if ((goalX == startX + 2) && (goalY == startY + 2)) {
-                    if (fields[startX + 1][startY + 1] != null) {
-                        if (fields[startX + 1][startY + 1].color.equals(black)) {
-                            return fields[startX + 1][startY + 1];
+                } else if ((goalRow == startRow + 2) && (goalCol == startCol + 2)) {
+                    if (fields[startRow + 1][startCol + 1] != null) {
+                        if (fields[startRow + 1][startCol + 1].color.equals(black)) {
+                            return fields[startRow + 1][startCol + 1];
                         }
                     }
                 }
