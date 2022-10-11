@@ -25,6 +25,7 @@ public class Game {
         } while (!boardSize.matches(regex) || Integer.parseInt(boardSize) % 2 != 0);
         return Integer.parseInt(boardSize);
     }
+
     public Board getBoard() {
         return this.board;
     }
@@ -95,75 +96,89 @@ public class Game {
     }
 
     public void checkStartingPosition(int player) {
+        int[] startPawnCoordinates;
+        int[] endPawnCoordianes;
+        Coordinates newPawnPosition;
+        do {
+            startPawnCoordinates = getStartPawnPosition(player);
+            endPawnCoordianes = getNewPawnPosition();
+            newPawnPosition = new Coordinates(endPawnCoordianes[0], endPawnCoordianes[1]);
+        } while (!tryToMakeMove(board.getFields()[startPawnCoordinates[0]][startPawnCoordinates[1]], newPawnPosition));
+        //TODO:
+        //etap 2: zapytaj o liste wspolrzednych
+    }
+
+    private int[] getStartPawnPosition(int player) {
+        int[] pawnPosition;
         Scanner scanner = new Scanner(System.in);
         String startCoordinate;
-        String endCoordinate;
-        int startColAsNumber;
-        int startRowAsNumber;
-        int endColAsNumber;
-        int endRowAsNumber;
-        char lastCol = (char) (board.getBoardSize() + (int) 'a' - 1);
-        String regex = String.format("(?i)[a-%s]", String.valueOf(lastCol));
-        Coordinates newPosition;
-        //TODO
-        //sprawdzam poprawnosc poczatkowych wspolrzednych
-        //w osobnej metodzie wczytac dane a w osobnej dokonac ich validacji
-        //podzielic na mniejsze metody
         do {
+            System.out.println(board);
+            System.out.println("Enter coordinates of the pawn you want to move. (eg. A1)");
+            startCoordinate = scanner.nextLine();
+            if (!isValidCoordinate(startCoordinate)) {
+                System.out.println("Coordinates are incorrect");
+                continue;
+            }
 
-            do {
-                System.out.println(board);
-                System.out.println("Enter coordinates of the pawn you want to move. (eg. A1)");
-                startCoordinate = scanner.nextLine();
-                if (!isValidCoordinate(startCoordinate)) {
-                    System.out.println("Coordinates are incorrect");
-                    continue;
-                }
-                String startCol = startCoordinate.substring(0, 1);
-                int startRow = Integer.parseInt(startCoordinate.substring(1));
-                startColAsNumber = ((int) (startCol.toUpperCase().charAt(0))) - (int) 'A';
-                startRowAsNumber = startRow - 1;
-                if (!startCol.matches(regex) || startRow <= 0 || startRow > board.getBoardSize()) {
-                    System.out.println("Coordinates are out of the size of the board");
-                    continue;
-                }
-                if ((board.getFields()[startRowAsNumber][startColAsNumber] == null)) {
-                    System.out.println("Selected field is empty, choose one with your pawn");
-                    continue;
-                }
-                if ((player == 1 && board.getFields()[startRowAsNumber][startColAsNumber].getColor() != Color.WHITE) ||
-                        (player == 2 && board.getFields()[startRowAsNumber][startColAsNumber].getColor() != Color.BLACK)) {
-                    System.out.println("Selected pawn belongs to the enemy, choose one with your pawn");
-                    continue;
-                }
+            pawnPosition = parseCoordinate(startCoordinate);
+            if (!areCoordinatesInBoardRange(pawnPosition)) {
+                System.out.println("Coordinates are out of the size of the board");
+                continue;
+            }
 
-                break;
-            } while (true);
+            if ((board.getFields()[pawnPosition[0]][pawnPosition[1]] == null)) {
+                System.out.println("Selected field is empty, choose one with your pawn");
+                continue;
+            }
+            if ((player == 1 && board.getFields()[pawnPosition[0]][pawnPosition[1]].getColor() != Color.WHITE) ||
+                    (player == 2 && board.getFields()[pawnPosition[0]][pawnPosition[1]].getColor() != Color.BLACK)) {
+                System.out.println("Selected pawn belongs to the enemy, choose one with your pawn");
+                continue;
+            }
+            break;
+        } while (true);
+        return pawnPosition;
+    }
 
-            //sprawdzam poprawnosc koncowych wspolrzednych
-            do {
-                System.out.println("Enter coordinates where you want to move your pawn. (eg. B2)");
-                endCoordinate = scanner.nextLine();
-                if (!isValidCoordinate(endCoordinate)) {
-                    System.out.println("Coordinates are incorrect");
-                    continue;
-                }
-                String endCol = endCoordinate.substring(0, 1);
-                int endRow = Integer.parseInt(endCoordinate.substring(1));
-                endColAsNumber = ((int) (endCol.toUpperCase().charAt(0))) - (int) 'A'; //error
-                endRowAsNumber = endRow - 1; //zwieksza 0 1
-                if (!endCol.matches(regex) || endRow <= 0 || endRow > board.getBoardSize()) {
-                    System.out.println("Selected pawn belongs to the enemy, choose one with your pawn");
-                    continue;
-                }
-                break;
-            } while (true);
+    private int[] getNewPawnPosition() {
+        int[] newPawnPosition;
+        Scanner scanner = new Scanner(System.in);
+        String endCoordinate;
+        //sprawdzam poprawnosc koncowych wspolrzednych
+        do {
+            System.out.println("Enter coordinates where you want to move your pawn. (eg. B2)");
+            endCoordinate = scanner.nextLine();
+            if (!isValidCoordinate(endCoordinate)) {
+                System.out.println("Coordinates are incorrect");
+                continue;
+            }
 
-            newPosition = new Coordinates(endRowAsNumber, endColAsNumber);
-        } while (!tryToMakeMove(board.getFields()[startRowAsNumber][startColAsNumber], newPosition));
-        //TODO:
-        //etap 2:
-        //zapytaj o liste wspolrzednych
+            newPawnPosition = parseCoordinate(endCoordinate);
+            if (!areCoordinatesInBoardRange(newPawnPosition)) {
+                System.out.println("Coordinates are out of the size of the board");
+                continue;
+            }
+
+            break;
+        } while (true);
+        return newPawnPosition;
+    }
+
+    private boolean areCoordinatesInBoardRange(int[] coordinates) {
+        return (
+                coordinates[0] >= 0 && coordinates[0] < board.getBoardSize() &&
+                        coordinates[1] >= 0 && coordinates[1] < board.getBoardSize()
+        );
+    }
+
+    private int[] parseCoordinate(String coordinate) {
+        String endCol = coordinate.toUpperCase().substring(0, 1);
+        int endRow = Integer.parseInt(coordinate.substring(1));
+        return new int[]{
+                endRow - 1, // col
+                ((int) (endCol.charAt(0))) - (int) 'A' // row
+        };
     }
 
     /**
@@ -174,18 +189,18 @@ public class Game {
      * @return true if move is possible and executed, otherwise false.
      */
     public boolean tryToMakeMove(Pawn pawn, Coordinates movePosition) {
-        if (pawn.validateMove(board, movePosition)) {
+        if (this.board.validateMove(pawn, movePosition)) {
             //nastepuje sam ruch, bez bicia
-            board.movePawn(pawn, movePosition);
+            this.board.movePawn(pawn, movePosition);
             drawCondition--;
             return true;
         }
         //sprawdz czy ruch jest o dwa pola a miedzy nimi jest pionek przeciwnika
-        Pawn pawnToCapture = pawn.validateMoveWithCapture(board, movePosition);
+        Pawn pawnToCapture = this.board.validateMoveWithCapture(pawn, movePosition);
         if (pawnToCapture != null) {
             //wykonaj ruch z biciem
-            board.movePawn(pawn, movePosition);
-            board.removePawn(pawnToCapture);
+            this.board.movePawn(pawn, movePosition);
+            this.board.removePawn(pawnToCapture);
             drawCondition = 15; //TODO opracowac funkcje
             return true;
         }
