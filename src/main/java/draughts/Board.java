@@ -29,7 +29,7 @@ public class Board {
     }
     /**
      * Print current board.
-     * This method marks rows as numbers and columns as letters.
+     * This method marks row as numbers and col as letters.
      * @return String representing board
      */
     @Override
@@ -49,32 +49,32 @@ public class Board {
         Pawn [][] board = this.fields;
         StringBuilder result = new StringBuilder();
         Color background;
-        for(int rows = 0; rows < board.length + 1; rows++){ // i -> rows
-            for(int columns = 0; columns < board[0].length + 1; columns++){ // j -> columns
-                if(rows > 0 && columns > 0){
+        for(int row = 0; row < board.length + 1; row++){ // i -> row
+            for(int col = 0; col < board[0].length + 1; col++){ // j -> col
+                if(row > 0 && col > 0){
                     String pawn = "";
-                    if(board[rows - 1][columns - 1] != null){
-                        if(board[rows - 1][columns - 1].isCrowned()){
+                    if(board[row - 1][col - 1] != null){
+                        if(board[row - 1][col - 1].isCrowned()){
                             pawn = ANSI_QUEEN; //Crowned pawn symbol
                         }else{
                             pawn = ANSI_PAWN;//pawn symbol
                         }
-                        if(board[rows - 1][columns - 1].getColor() == black) { //set pawns color on the board according to color set
+                        if(board[row - 1][col - 1].getColor() == black) { //set pawns color on the board according to color set
                             pawn =  ANSI_BLACK  + " " + pawn + " "; //set pawn's color black
                         }else{
                             pawn =  ANSI_WHITE + " " + pawn + " "; //set pawn's color white
                         }
                     }
-                    if(rows % 2 == 0) { //even row
-                        if (columns % 2 == 0) {
+                    if(row % 2 == 0) { //even coordinatesRow
+                        if (col % 2 == 0) {
                             result.append(ANSI_WHITE_BACKGROUND);
                             background = WHITE;
                         } else {
                             result.append(ANSI_GREY_BACKGROUND);
                             background =BLACK;
                         }
-                    }else{ //odd row
-                        if (columns % 2 == 0) {
+                    }else{ //odd coordinatesRow
+                        if (col % 2 == 0) {
                             result.append(ANSI_GREY_BACKGROUND);
                             background = BLACK;
                         } else {
@@ -92,10 +92,10 @@ public class Board {
                     }
                     result.append(String.format(FORMAT,ANSI_BOLD+pawn)).append(ANSI_RESET);
                 }else{
-                    char colChar = (char) (64 + columns); // columns -> colChar
-                    if(rows == 0 && columns == 0) result.append(String.format(FORMAT, "   "));//empty field in left up corner
-                    if(rows == 0 && columns > 0) result.append(String.format(FORMAT, ANSII_BLACK_BACKGROUND+ANSI_BOLD+ " "+colChar+ANSI_BLACK+ANSI_PAWN+ANSI_RESET));// Letters row //columns -> colChar
-                    if(columns == 0 && rows > 0) result.append(String.format(FORMAT, rows));// Numbers column
+                    char colChar = (char) (64 + col); // col -> colChar
+                    if(row == 0 && col == 0) result.append(String.format(FORMAT, "   "));//empty field in left up corner
+                    if(row == 0 && col > 0) result.append(String.format(FORMAT, ANSII_BLACK_BACKGROUND+ANSI_BOLD+ " "+colChar+ANSI_BLACK+ANSI_PAWN+ANSI_RESET));// Letters coordinatesRow //col -> colChar
+                    if(col == 0 && row > 0) result.append(String.format(FORMAT, row));// Numbers column
                 }
             }
             result.append("\n");
@@ -113,9 +113,9 @@ public class Board {
 
     public void removePawn(Pawn pawn) {
         //zmniejsza o 1 licznik pionkow w klasie board, zgodnie z kolorem jaki zawiera obiekt pawn
-        int row = pawn.getPosition().getRow();
-        int col = pawn.getPosition().getCol();
-        this.fields[row][col] = null;
+        int coordinatesRow = pawn.getPosition().getRow();
+        int coordinatesCol = pawn.getPosition().getCol();
+        this.fields[coordinatesRow][coordinatesCol] = null;
         if (pawn.getColor().equals(white)) {
             whitePawnsCounter--;
         } else blackPawnsCounter--;
@@ -139,16 +139,16 @@ public class Board {
         int sideLength = this.getBoardSize();
         int numberOfPawns = sideLength * 2;
 
-        for (int rows = 0; rows < sideLength; rows++) {
-            for (int columns = 0; columns < sideLength; columns = columns + 2) {
-                if (rows % 2 == 0) {
+        for (int row = 0; row < sideLength; row++) {
+            for (int col = 0; col < sideLength; col = col + 2) {
+                if (row % 2 == 0) {
                     if (numberOfPawns > 0) {
-                        this.fields[rows][columns + 1] = new Pawn(new Coordinates(rows, columns+1), black);
+                        this.fields[row][col + 1] = new Pawn(new Coordinates(row, col+1), black);
                         numberOfPawns--;
                     }
                 } else {
                     if (numberOfPawns > 0) {
-                        this.fields[rows][columns] = new Pawn(new Coordinates(rows, columns), black);
+                        this.fields[row][col] = new Pawn(new Coordinates(row, col), black);
                         numberOfPawns--;
                     }
                 }
@@ -157,16 +157,16 @@ public class Board {
 
         // other side of the board
         numberOfPawns = 2 * sideLength;
-        for (int rows = sideLength - 1; rows > sideLength - 5; rows--) {
-            for (int columns = 0; columns < sideLength; columns = columns + 2) {
-                if (rows % 2 == 0) {
+        for (int row = sideLength - 1; row > sideLength - 5; row--) {
+            for (int col = 0; col < sideLength; col = col + 2) {
+                if (row % 2 == 0) {
                     if (numberOfPawns > 0) {
-                        this.fields[rows][columns + 1] = new Pawn(new Coordinates(rows, columns+1), white);
+                        this.fields[row][col + 1] = new Pawn(new Coordinates(row, col+1), white);
                         numberOfPawns--;
                     }
                 } else {
                     if (numberOfPawns > 0) {
-                        this.fields[rows][columns] = new Pawn(new Coordinates(rows, columns), white);
+                        this.fields[row][col] = new Pawn(new Coordinates(row, col), white);
                         numberOfPawns--;
                     }
                 }
