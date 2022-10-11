@@ -43,7 +43,7 @@ public class Game {
     public boolean showResults(){
         boolean win1 = checkForWinner(1);
         boolean win2 = checkForWinner(2);
-        if(win1|| win2 || drawCondition == 0){ //TODO drawCondition do rozbudowania
+        if(win1|| win2 || checkForTheDraw()){
             if (win1) {
                 System.out.println("Player 1 won. Congratulations!");
             } else if (win2) {
@@ -77,13 +77,94 @@ public class Game {
      * also checks for draws.
      */
     public boolean checkForWinner(int player) {
-        if (drawCondition == 0) {
-            System.out.println("It's draw! Game over! ");
+        if(checkForTheDraw()){
             return false;
         }
+if(player ==1 && !isItPossibleToMove(2)){
+    return true;
+} else if(player ==2 && !isItPossibleToMove(1)){
+    return true;
+}
         if (player == 1 && board.getBlackPawnsCounter() == 0) {
             return true;
         } else return player == 2 && board.getWhitePawnsCounter() == 0;
+    }
+    public boolean checkForTheDraw(){
+        if(drawCondition == 0){
+            return true;
+        }
+        if(!(isItPossibleToMove(1) && isItPossibleToMove(2))){
+            return true;
+        }
+        return isOnlyTwoCrownsOnBoard();
+    }
+    public boolean isItPossibleToMove(int player){
+        if(player ==1){
+        for (int i =0; i <board.getBoardSize(); i++) {
+            for (int j = 0; j < board.getBoardSize(); j++) {
+                if (board.getFields()[i][j] != null &&
+                        board.getFields()[i][j].getColor().equals(Color.white)){
+                    if(
+                            board.validateMove(board.getFields()[i][j], new Coordinates(i - 1, j - 1)) ||
+                                    board.validateMove(board.getFields()[i][j], new Coordinates(i - 1, j + 1)) ||
+                                    board.validateMoveWithCapture(board.getFields()[i][j], new Coordinates(i - 2, j - 2)) != null ||
+                                    board.validateMoveWithCapture(board.getFields()[i][j], new Coordinates(i - 2, j + 1)) != null ||
+                                    board.validateMoveWithCapture(board.getFields()[i][j], new Coordinates(i + 2, j - 2)) != null ||
+                                    board.validateMoveWithCapture(board.getFields()[i][j], new Coordinates(i + 2, j + 1)) != null)
+                    {
+                        return true;
+                    }
+
+                }
+
+            }
+        }
+            } else {
+            for (int i =0; i <board.getBoardSize(); i++) {
+                for (int j = 0; j < board.getBoardSize(); j++) {
+                    if (board.getFields()[i][j] != null &&
+                            board.getFields()[i][j].getColor().equals(Color.black)){
+                        if(
+                                board.validateMove(board.getFields()[i][j], new Coordinates(i +1, j - 1)) ||
+                                        board.validateMove(board.getFields()[i][j], new Coordinates(i + 1, j + 1)) ||
+                                        board.validateMoveWithCapture(board.getFields()[i][j], new Coordinates(i - 2, j - 2)) !=null ||
+                                        board.validateMoveWithCapture(board.getFields()[i][j], new Coordinates(i - 2, j + 1)) !=null ||
+                                        board.validateMoveWithCapture(board.getFields()[i][j], new Coordinates(i + 2, j - 2)) !=null ||
+                                        board.validateMoveWithCapture(board.getFields()[i][j], new Coordinates(i + 2, j + 1)) !=null )
+                        {
+                            return true;
+                        }
+
+                    }
+
+                }
+            }
+        }
+        return false;
+    }
+    public boolean isOnlyTwoCrownsOnBoard() {
+        int numberOfWhiteCrown = 0;
+        int numberOfBlackCrown = 0;
+        for (int i = 0; i < board.getBoardSize(); i++) {
+            for (int j = 0; j < board.getBoardSize(); j++) {
+                if(board.getFields()[i][j] != null && !board.getFields()[i][j].isCrowned()){
+                    return false;
+                }
+if(board.getFields()[i][j] != null &&
+       board.getFields()[i][j].getColor().equals(Color.white) && board.getFields()[i][j].isCrowned()){
+    numberOfWhiteCrown +=1;
+    if(numberOfWhiteCrown >1 ){
+        return false;
+    }
+} if(board.getFields()[i][j].isCrowned() &&board.getFields()[i][j].getColor().equals(Color.black)){
+    numberOfBlackCrown +=1;
+                    if(numberOfBlackCrown >1 ){
+                        return false;
+                    }
+                }
+            }
+        }
+        return true;
     }
 
     /**
