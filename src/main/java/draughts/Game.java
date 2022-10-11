@@ -2,7 +2,6 @@ package main.java.draughts;
 
 import java.awt.*;
 import java.util.Scanner;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Game {
@@ -12,7 +11,7 @@ public class Game {
 
 
     public Game() {
-        this.board = new Board(getBoardSizeFromUser());
+        this.board = Board.newInstance(getBoardSizeFromUser());
     }
 
     private static int getBoardSizeFromUser() {

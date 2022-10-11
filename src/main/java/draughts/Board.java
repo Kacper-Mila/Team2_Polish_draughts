@@ -6,6 +6,8 @@ import static java.awt.Color.*;
 
 public class Board {
     private Pawn[][] fields;
+
+    private static Board single_instance;
     private int whitePawnsCounter; // number of white pawns in the game at the moment
     private int blackPawnsCounter; // same as above but black one
 
@@ -17,13 +19,27 @@ public class Board {
         return blackPawnsCounter;
     }
 
-    public Board(int n) {
+    private Board(int n) {
         if (n >= 10 && n <= 20) {
             this.fields = new Pawn[n][n];
             whitePawnsCounter = 2 * n;
             blackPawnsCounter = 2 * n;
         }
     }
+
+    public static Board newInstance(int n){
+        if (single_instance == null){
+            single_instance = new Board(n);
+        }else {
+            throw new IllegalStateException("The board instance already exists");
+        }
+        return null;
+    }
+    public static Board getInstance(){
+        if (single_instance == null) return null;
+        return single_instance;
+    }
+
     public int getBoardSize(){
         return fields.length;
     }
