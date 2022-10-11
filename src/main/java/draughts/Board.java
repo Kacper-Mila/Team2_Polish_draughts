@@ -173,4 +173,106 @@ public class Board {
             }
         }
     }
+
+    /**
+     * @param pawn    game's board instance
+     * @param position coordinates of pawn move
+     * @return true if move is valid, otherwise false
+     */
+    public boolean validateMove(Pawn pawn, Coordinates position) {
+        //czy wybrane pole jest puste i jest w zasiegu
+        // jednego pola po przekatnej do przodu
+
+
+        int startX = pawn.getPosition().getX();
+        int startY = pawn.getPosition().getY();
+        int goalX = position.getX();
+        int goalY = position.getY();
+        Color startColor = pawn.getColor();
+
+        // if the goal field is empty check if move is diagonally by one square
+        if ((this.fields[goalX][goalY]) == null) {
+            if (startColor.equals(black)) {
+                return ((goalX == startX + 1) && (goalY == startY - 1)) || ((goalX == startX + 1) && (goalY == startY + 1));
+            } else if (startColor.equals(white)) {
+                return ((goalX == startX - 1) && (goalY == startY - 1)) || ((goalX == startX - 1) && (goalY == startY + 1));
+            }
+        } else {
+            return false;
+        }
+        return false;
+    }
+
+    public Pawn validateMoveWithCapture(Pawn pawn, Coordinates position) {
+        //TODO: przeniesc metody validacji ruchu do klasy Board
+
+
+        int startX = pawn.getPosition().getX();
+        int startY = pawn.getPosition().getY();
+        int goalX = position.getX();
+        int goalY = position.getY();
+        Pawn goalPawn = this.fields[goalX][goalY];
+
+        // if goal field is empty
+        if (goalPawn == null) {
+            // if my color is black
+            if (pawn.getColor().equals(black)) {
+                // if my goal move is 2 fields diagonally away
+                if ((goalX == startX - 2) && (goalY == startY - 2)) {
+                    if (this.fields[startX - 1][startY - 1] != null) {
+                        if (this.fields[startX - 1][startY - 1].getColor().equals(white)) {
+                            return this.fields[startX - 1][startY - 1];
+                        }
+                    }
+                } else if ((goalX == startX + 2) && (goalY == startY - 2)) {
+                    if (this.fields[startX + 1][startY - 1] !=  null) {
+                        if (this.fields[startX + 1][startY - 1].getColor().equals(white)) {
+                            return this.fields[startX + 1][startY - 1];
+                        }
+                    }
+                } else if ((goalX == startX - 2) && (goalY == startY + 2)) {
+                    if (this.fields[startX - 1][startY + 1] != null) {
+                        if (this.fields[startX - 1][startY + 1].getColor().equals(white)) {
+                            return this.fields[startX - 1][startY + 1];
+                        }
+                    }
+                } else if ((goalX == startX + 2) && (goalY == startY + 2)) {
+                    if (this.fields[startX + 1][startY + 1] != null) {
+                        if (this.fields[startX + 1][startY + 1].getColor().equals(white)) {
+                            return this.fields[startX + 1][startY + 1];
+                        }
+                    }
+                }
+            } else if (pawn.getColor().equals(white)) {
+                if ((goalX == startX - 2) && (goalY == startY - 2)) {
+                    if (this.fields[startX - 1][startY - 1] != null) {
+                        if (this.fields[startX - 1][startY - 1].getColor().equals(black)) {
+                            return this.fields[startX - 1][startY - 1];
+                        }
+                    }
+                } else if ((goalX == startX + 2) && (goalY == startY - 2)) {
+                    if (this.fields[startX + 1][startY - 1] != null) {
+                        if (this.fields[startX + 1][startY - 1].getColor().equals(black)) {
+                            return this.fields[startX + 1][startY - 1];
+                        }
+                    }
+                } else if ((goalX == startX - 2) && (goalY == startY + 2)) {
+                    if (this.fields[startX - 1][startY + 1] != null){
+                        if (this.fields[startX - 1][startY + 1].getColor().equals(black)) {
+                            return this.fields[startX - 1][startY + 1];
+                        }
+                    }
+                } else if ((goalX == startX + 2) && (goalY == startY + 2)) {
+                    if (this.fields[startX + 1][startY + 1] != null) {
+                        if (this.fields[startX + 1][startY + 1].getColor().equals(black)) {
+                            return this.fields[startX + 1][startY + 1];
+                        }
+                    }
+                }
+            }
+        } else {
+            return null;
+        }
+        return null;
+    }
 }
