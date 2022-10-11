@@ -20,8 +20,8 @@ public class Board {
     public Board(int sideLength) { // n -> sideLength
         if (sideLength >= 10 && sideLength <= 20) {
             this.fields = new Pawn[sideLength][sideLength];
-            whitePawnsCounter = 2 * sideLength;
-            blackPawnsCounter = 2 * sideLength;
+            whitePawnsCounter = sideLength;
+            blackPawnsCounter = sideLength;
         }
     }
     public int getBoardSize(){
@@ -137,9 +137,9 @@ public class Board {
     public void createBoard(){
         // one side of the board
         int sideLength = this.getBoardSize();
-        int numberOfPawns = sideLength * 2;
+        int numberOfPawns = sideLength/2;
 
-        for (int row = 0; row < sideLength; row++) {
+        for (int row = 9; row < sideLength; row++) {
             for (int col = 0; col < sideLength; col = col + 2) {
                 if (row % 2 == 0) {
                     if (numberOfPawns > 0) {
@@ -156,12 +156,12 @@ public class Board {
         }
 
         // other side of the board
-        numberOfPawns = 2 * sideLength;
-        for (int row = sideLength - 1; row > sideLength - 5; row--) {
-            for (int col = 0; col < sideLength; col = col + 2) {
+        numberOfPawns = sideLength/2;
+            int row = 0;
+            for (int col = 1; col < sideLength; col = col + 2) {
                 if (row % 2 == 0) {
                     if (numberOfPawns > 0) {
-                        this.fields[row][col + 1] = new Pawn(new Coordinates(row, col+1), white);
+                        this.fields[row][col] = new Pawn(new Coordinates(row, col), white);
                         numberOfPawns--;
                     }
                 } else {
@@ -171,7 +171,7 @@ public class Board {
                     }
                 }
             }
-        }
+        this.fields[2][1] = new Pawn(new Coordinates(2, 1), white);
     }
 
     /**
