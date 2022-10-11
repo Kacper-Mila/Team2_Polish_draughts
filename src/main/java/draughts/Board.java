@@ -184,10 +184,10 @@ public class Board {
         // jednego pola po przekatnej do przodu
 
 
-        int startX = pawn.getPosition().getX();
-        int startY = pawn.getPosition().getY();
-        int goalX = position.getX();
-        int goalY = position.getY();
+        int startX = pawn.getPosition().getRow();
+        int startY = pawn.getPosition().getCol();
+        int goalX = position.getRow();
+        int goalY = position.getCol();
         Color startColor = pawn.getColor();
 
         // if the goal field is empty check if move is diagonally by one square
@@ -207,10 +207,10 @@ public class Board {
         //TODO: przeniesc metody validacji ruchu do klasy Board
 
 
-        int startX = pawn.getPosition().getX();
-        int startY = pawn.getPosition().getY();
-        int goalX = position.getX();
-        int goalY = position.getY();
+        int startX = pawn.getPosition().getRow();
+        int startY = pawn.getPosition().getCol();
+        int goalX = position.getRow();
+        int goalY = position.getCol();
         Pawn goalPawn = this.fields[goalX][goalY];
 
         // if goal field is empty
