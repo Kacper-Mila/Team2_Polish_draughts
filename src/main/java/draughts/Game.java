@@ -303,6 +303,11 @@ public class Game {
             //nastepuje sam ruch, bez bicia
             this.board.movePawn(pawn, movePosition);
             drawCondition--;
+            if(pawn.isCrowned()){
+                int [][] tmpQueenFields = pawn.getFieldsPickedWhenCrowned();
+                tmpQueenFields[movePosition.getRow()][movePosition.getCol()] ++;
+                pawn.setFieldsPickedWhenCrowned(tmpQueenFields);
+            }
             return true;
         }
         //sprawdz czy ruch jest o dwa pola a miedzy nimi jest pionek przeciwnika
@@ -312,6 +317,11 @@ public class Game {
             this.board.movePawn(pawn, movePosition);
             this.board.removePawn(pawnToCapture);
             drawCondition = 15; //TODO opracowac funkcje
+            if(pawn.isCrowned()){
+                int [][] tmpQueenFields = pawn.getFieldsPickedWhenCrowned();
+                tmpQueenFields[movePosition.getRow()][movePosition.getCol()] ++;
+                pawn.setFieldsPickedWhenCrowned(tmpQueenFields);
+            }
             return true;
         }
         System.out.println("Your move is incorrect");
