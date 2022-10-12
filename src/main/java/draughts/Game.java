@@ -2,14 +2,12 @@ package main.java.draughts;
 
 import java.awt.*;
 import java.util.Scanner;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Game {
 
-    private Board board;
+    private final Board board;
     private int drawCondition = 15;
-
 
     public Game() {
         this.board = new Board(getBoardSizeFromUser());
@@ -35,41 +33,50 @@ public class Game {
      */
     public void start() {
         this.board.createBoard();
-        do {
-            playRound();
-        } while (!showResults());
-    }
-
-    public boolean showResults(){
-        boolean win1 = checkForWinner(1);
-        boolean win2 = checkForWinner(2);
-        if(win1|| win2 || drawCondition == 0){ //TODO drawCondition do rozbudowania
-            if (win1) {
-                System.out.println("Player 1 won. Congratulations!");
-            } else if (win2) {
-                System.out.println("Player 2 won. Congratulations!");
-            } else {
-                System.out.println("It's a draw!");
-            }
-            return true;
+        while (playRound()){
+            //within playRound() player's moves are played. If none of them wins, or it is draw then game is kept running
         }
-        return false;
+        System.out.println(board);
     }
 
     /**
      * determines one-round actions that is, checks which player is next and whether
      * there is a winner.
+     *
+     * @return true if game is over, otherwise false
      */
-    public void playRound() {
+    public boolean playRound() {
         //ruch 1 gracza
         System.out.println("Player 1 move - white");
         checkStartingPosition(1);
-        if (checkForWinner(1)) return;
-
+        if (checkForTheDraw()){
+            System.out.println("It's a draw!");
+            return false;
+        }
+        if (checkForWinner(1)) {
+            System.out.println("Player 1 won. Congratulations!");
+            return false;
+        }
+        if(checkForWinner(2) ){
+            System.out.println("Player 2 won. Congratulations!");
+            return false;
+        }
         //ruch 2 gracza
         System.out.println("Player 2 move- black");
         checkStartingPosition(2);
-        checkForWinner(2);
+        if (checkForTheDraw()){
+            System.out.println("It's a draw!");
+            return false;
+        }
+        if (checkForWinner(1)) {
+            System.out.println("Player 1 won. Congratulations!");
+            return false;
+        }
+        if(checkForWinner(2) ){
+            System.out.println("Player 2 won. Congratulations!");
+            return false;
+        }
+        return true;
     }
 
     /**
@@ -77,13 +84,116 @@ public class Game {
      * also checks for draws.
      */
     public boolean checkForWinner(int player) {
-        if (drawCondition == 0) {
-            System.out.println("It's draw! Game over! ");
-            return false;
-        }
+        if(isItPossibleToMove(player)&&!isItPossibleToMove(3 - player)) return true;
         if (player == 1 && board.getBlackPawnsCounter() == 0) {
             return true;
         } else return player == 2 && board.getWhitePawnsCounter() == 0;
+    }
+
+    public boolean checkForTheDraw() {
+        if (drawCondition == 0) {
+            return true;
+        }
+        if ((!isItPossibleToMove(1) && !isItPossibleToMove(2))) {
+            return true;
+        }
+        if (wasAtLeastOneQueen3TimesOnTheSameField()) return true;
+        return areOnlyTwoCrownsOnBoard();
+    }
+
+    public boolean wasAtLeastOneQueen3TimesOnTheSameField(){
+        for (Pawn[] pawns:
+                board.getFields()) {
+            for (Pawn pawn:
+                    pawns) {
+                if(pawn != null) {
+                    if (pawn.isCrowned()) {
+                        for (int [] rows:
+                                pawn.getFieldsPickedWhenCrowned()) {
+                            for (int col:
+                                    rows) {
+                                if(col >=3 ) {
+                                    return true;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    public boolean isItPossibleToMove(int player) {
+        int moveFactor;
+        Color color;
+        if(player==1){
+            color = Color.WHITE;
+            moveFactor = 1;
+        }else{
+            color = Color.BLACK;
+            moveFactor = -1;
+        }
+        for (int row = 0; row < board.getBoardSize(); row++) {
+            for (int col = 0; col < board.getBoardSize(); col++) {
+                if(board.getFields()[row][col] != null){
+                    if(board.getFields()[row][col].getColor().equals(color)){
+                        try {
+                            if (board.validateMove(board.getFields()[row][col], new Coordinates(row - moveFactor, col - moveFactor))) return true;
+                        } catch (Exception ignored) {
+                        }
+                        try {
+                            if (board.validateMove(board.getFields()[row][col], new Coordinates(row - moveFactor, col + moveFactor))) return true;
+                        } catch (Exception ignored) {
+                        }
+                        try {
+                            if (board.validateMoveWithCapture(board.getFields()[row][col], new Coordinates(row - 2, col - 2)) != null)
+                                return true;
+                        } catch (Exception ignored) {
+                        }
+                        try {
+                            if (board.validateMoveWithCapture(board.getFields()[row][col], new Coordinates(row - 2, col + 2)) != null)
+                                return true;
+                        } catch (Exception ignored) {
+                        }
+                        try {
+                            if (board.validateMoveWithCapture(board.getFields()[row][col], new Coordinates(row + 2, col - 2)) != null)
+                                return true;
+                        } catch (Exception ignored) {
+                        }
+                        try {
+                            if (board.validateMoveWithCapture(board.getFields()[row][col], new Coordinates(row + 2, col + 2)) != null)
+                                return true;
+                        } catch (Exception ignored) {
+                        }
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    public boolean areOnlyTwoCrownsOnBoard() {
+        boolean isBlackCrowned = false;
+        boolean isWhiteCrowned = false;
+        if(board.getBlackPawnsCounter()==1 && board.getWhitePawnsCounter()==1){
+            for (Pawn[] pawns:
+                 board.getFields()) {
+                for (Pawn pawn:
+                     pawns) {
+                    if(pawn != null) {
+                        if (pawn.isCrowned()) {
+                            if (pawn.getColor() == Color.black) {
+                                isBlackCrowned = true;
+                            } else {
+                                isWhiteCrowned = true;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return (isBlackCrowned && isWhiteCrowned);
     }
 
     /**
@@ -193,6 +303,11 @@ public class Game {
             //nastepuje sam ruch, bez bicia
             this.board.movePawn(pawn, movePosition);
             drawCondition--;
+            if(pawn.isCrowned()){
+                int [][] tmpQueenFields = pawn.getFieldsPickedWhenCrowned();
+                tmpQueenFields[movePosition.getRow()][movePosition.getCol()] ++;
+                pawn.setFieldsPickedWhenCrowned(tmpQueenFields);
+            }
             return true;
         }
         //sprawdz czy ruch jest o dwa pola a miedzy nimi jest pionek przeciwnika
@@ -202,6 +317,11 @@ public class Game {
             this.board.movePawn(pawn, movePosition);
             this.board.removePawn(pawnToCapture);
             drawCondition = 15; //TODO opracowac funkcje
+            if(pawn.isCrowned()){
+                int [][] tmpQueenFields = pawn.getFieldsPickedWhenCrowned();
+                tmpQueenFields[movePosition.getRow()][movePosition.getCol()] ++;
+                pawn.setFieldsPickedWhenCrowned(tmpQueenFields);
+            }
             return true;
         }
         System.out.println("Your move is incorrect");
