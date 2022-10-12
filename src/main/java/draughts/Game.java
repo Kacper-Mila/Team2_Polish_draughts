@@ -1,6 +1,7 @@
 package main.java.draughts;
 
 import java.awt.*;
+import java.util.LinkedList;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -206,6 +207,66 @@ public class Game {
         }
         System.out.println("Your move is incorrect");
         return false;
+    }
+
+    public void getAiMove (int player){
+        // create list with all current player's pawns
+        Color color;
+        if (player == 1) {
+            color = Color.white;
+        } else {
+            color = Color.black;
+        }
+
+        LinkedList <Pawn> pawns = new LinkedList<Pawn>();
+        for (Pawn [] fields : this.board.getFields()) {
+            for (Pawn pawn : fields) {
+                if (pawn.getColor().equals(color)) {
+                    pawns.add(pawn);
+                }
+            }
+        }
+
+        // select one random pawn to move
+        int index = (int)(Math.random() * pawns.size());
+        Pawn chosenPawn = pawns.get(index);
+
+        // create lists with all possible pawn's moves
+        int[] tempCoordinates = null;
+        LinkedList<Coordinates> possibleCaptureMoves = null;
+        LinkedList<Coordinates> possibleMovesWithoutCapture = null;
+
+        if (color.equals(Color.white)) {
+            tempCoordinates[0] = chosenPawn.getPosition().getRow() - 1;
+            tempCoordinates[1] = chosenPawn.getPosition().getCol() - 1;
+            if (areCoordinatesInBoardRange(tempCoordinates)) {
+                possibleMovesWithoutCapture.add((tempCoordinates[0]), (tempCoordinates[1]));
+            }
+
+            tempCoordinates[0] = chosenPawn.getPosition().getRow() - 1;
+            tempCoordinates[1] = chosenPawn.getPosition().getCol() + 1;
+            if (areCoordinatesInBoardRange(tempCoordinates)) {
+                possibleMovesWithoutCapture.add((tempCoordinates[0]), (tempCoordinates[1]));
+            }
+
+
+        } else {
+
+        }
+
+
+        // for white player
+            //normal move: x-1 y-1 or x-1 y+1
+            // capture move: x+2 y+2, x+2 y-2, x-2 y+2, x-2 y-2
+        // for  black player:
+            // normal move: x+1 y-1 or x+1 y+1
+            // capture move: x+2 y+2, x+2 y-2, x-2 y+2, x-2 y-2
+        // check if capture is possible
+
+
+
+
+
     }
 }
 
