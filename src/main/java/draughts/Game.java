@@ -80,18 +80,40 @@ public class Game {
         return true;
     }
 
-    public void playRoundWithAI(){
+
+    public boolean playRoundWithAI() {
         //ruch 1 gracza - human
         System.out.println("Player 1 move - white");
-        getAiMove(1);
-        if (checkForWinner(1)) return;
-
-        //ruch 2 gracza - ai
+        checkStartingPosition(1);
+        if (checkForTheDraw()){
+            System.out.println("It's a draw!");
+            return false;
+        }
+        if (checkForWinner(1)) {
+            System.out.println("Player 1 won. Congratulations!");
+            return false;
+        }
+        if(checkForWinner(2) ){
+            System.out.println("Player 2 won. Congratulations!");
+            return false;
+        }
+        //ruch 2 gracza - human
         System.out.println("Player 2 move - black");
         getAiMove(2);
-        checkForWinner(2);
+        if (checkForTheDraw()){
+            System.out.println("It's a draw!");
+            return false;
+        }
+        if (checkForWinner(1)) {
+            System.out.println("Player 1 won. Congratulations!");
+            return false;
+        }
+        if(checkForWinner(2) ){
+            System.out.println("Player 2 won. Congratulations!");
+            return false;
+        }
+        return true;
     }
-
     /**
      * method that checks whether there is a winner after each round.
      * also checks for draws.
@@ -451,7 +473,7 @@ public class Game {
         LinkedList<Coordinates> possibleMovesWithoutCapture = new LinkedList<>();
 
         try {
-            Thread.sleep(2000);
+            Thread.sleep(1500);
         } catch (InterruptedException ie) {
             Thread.currentThread().interrupt();
         }
@@ -460,7 +482,6 @@ public class Game {
             // select one random pawn to move
             int index = (int) (Math.random() * pawns.size());
             Pawn chosenPawn = pawns.get(index);
-            System.out.println("Selected pawn: " + chosenPawn.getPosition().getRow() + chosenPawn.getPosition().getCol());
             // normal moves for white pawn
             if (color.equals(Color.white)) {
                 tempCoordinates[0] = chosenPawn.getPosition().getRow() - 1;
