@@ -128,7 +128,7 @@ public class Game {
                         } catch (Exception ignored) {
                         }
                         try {
-                            if (board.validateMoveWithCapture(board.getFields()[i][j], new Coordinates(i - 2, j + 1)) != null)
+                            if (board.validateMoveWithCapture(board.getFields()[i][j], new Coordinates(i - 2, j + 2)) != null)
                                 return true;
                         } catch (Exception ignored) {
                         }
@@ -138,7 +138,7 @@ public class Game {
                         } catch (Exception ignored) {
                         }
                         try {
-                            if (board.validateMoveWithCapture(board.getFields()[i][j], new Coordinates(i + 2, j + 1)) != null)
+                            if (board.validateMoveWithCapture(board.getFields()[i][j], new Coordinates(i + 2, j + 2)) != null)
                                 return true;
                         } catch (Exception ignored) {
                         }
