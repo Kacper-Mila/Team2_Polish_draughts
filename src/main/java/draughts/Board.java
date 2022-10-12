@@ -137,7 +137,7 @@ public class Board {
     public void createBoard(){
         // one side of the board
         int sideLength = this.getBoardSize();
-        int numberOfPawns = sideLength * 2;
+        int numberOfPawns = blackPawnsCounter;
 
         for (int row = 0; row < sideLength; row++) {
             for (int col = 0; col < sideLength; col = col + 2) {
@@ -156,7 +156,7 @@ public class Board {
         }
 
         // other side of the board
-        numberOfPawns = 2 * sideLength;
+        numberOfPawns = whitePawnsCounter;
         for (int row = sideLength - 1; row > sideLength - 5; row--) {
             for (int col = 0; col < sideLength; col = col + 2) {
                 if (row % 2 == 0) {
@@ -175,14 +175,13 @@ public class Board {
     }
 
     /**
-     * @param pawn    game's board instance
+     * @param pawn pawn object
      * @param position coordinates of pawn move
      * @return true if move is valid, otherwise false
      */
     public boolean validateMove(Pawn pawn, Coordinates position) {
         //czy wybrane pole jest puste i jest w zasiegu
         // jednego pola po przekatnej do przodu
-
 
         int startX = pawn.getPosition().getRow();
         int startY = pawn.getPosition().getCol();
