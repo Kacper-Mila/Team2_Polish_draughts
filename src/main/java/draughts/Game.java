@@ -2,7 +2,6 @@ package main.java.draughts;
 
 import java.awt.*;
 import java.util.Scanner;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Game {
@@ -35,41 +34,57 @@ public class Game {
      */
     public void start() {
         this.board.createBoard();
-        do {
-            playRound();
-        } while (!showResults());
+        while (playRound()) {
+        }
+        System.out.println(board);
     }
 
-    public boolean showResults() {
-        boolean win1 = checkForWinner(1);
-        boolean win2 = checkForWinner(2);
-        if (win1 || win2 || checkForTheDraw()) {
-            if (win1) {
-                System.out.println("Player 1 won. Congratulations!");
-            } else if (win2) {
-                System.out.println("Player 2 won. Congratulations!");
-            } else {
-                System.out.println("It's a draw!");
-            }
-            return true;
-        }
-        return false;
-    }
+//    public boolean showResults() {
+//        boolean win1 = ;
+//        boolean win2 = ;
+//        if () {
+//            if (win1) {
+//
+//            } else if (win2) {
+//                System.out.println("Player 2 won. Congratulations!");
+//            } else {
+//
+//            }
+//            return true;
+//        }
+//        return false;
+//    }
 
     /**
      * determines one-round actions that is, checks which player is next and whether
      * there is a winner.
+     *
+     * @return
      */
-    public void playRound() {
+    public boolean playRound() {
         //ruch 1 gracza
         System.out.println("Player 1 move - white");
         checkStartingPosition(1);
-        if (checkForWinner(1)) return;
-
+        if (checkForTheDraw()){
+            System.out.println("It's a draw!");
+            return false;
+        }
+        if (checkForWinner(1)) {
+            System.out.println("Player 1 won. Congratulations!");
+            return false;
+        }
         //ruch 2 gracza
         System.out.println("Player 2 move- black");
         checkStartingPosition(2);
-        checkForWinner(2);
+        if (checkForTheDraw()){
+            System.out.println("It's a draw!");
+            return false;
+        }
+        if(checkForWinner(2) ){
+            System.out.println("Player 2 won. Congratulations!");
+            return false;
+        }
+        return true;
     }
 
     /**
@@ -77,9 +92,6 @@ public class Game {
      * also checks for draws.
      */
     public boolean checkForWinner(int player) {
-        if (checkForTheDraw()) {
-            return false;
-        }
         if (player == 1 && !isItPossibleToMove(2)) {
             return true;
         } else if (player == 2 && !isItPossibleToMove(1)) {
@@ -97,92 +109,77 @@ public class Game {
         if (!(isItPossibleToMove(1) && isItPossibleToMove(2))) {
             return true;
         }
-        return isOnlyTwoCrownsOnBoard();
+        return areOnlyTwoCrownsOnBoard();
     }
 
     public boolean isItPossibleToMove(int player) {
-        if (player == 1) {
-            for (int i = 0; i < board.getBoardSize(); i++) {
-                for (int j = 0; j < board.getBoardSize(); j++) {
-                    if (board.getFields()[i][j] != null &&
-                            board.getFields()[i][j].getColor().equals(Color.white)) {
+        int moveFactor;
+        Color color;
+        if(player==1){
+            color = Color.WHITE;
+            moveFactor = 1;
+        }else{
+            color = Color.BLACK;
+            moveFactor = -1;
+        }
+        for (int i = 0; i < board.getBoardSize(); i++) {
+            for (int j = 0; j < board.getBoardSize(); j++) {
+                if(board.getFields()[i][j] != null){
+                    if(board.getFields()[i][j].getColor().equals(color)){
                         try {
-                            if (board.validateMove(board.getFields()[i][j], new Coordinates(i - 1, j - 1))) return true;
+                            if (board.validateMove(board.getFields()[i][j], new Coordinates(i - moveFactor, j - moveFactor))) return true; // white: -1 -1 black: +1 +1
                         } catch (Exception ignored) {
                         }
-                        ;
                         try {
-                            if (board.validateMove(board.getFields()[i][j], new Coordinates(i - 1, j + 1)))return true;
+                            if (board.validateMove(board.getFields()[i][j], new Coordinates(i - moveFactor, j + moveFactor))) return true; // white: -1 +1 black +1 -1
                         } catch (Exception ignored) {
-                        } ;
-                        try {
-                            if (board.validateMoveWithCapture(board.getFields()[i][j], new Coordinates(i - 2, j - 2)) != null) return true;
-                        } catch (Exception ignored) {
-                        } ;
-                        try {
-                            if (board.validateMoveWithCapture(board.getFields()[i][j], new Coordinates(i - 2, j + 1)) != null) return true;
-                        } catch (Exception ignored) {
-                        } ;
-                        try {
-                            if (board.validateMoveWithCapture(board.getFields()[i][j], new Coordinates(i + 2, j - 2)) != null) return true;
-                        } catch (Exception ignored) {
-                        } ;
-                        try {
-                            if (board.validateMoveWithCapture(board.getFields()[i][j], new Coordinates(i + 2, j + 1)) != null) return true;
-                        } catch (Exception ignored) {
-                        } ;
-                            return false;
-                    }
-
-                }
-            }
-        } else {
-            for (int i = 0; i < board.getBoardSize(); i++) {
-                for (int j = 0; j < board.getBoardSize(); j++) {
-                    if (board.getFields()[i][j] != null &&
-                            board.getFields()[i][j].getColor().equals(Color.black)) {
-                        if (
-                                board.validateMove(board.getFields()[i][j], new Coordinates(i + 1, j - 1)) ||
-                                        board.validateMove(board.getFields()[i][j], new Coordinates(i + 1, j + 1)) ||
-                                        board.validateMoveWithCapture(board.getFields()[i][j], new Coordinates(i - 2, j - 2)) != null ||
-                                        board.validateMoveWithCapture(board.getFields()[i][j], new Coordinates(i - 2, j + 1)) != null ||
-                                        board.validateMoveWithCapture(board.getFields()[i][j], new Coordinates(i + 2, j - 2)) != null ||
-                                        board.validateMoveWithCapture(board.getFields()[i][j], new Coordinates(i + 2, j + 1)) != null) {
-                            return true;
                         }
-
+                        try {
+                            if (board.validateMoveWithCapture(board.getFields()[i][j], new Coordinates(i - 2, j - 2)) != null)
+                                return true;
+                        } catch (Exception ignored) {
+                        }
+                        try {
+                            if (board.validateMoveWithCapture(board.getFields()[i][j], new Coordinates(i - 2, j + 1)) != null)
+                                return true;
+                        } catch (Exception ignored) {
+                        }
+                        try {
+                            if (board.validateMoveWithCapture(board.getFields()[i][j], new Coordinates(i + 2, j - 2)) != null)
+                                return true;
+                        } catch (Exception ignored) {
+                        }
+                        try {
+                            if (board.validateMoveWithCapture(board.getFields()[i][j], new Coordinates(i + 2, j + 1)) != null)
+                                return true;
+                        } catch (Exception ignored) {
+                        }
                     }
-
                 }
             }
         }
         return false;
     }
 
-    public boolean isOnlyTwoCrownsOnBoard() {
-        int numberOfWhiteCrown = 0;
-        int numberOfBlackCrown = 0;
-        for (int i = 0; i < board.getBoardSize(); i++) {
-            for (int j = 0; j < board.getBoardSize(); j++) {
-                if (board.getFields()[i][j] != null && !board.getFields()[i][j].isCrowned()) {
-                    return false;
-                }
-                if (board.getFields()[i][j] != null &&
-                        board.getFields()[i][j].getColor().equals(Color.white) && board.getFields()[i][j].isCrowned()) {
-                    numberOfWhiteCrown += 1;
-                    if (numberOfWhiteCrown > 1) {
-                        return false;
-                    }
-                }
-                if (board.getFields()[i][j].isCrowned() && board.getFields()[i][j].getColor().equals(Color.black)) {
-                    numberOfBlackCrown += 1;
-                    if (numberOfBlackCrown > 1) {
-                        return false;
+    public boolean areOnlyTwoCrownsOnBoard() {
+        boolean isBlackCrowned = false;
+        boolean isWhiteCrowned = false;
+        if(board.getBlackPawnsCounter()==1 && board.getWhitePawnsCounter()==1){
+            for (Pawn[] pawns:
+                 board.getFields()) {
+                for (Pawn pawn:
+                     pawns) {
+                    if (pawn.isCrowned()){
+                        if (pawn.getColor()==Color.black){
+                            isBlackCrowned = true;
+                        }else {
+                            isWhiteCrowned = true;
+                        }
                     }
                 }
             }
         }
-        return true;
+        return (isBlackCrowned && isWhiteCrowned);
     }
 
     /**
