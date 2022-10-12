@@ -37,7 +37,7 @@ public class Game {
     public void start() {
         this.board.createBoard();
         do {
-            playRoundWithAI();
+            playRound();
         } while (!showResults());
     }
 
@@ -76,7 +76,7 @@ public class Game {
     public void playRoundWithAI(){
         //ruch 1 gracza - human
         System.out.println("Player 1 move - white");
-        checkStartingPosition(1);
+        getAiMove(1);
         if (checkForWinner(1)) return;
 
         //ruch 2 gracza - ai
@@ -229,7 +229,7 @@ public class Game {
         } else {
             color = Color.black;
         }
-
+        System.out.println(this.board);
         LinkedList<Pawn> pawns = new LinkedList<Pawn>();
         for (Pawn[] fields : this.board.getFields()) {
             for (Pawn pawn : fields) {
@@ -241,17 +241,22 @@ public class Game {
             }
         }
 
-
-
         // create lists with all possible pawn's moves
         int[] tempCoordinates = {-1, -1};
         LinkedList<Coordinates> possibleCaptureMoves = new LinkedList<>();
         LinkedList<Coordinates> possibleMovesWithoutCapture = new LinkedList<>();
 
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException ie) {
+            Thread.currentThread().interrupt();
+        }
+
         while (!pawns.isEmpty()){
             // select one random pawn to move
             int index = (int) (Math.random() * pawns.size());
             Pawn chosenPawn = pawns.get(index);
+            System.out.println("Selected pawn: " + chosenPawn.getPosition().getRow() + chosenPawn.getPosition().getCol());
             // normal moves for white pawn
             if (color.equals(Color.white)) {
                 tempCoordinates[0] = chosenPawn.getPosition().getRow() - 1;
@@ -328,13 +333,6 @@ public class Game {
             }
             pawns.remove(index);
          }
-
-        // for white player
-            //normal move: x-1 y-1 or x-1 y+1
-            // capture move: x+2 y+2, x+2 y-2, x-2 y+2, x-2 y-2
-        // for  black player:
-            // normal move: x+1 y-1 or x+1 y+1
-            // capture move: x+2 y+2, x+2 y-2, x-2 y+2, x-2 y-2
     }
 }
 
