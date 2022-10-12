@@ -132,6 +132,17 @@ public class Board {
         int goalCol = position.getCol(); // goalY -> goalCol
         pawn.setPosition(position);
         this.fields[goalRow][goalCol] = pawn;
+
+        //******* setCrowned *******//
+        if (!pawn.isCrowned()){
+            if(pawn.getColor() == white && goalRow == 0){
+                pawn.setCrowned();
+            }
+            if (pawn.getColor() == black && goalRow == this.getBoardSize() - 1){
+                pawn.setCrowned();
+            }
+        }
+        //**************************//
     }
 
     public void createBoard(){
@@ -201,6 +212,59 @@ public class Board {
         }
         return false;
     }
+
+    //******** Queen Validation ********//
+    public boolean validateQueenMove(Pawn pawn, Coordinates position){//TODO
+        int startX = pawn.getPosition().getRow();
+        int startY = pawn.getPosition().getCol();
+        int goalX = position.getRow();
+        int goalY = position.getCol();
+        Color startColor = pawn.getColor();
+
+        if ((this.fields[goalX][goalY]) == null) {
+            // checks ↗
+            if (goalX > startX && goalY > startY){
+                for (int row = startX; row < goalX; row++){
+                    for(int col = startY; col < goalY; col++){
+                        if (getFields()[row][col] == null) return true;
+                    }
+                }
+            }
+            // checks ↙
+            if (goalX < startX && goalY < startY){
+                for (int row = startX; row < goalX; row--){
+                    for(int col = startY; col < goalY; col--){
+                        if (getFields()[row][col] == null) return true;
+                    }
+                }
+            }
+            // checks ↖
+            if (goalX < startX && goalY > startY){
+                for (int row = startX; row < goalX; row--){
+                    for(int col = startY; col < goalY; col++){
+                        if (getFields()[row][col] == null) return true;
+                    }
+                }
+            }
+            // checks ↘
+            if (goalX > startX && goalY < startY){
+                for (int row = startX; row < goalX; row++){
+                    for(int col = startY; col < goalY; col--){
+                        if (getFields()[row][col] == null) return true;
+                    }
+                }
+            }
+        } else {
+            return false;
+        }
+
+        return false;
+    }
+    public Pawn validateQueenMoveWithCapture(Pawn pawn, Coordinates position){
+
+        return null;
+    }
+    //******** Queen Validation END ********//
 
     public Pawn checkForPossibleMoves(Pawn pawn, Coordinates position, Color color) {
         int startRow = pawn.getPosition().getRow();

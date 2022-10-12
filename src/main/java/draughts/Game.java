@@ -147,22 +147,22 @@ public class Game {
                         } catch (Exception ignored) {
                         }
                         try {
-                            if (board.validateMoveWithCapture(board.getFields()[row][col], new Coordinates(row - 2, col - 2)) != null)
+                            if (board.validateMoveWithCapture(board.getFields()[row][col], new Coordinates(row - 2, col - 2)) != null) //  ↖
                                 return true;
                         } catch (Exception ignored) {
                         }
                         try {
-                            if (board.validateMoveWithCapture(board.getFields()[row][col], new Coordinates(row - 2, col + 2)) != null)
+                            if (board.validateMoveWithCapture(board.getFields()[row][col], new Coordinates(row - 2, col + 2)) != null) //  ↙
                                 return true;
                         } catch (Exception ignored) {
                         }
                         try {
-                            if (board.validateMoveWithCapture(board.getFields()[row][col], new Coordinates(row + 2, col - 2)) != null)
+                            if (board.validateMoveWithCapture(board.getFields()[row][col], new Coordinates(row + 2, col - 2)) != null) //  ↗
                                 return true;
                         } catch (Exception ignored) {
                         }
                         try {
-                            if (board.validateMoveWithCapture(board.getFields()[row][col], new Coordinates(row + 2, col + 2)) != null)
+                            if (board.validateMoveWithCapture(board.getFields()[row][col], new Coordinates(row + 2, col + 2)) != null) //  ↘
                                 return true;
                         } catch (Exception ignored) {
                         }
