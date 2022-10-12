@@ -4,8 +4,6 @@ import java.awt.*;
 import java.util.Scanner;
 import java.util.regex.Pattern;
 
-import static java.lang.Math.abs;
-
 public class Game {
 
     private final Board board;
@@ -35,7 +33,8 @@ public class Game {
      */
     public void start() {
         this.board.createBoard();
-        while (playRound()) {
+        while (playRound()){
+            //within playRound() player's moves are played. If none of them wins, or it is draw then game is kept running
         }
         System.out.println(board);
     }
@@ -118,11 +117,11 @@ public class Game {
                 if(board.getFields()[i][j] != null){
                     if(board.getFields()[i][j].getColor().equals(color)){
                         try {
-                            if (board.validateMove(board.getFields()[i][j], new Coordinates(i - moveFactor, j - moveFactor))) return true; // white: -1 -1 black: +1 +1
+                            if (board.validateMove(board.getFields()[i][j], new Coordinates(i - moveFactor, j - moveFactor))) return true;
                         } catch (Exception ignored) {
                         }
                         try {
-                            if (board.validateMove(board.getFields()[i][j], new Coordinates(i - moveFactor, j + moveFactor))) return true; // white: -1 +1 black +1 -1
+                            if (board.validateMove(board.getFields()[i][j], new Coordinates(i - moveFactor, j + moveFactor))) return true;
                         } catch (Exception ignored) {
                         }
                         try {

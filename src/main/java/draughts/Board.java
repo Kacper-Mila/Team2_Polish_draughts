@@ -20,8 +20,8 @@ public class Board {
     public Board(int sideLength) { // n -> sideLength
         if (sideLength >= 10 && sideLength <= 20) {
             this.fields = new Pawn[sideLength][sideLength];
-            whitePawnsCounter = sideLength;
-            blackPawnsCounter = sideLength;
+            whitePawnsCounter = sideLength*2;
+            blackPawnsCounter = sideLength*2;
         }
     }
     public int getBoardSize(){
@@ -137,9 +137,9 @@ public class Board {
     public void createBoard(){
         // one side of the board
         int sideLength = this.getBoardSize();
-        int numberOfPawns = sideLength/2;
+        int numberOfPawns = blackPawnsCounter;
 
-        for (int row = 9; row < sideLength; row++) {
+        for (int row = 0; row < sideLength; row++) {
             for (int col = 0; col < sideLength; col = col + 2) {
                 if (row % 2 == 0) {
                     if (numberOfPawns > 0) {
@@ -156,12 +156,12 @@ public class Board {
         }
 
         // other side of the board
-        numberOfPawns = sideLength/2;
-            int row = 0;
-            for (int col = 1; col < sideLength; col = col + 2) {
+        numberOfPawns = blackPawnsCounter;
+        for (int row = sideLength - 1; row > sideLength - 5; row--) {
+            for (int col = 0; col < sideLength; col = col + 2) {
                 if (row % 2 == 0) {
                     if (numberOfPawns > 0) {
-                        this.fields[row][col] = new Pawn(new Coordinates(row, col), white);
+                        this.fields[row][col + 1] = new Pawn(new Coordinates(row, col+1), white);
                         numberOfPawns--;
                     }
                 } else {
@@ -171,19 +171,17 @@ public class Board {
                     }
                 }
             }
-        this.fields[1][0] = new Pawn(new Coordinates(2, 1), white);
-        this.fields[7][2] = new Pawn(new Coordinates(7, 2), black);
+        }
     }
 
     /**
-     * @param pawn    game's board instance
+     * @param pawn pawn object
      * @param position coordinates of pawn move
      * @return true if move is valid, otherwise false
      */
     public boolean validateMove(Pawn pawn, Coordinates position) {
         //czy wybrane pole jest puste i jest w zasiegu
         // jednego pola po przekatnej do przodu
-
 
         int startX = pawn.getPosition().getRow();
         int startY = pawn.getPosition().getCol();
@@ -206,7 +204,6 @@ public class Board {
 
     public Pawn validateMoveWithCapture(Pawn pawn, Coordinates position) {
         //TODO: przeniesc metody validacji ruchu do klasy Board
-
 
         int startX = pawn.getPosition().getRow();
         int startY = pawn.getPosition().getCol();
