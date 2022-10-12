@@ -4,11 +4,12 @@ import java.awt.*;
 import java.util.Scanner;
 import java.util.regex.Pattern;
 
+import static java.lang.Math.abs;
+
 public class Game {
 
     private final Board board;
     private int drawCondition = 15;
-
 
     public Game() {
         this.board = new Board(getBoardSizeFromUser());
@@ -84,23 +85,7 @@ public class Game {
      * also checks for draws.
      */
     public boolean checkForWinner(int player) {
-        //jezeli ja moge sie ruszyc a on nie to wygralem
-        // y = f(player)
-        // player = 1 => y=2
-        // player =2 => y =1
-//        if(isItPossibleToMove(player)&&!isItPossibleToMove((player+2)/2))
-        if(player ==1){
-            if (isItPossibleToMove(1) && !isItPossibleToMove(2)) return true;
-        }else {
-            if(isItPossibleToMove(2) && !isItPossibleToMove(1)) return true;
-        }
-        // 1 nie moze sie ruszyc 2 moze sie ruszyc wiec ma dac wygrana graczowi 2
-//        if (player == 1 && !isItPossibleToMove(2)) {
-//            return true;
-//        }
-//        if (player == 2 && !isItPossibleToMove(1)) {
-//            return true;
-//        }
+        if(isItPossibleToMove(player)&&!isItPossibleToMove(3 - player)) return true;
         if (player == 1 && board.getBlackPawnsCounter() == 0) {
             return true;
         } else return player == 2 && board.getWhitePawnsCounter() == 0;
