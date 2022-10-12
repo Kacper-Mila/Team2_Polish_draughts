@@ -39,22 +39,6 @@ public class Game {
         System.out.println(board);
     }
 
-//    public boolean showResults() {
-//        boolean win1 = ;
-//        boolean win2 = ;
-//        if () {
-//            if (win1) {
-//
-//            } else if (win2) {
-//                System.out.println("Player 2 won. Congratulations!");
-//            } else {
-//
-//            }
-//            return true;
-//        }
-//        return false;
-//    }
-
     /**
      * determines one-round actions that is, checks which player is next and whether
      * there is a winner.
@@ -73,11 +57,19 @@ public class Game {
             System.out.println("Player 1 won. Congratulations!");
             return false;
         }
+        if(checkForWinner(2) ){
+            System.out.println("Player 2 won. Congratulations!");
+            return false;
+        }
         //ruch 2 gracza
         System.out.println("Player 2 move- black");
         checkStartingPosition(2);
         if (checkForTheDraw()){
             System.out.println("It's a draw!");
+            return false;
+        }
+        if (checkForWinner(1)) {
+            System.out.println("Player 1 won. Congratulations!");
             return false;
         }
         if(checkForWinner(2) ){
@@ -92,11 +84,23 @@ public class Game {
      * also checks for draws.
      */
     public boolean checkForWinner(int player) {
-        if (player == 1 && !isItPossibleToMove(2)) {
-            return true;
-        } else if (player == 2 && !isItPossibleToMove(1)) {
-            return true;
+        //jezeli ja moge sie ruszyc a on nie to wygralem
+        // y = f(player)
+        // player = 1 => y=2
+        // player =2 => y =1
+//        if(isItPossibleToMove(player)&&!isItPossibleToMove((player+2)/2))
+        if(player ==1){
+            if (isItPossibleToMove(1) && !isItPossibleToMove(2)) return true;
+        }else {
+            if(isItPossibleToMove(2) && !isItPossibleToMove(1)) return true;
         }
+        // 1 nie moze sie ruszyc 2 moze sie ruszyc wiec ma dac wygrana graczowi 2
+//        if (player == 1 && !isItPossibleToMove(2)) {
+//            return true;
+//        }
+//        if (player == 2 && !isItPossibleToMove(1)) {
+//            return true;
+//        }
         if (player == 1 && board.getBlackPawnsCounter() == 0) {
             return true;
         } else return player == 2 && board.getWhitePawnsCounter() == 0;
@@ -106,7 +110,9 @@ public class Game {
         if (drawCondition == 0) {
             return true;
         }
-        if (!(isItPossibleToMove(1) && isItPossibleToMove(2))) {
+        isItPossibleToMove(1);
+        isItPossibleToMove(2);
+        if ((!isItPossibleToMove(1) && !isItPossibleToMove(2))) {
             return true;
         }
         return areOnlyTwoCrownsOnBoard();

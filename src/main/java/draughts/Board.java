@@ -171,7 +171,8 @@ public class Board {
                     }
                 }
             }
-        this.fields[2][1] = new Pawn(new Coordinates(2, 1), white);
+        this.fields[1][0] = new Pawn(new Coordinates(2, 1), white);
+        this.fields[7][2] = new Pawn(new Coordinates(7, 2), black);
     }
 
     /**
