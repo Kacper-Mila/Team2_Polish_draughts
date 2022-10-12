@@ -37,7 +37,7 @@ public class Game {
     public void start() {
         this.board.createBoard();
         do {
-            playRound();
+            playRoundWithAI();
         } while (!showResults());
     }
 
@@ -70,6 +70,18 @@ public class Game {
         //ruch 2 gracza
         System.out.println("Player 2 move- black");
         checkStartingPosition(2);
+        checkForWinner(2);
+    }
+
+    public void playRoundWithAI(){
+        //ruch 1 gracza - human
+        System.out.println("Player 1 move - white");
+        checkStartingPosition(1);
+        if (checkForWinner(1)) return;
+
+        //ruch 2 gracza - ai
+        System.out.println("Player 2 move - black");
+        getAiMove(2);
         checkForWinner(2);
     }
 
@@ -209,7 +221,7 @@ public class Game {
         return false;
     }
 
-    public void getAiMove (int player){
+    public void getAiMove (int player) {
         // create list with all current player's pawns
         Color color;
         if (player == 1) {
@@ -218,42 +230,104 @@ public class Game {
             color = Color.black;
         }
 
-        LinkedList <Pawn> pawns = new LinkedList<Pawn>();
-        for (Pawn [] fields : this.board.getFields()) {
+        LinkedList<Pawn> pawns = new LinkedList<Pawn>();
+        for (Pawn[] fields : this.board.getFields()) {
             for (Pawn pawn : fields) {
-                if (pawn.getColor().equals(color)) {
-                    pawns.add(pawn);
+                if (pawn != null) {
+                    if (pawn.getColor().equals(color)) {
+                        pawns.add(pawn);
+                    }
                 }
             }
         }
 
-        // select one random pawn to move
-        int index = (int)(Math.random() * pawns.size());
-        Pawn chosenPawn = pawns.get(index);
+
 
         // create lists with all possible pawn's moves
-        int[] tempCoordinates = null;
-        LinkedList<Coordinates> possibleCaptureMoves = null;
-        LinkedList<Coordinates> possibleMovesWithoutCapture = null;
+        int[] tempCoordinates = {-1, -1};
+        LinkedList<Coordinates> possibleCaptureMoves = new LinkedList<>();
+        LinkedList<Coordinates> possibleMovesWithoutCapture = new LinkedList<>();
 
-        if (color.equals(Color.white)) {
-            tempCoordinates[0] = chosenPawn.getPosition().getRow() - 1;
-            tempCoordinates[1] = chosenPawn.getPosition().getCol() - 1;
-            if (areCoordinatesInBoardRange(tempCoordinates)) {
-                possibleMovesWithoutCapture.add((tempCoordinates[0]), (tempCoordinates[1]));
+        while (!pawns.isEmpty()){
+            // select one random pawn to move
+            int index = (int) (Math.random() * pawns.size());
+            Pawn chosenPawn = pawns.get(index);
+            // normal moves for white pawn
+            if (color.equals(Color.white)) {
+                tempCoordinates[0] = chosenPawn.getPosition().getRow() - 1;
+                tempCoordinates[1] = chosenPawn.getPosition().getCol() - 1;
+                if (areCoordinatesInBoardRange(tempCoordinates)) {
+                    possibleMovesWithoutCapture.add(new Coordinates(tempCoordinates[0], tempCoordinates[1]));
+                }
+
+                tempCoordinates[0] = chosenPawn.getPosition().getRow() - 1;
+                tempCoordinates[1] = chosenPawn.getPosition().getCol() + 1;
+                if (areCoordinatesInBoardRange(tempCoordinates)) {
+                    possibleMovesWithoutCapture.add(new Coordinates(tempCoordinates[0], tempCoordinates[1]));
+                }
+
+                // normal moves for black pawn
+            } else {
+                tempCoordinates[0] = chosenPawn.getPosition().getRow() + 1;
+                tempCoordinates[1] = chosenPawn.getPosition().getCol() - 1;
+                if (areCoordinatesInBoardRange(tempCoordinates)) {
+                    possibleMovesWithoutCapture.add(new Coordinates(tempCoordinates[0], tempCoordinates[1]));
+                }
+
+                tempCoordinates[0] = chosenPawn.getPosition().getRow() + 1;
+                tempCoordinates[1] = chosenPawn.getPosition().getCol() + 1;
+                if (areCoordinatesInBoardRange(tempCoordinates)) {
+                    possibleMovesWithoutCapture.add(new Coordinates(tempCoordinates[0], tempCoordinates[1]));
+                }
             }
 
-            tempCoordinates[0] = chosenPawn.getPosition().getRow() - 1;
-            tempCoordinates[1] = chosenPawn.getPosition().getCol() + 1;
+            //capture moves
+            tempCoordinates[0] = chosenPawn.getPosition().getRow() + 2;
+            tempCoordinates[1] = chosenPawn.getPosition().getCol() + 2;
             if (areCoordinatesInBoardRange(tempCoordinates)) {
-                possibleMovesWithoutCapture.add((tempCoordinates[0]), (tempCoordinates[1]));
+                possibleCaptureMoves.add(new Coordinates(tempCoordinates[0], tempCoordinates[1]));
+            }
+
+            tempCoordinates[0] = chosenPawn.getPosition().getRow() + 2;
+            tempCoordinates[1] = chosenPawn.getPosition().getCol() - 2;
+            if (areCoordinatesInBoardRange(tempCoordinates)) {
+                possibleCaptureMoves.add(new Coordinates(tempCoordinates[0], tempCoordinates[1]));
+            }
+
+            tempCoordinates[0] = chosenPawn.getPosition().getRow() - 2;
+            tempCoordinates[1] = chosenPawn.getPosition().getCol() + 2;
+            if (areCoordinatesInBoardRange(tempCoordinates)) {
+                possibleCaptureMoves.add(new Coordinates(tempCoordinates[0], tempCoordinates[1]));
+            }
+
+            tempCoordinates[0] = chosenPawn.getPosition().getRow() - 2;
+            tempCoordinates[1] = chosenPawn.getPosition().getCol() - 2;
+            if (areCoordinatesInBoardRange(tempCoordinates)) {
+                possibleCaptureMoves.add(new Coordinates(tempCoordinates[0], tempCoordinates[1]));
             }
 
 
-        } else {
+            // if it is possible - make a random capture move, if not - remove move from the list
+            while (!possibleCaptureMoves.isEmpty()) {
+                int i = (int) (Math.random() * possibleCaptureMoves.size());
+                if (tryToMakeMove(chosenPawn, possibleCaptureMoves.get(i))) {
+                    return;
+                } else {
+                    possibleCaptureMoves.remove(i);
+                }
+            }
 
-        }
-
+            // if it is possible - make a random normal move, if not - remove move from the list
+            while (!possibleMovesWithoutCapture.isEmpty()) {
+                int i = (int) (Math.random() * possibleCaptureMoves.size());
+                if (tryToMakeMove(chosenPawn, possibleMovesWithoutCapture.get(i))) {
+                    return;
+                } else {
+                    possibleMovesWithoutCapture.remove(i);
+                }
+            }
+            pawns.remove(index);
+         }
 
         // for white player
             //normal move: x-1 y-1 or x-1 y+1
@@ -261,12 +335,6 @@ public class Game {
         // for  black player:
             // normal move: x+1 y-1 or x+1 y+1
             // capture move: x+2 y+2, x+2 y-2, x-2 y+2, x-2 y-2
-        // check if capture is possible
-
-
-
-
-
     }
 }
 
