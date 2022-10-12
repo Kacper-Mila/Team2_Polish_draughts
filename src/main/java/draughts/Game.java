@@ -94,8 +94,6 @@ public class Game {
         if (drawCondition == 0) {
             return true;
         }
-        isItPossibleToMove(1);
-        isItPossibleToMove(2);
         if ((!isItPossibleToMove(1) && !isItPossibleToMove(2))) {
             return true;
         }
