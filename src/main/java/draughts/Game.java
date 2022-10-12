@@ -134,35 +134,35 @@ public class Game {
             color = Color.BLACK;
             moveFactor = -1;
         }
-        for (int i = 0; i < board.getBoardSize(); i++) {
-            for (int j = 0; j < board.getBoardSize(); j++) {
-                if(board.getFields()[i][j] != null){
-                    if(board.getFields()[i][j].getColor().equals(color)){
+        for (int row = 0; row < board.getBoardSize(); row++) {
+            for (int col = 0; col < board.getBoardSize(); col++) {
+                if(board.getFields()[row][col] != null){
+                    if(board.getFields()[row][col].getColor().equals(color)){
                         try {
-                            if (board.validateMove(board.getFields()[i][j], new Coordinates(i - moveFactor, j - moveFactor))) return true;
+                            if (board.validateMove(board.getFields()[row][col], new Coordinates(row - moveFactor, col - moveFactor))) return true;
                         } catch (Exception ignored) {
                         }
                         try {
-                            if (board.validateMove(board.getFields()[i][j], new Coordinates(i - moveFactor, j + moveFactor))) return true;
+                            if (board.validateMove(board.getFields()[row][col], new Coordinates(row - moveFactor, col + moveFactor))) return true;
                         } catch (Exception ignored) {
                         }
                         try {
-                            if (board.validateMoveWithCapture(board.getFields()[i][j], new Coordinates(i - 2, j - 2)) != null)
+                            if (board.validateMoveWithCapture(board.getFields()[row][col], new Coordinates(row - 2, col - 2)) != null)
                                 return true;
                         } catch (Exception ignored) {
                         }
                         try {
-                            if (board.validateMoveWithCapture(board.getFields()[i][j], new Coordinates(i - 2, j + 2)) != null)
+                            if (board.validateMoveWithCapture(board.getFields()[row][col], new Coordinates(row - 2, col + 2)) != null)
                                 return true;
                         } catch (Exception ignored) {
                         }
                         try {
-                            if (board.validateMoveWithCapture(board.getFields()[i][j], new Coordinates(i + 2, j - 2)) != null)
+                            if (board.validateMoveWithCapture(board.getFields()[row][col], new Coordinates(row + 2, col - 2)) != null)
                                 return true;
                         } catch (Exception ignored) {
                         }
                         try {
-                            if (board.validateMoveWithCapture(board.getFields()[i][j], new Coordinates(i + 2, j + 2)) != null)
+                            if (board.validateMoveWithCapture(board.getFields()[row][col], new Coordinates(row + 2, col + 2)) != null)
                                 return true;
                         } catch (Exception ignored) {
                         }
