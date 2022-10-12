@@ -201,21 +201,90 @@ public class Game {
      * is a valid pawn and if the ending position is within board boundaries.
      * If so, it calls tryToMakeMove() on pawn instance.
      */
+
     public boolean isValidCoordinate(String inputCoordinate) {
         return Pattern.compile("^((?i)([a-z])(\\d+))$").matcher(inputCoordinate).matches();
     }
 
-    public void checkStartingPosition(int player) {
-        int[] startPawnCoordinates;
-        int[] endPawnCoordianes;
-        Coordinates newPawnPosition;
+    public boolean isValidCoordinatewithEnd(String inputCoordinate) {
+        return (Pattern.compile("^((?i)([a-z])(\\d+))$").matcher(inputCoordinate).matches() || inputCoordinate.equals("end"));
+    }
+
+    //return user color
+    public int getUserPawnColor() {
+        Scanner scanner = new Scanner(System.in);
+        int userColor = scanner.nextInt();
+        System.out.println("Choose yours pawns color");
+        String pattern = "^[1-2]$";
         do {
-            startPawnCoordinates = getStartPawnPosition(player);
-            endPawnCoordianes = getNewPawnPosition();
-            newPawnPosition = new Coordinates(endPawnCoordianes[0], endPawnCoordianes[1]);
-        } while (!tryToMakeMove(board.getFields()[startPawnCoordinates[0]][startPawnCoordinates[1]], newPawnPosition));
-        //TODO:
-        //etap 2: zapytaj o liste wspolrzednych
+
+        } while (!String.valueOf(userColor).matches(pattern));
+        return 0;
+    }
+
+    public void checkStartingPosition(int player) {
+        int[] startPawnCoordinates = {0, 0};
+        int[] endPawnCoordinates = {0, 0};
+        Coordinates newPawnPosition;
+        boolean isFirstMovement = true;
+        boolean isNextCapturePossible = false;
+        do {
+            do {
+                if (isFirstMovement) {
+                    startPawnCoordinates = getStartPawnPosition(player);
+                    endPawnCoordinates = getNewPawnPosition(isFirstMovement);
+                }
+                newPawnPosition = new Coordinates(endPawnCoordinates[0], endPawnCoordinates[1]);
+            } while (!tryToMakeMove(board.getFields()[startPawnCoordinates[0]][startPawnCoordinates[1]], newPawnPosition));
+
+            if (isCaptureInPrevMove(startPawnCoordinates, endPawnCoordinates)) {
+                isFirstMovement = false;
+                isNextCapturePossible = isNextCapturePossible(endPawnCoordinates);
+                if (isNextCapturePossible) {
+                    startPawnCoordinates = endPawnCoordinates;
+                    endPawnCoordinates = getNewPawnPosition(isFirstMovement);
+                }
+                if (endPawnCoordinates == null) {
+                    return;
+                }
+            }
+        } while (isNextCapturePossible);
+    }
+
+    private boolean isCaptureInPrevMove(int[] startPosition, int[] endPosition) {
+        return (startPosition[0] == endPosition[0] + 2 && startPosition[1] == endPosition[1] + 2
+                || startPosition[0] == endPosition[0] - 2 && startPosition[1] == endPosition[1] + 2
+                || startPosition[0] == endPosition[0] + 2 && startPosition[1] == endPosition[1] - 2
+                || startPosition[0] == endPosition[0] - 2 && startPosition[1] == endPosition[1] - 2);
+    }
+
+    private boolean isNextCapturePossible(int[] endPawnCoordinates) {
+
+        if (areCoordinatesInBoardRange(endPawnCoordinates[0] - 2, endPawnCoordinates[1] - 2)) {
+            if (board.validateMoveWithCapture(board.getFields()[endPawnCoordinates[0]][endPawnCoordinates[1]], new Coordinates(endPawnCoordinates[0] - 2, endPawnCoordinates[1] - 2)) != null) {
+                return true;
+            }
+        }
+        if (areCoordinatesInBoardRange(endPawnCoordinates[0] - 2, endPawnCoordinates[1] + 2)) {
+            if (board.validateMoveWithCapture(
+                    board.getFields()[endPawnCoordinates[0]][endPawnCoordinates[1]],
+                    new Coordinates(endPawnCoordinates[0] - 2, endPawnCoordinates[1] + 2)
+            ) != null) {
+                return true;
+            }
+        }
+        if (areCoordinatesInBoardRange(endPawnCoordinates[0] + 2, endPawnCoordinates[1] - 2)) {
+            if (board.validateMoveWithCapture(board.getFields()[endPawnCoordinates[0]][endPawnCoordinates[1]], new Coordinates(endPawnCoordinates[0] + 2, endPawnCoordinates[1] - 2)) != null) {
+                return true;
+            }
+
+        }
+        if (areCoordinatesInBoardRange((endPawnCoordinates[0] + 2), (endPawnCoordinates[1] + 2))) {
+            if (board.validateMoveWithCapture(board.getFields()[endPawnCoordinates[0]][endPawnCoordinates[1]], new Coordinates((endPawnCoordinates[0] + 2), (endPawnCoordinates[1] + 2))) != null) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private int[] getStartPawnPosition(int player) {
@@ -251,34 +320,49 @@ public class Game {
         return pawnPosition;
     }
 
-    private int[] getNewPawnPosition() {
-        int[] newPawnPosition;
+    private int[] getNewPawnPosition(boolean isFirstNewPawnPosition) {
+        int[] newPawnPosition = null;
         Scanner scanner = new Scanner(System.in);
         String endCoordinate;
-        //sprawdzam poprawnosc koncowych wspolrzednych
         do {
-            System.out.println("Enter coordinates where you want to move your pawn. (eg. B2)");
-            endCoordinate = scanner.nextLine();
-            if (!isValidCoordinate(endCoordinate)) {
-                System.out.println("Coordinates are incorrect");
-                continue;
-            }
+            if (isFirstNewPawnPosition) {
+                System.out.println("Enter coordinates where you want to move your pawn. (eg. B2)");
+                endCoordinate = scanner.nextLine();
+                if (!isValidCoordinate(endCoordinate)) {
+                    System.out.println("Coordinates are incorrect");
+                    continue;
+                }
+            } else {
+                System.out.println(board);
+                System.out.println("You have optional movement with capture (multicapture), if you want capture enter coordinate, else press 'end'");
+                endCoordinate = scanner.nextLine();
+                if (!isValidCoordinatewithEnd(endCoordinate)) {
+                    System.out.println("Incorrect value, enter coordinate or 'end'");
+                    continue;
 
+                }
+                if (endCoordinate.equals("end")) {
+                    return null;
+                }
+            }
             newPawnPosition = parseCoordinate(endCoordinate);
             if (!areCoordinatesInBoardRange(newPawnPosition)) {
                 System.out.println("Coordinates are out of the size of the board");
                 continue;
             }
-
             break;
         } while (true);
         return newPawnPosition;
     }
 
     private boolean areCoordinatesInBoardRange(int[] coordinates) {
+        return areCoordinatesInBoardRange(coordinates[0], coordinates[1]);
+    }
+
+    private boolean areCoordinatesInBoardRange(int row, int col) {
         return (
-                coordinates[0] >= 0 && coordinates[0] < board.getBoardSize() &&
-                        coordinates[1] >= 0 && coordinates[1] < board.getBoardSize()
+                row >= 0 && row < board.getBoardSize() &&
+                        col >= 0 && col < board.getBoardSize()
         );
     }
 
@@ -286,8 +370,8 @@ public class Game {
         String endCol = coordinate.toUpperCase().substring(0, 1);
         int endRow = Integer.parseInt(coordinate.substring(1));
         return new int[]{
-                endRow - 1, // col
-                ((int) (endCol.charAt(0))) - (int) 'A' // row
+                endRow - 1,
+                ((int) (endCol.charAt(0))) - (int) 'A'
         };
     }
 
