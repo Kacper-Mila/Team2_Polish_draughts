@@ -97,7 +97,31 @@ public class Game {
         if ((!isItPossibleToMove(1) && !isItPossibleToMove(2))) {
             return true;
         }
+        if (wasAtLeastOneQueen3TimesOnTheSameField()) return true;
         return areOnlyTwoCrownsOnBoard();
+    }
+
+    public boolean wasAtLeastOneQueen3TimesOnTheSameField(){
+        for (Pawn[] pawns:
+                board.getFields()) {
+            for (Pawn pawn:
+                    pawns) {
+                if(pawn != null) {
+                    if (pawn.isCrowned()) {
+                        for (int [] rows:
+                                pawn.getFieldsPickedWhenCrowned()) {
+                            for (int col:
+                                    rows) {
+                                if(col >=3 ) {
+                                    return true;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return false;
     }
 
     public boolean isItPossibleToMove(int player) {
