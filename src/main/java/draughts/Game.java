@@ -43,7 +43,7 @@ public class Game {
      * determines one-round actions that is, checks which player is next and whether
      * there is a winner.
      *
-     * @return
+     * @return true if game is over, otherwise false
      */
     public boolean playRound() {
         //ruch 1 gracza
@@ -157,11 +157,13 @@ public class Game {
                  board.getFields()) {
                 for (Pawn pawn:
                      pawns) {
-                    if (pawn.isCrowned()){
-                        if (pawn.getColor()==Color.black){
-                            isBlackCrowned = true;
-                        }else {
-                            isWhiteCrowned = true;
+                    if(pawn != null) {
+                        if (pawn.isCrowned()) {
+                            if (pawn.getColor() == Color.black) {
+                                isBlackCrowned = true;
+                            } else {
+                                isWhiteCrowned = true;
+                            }
                         }
                     }
                 }
