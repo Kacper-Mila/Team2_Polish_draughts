@@ -14,8 +14,8 @@ public class Board {
     private Board(int sideLength) { // n -> sideLength
         if (sideLength >= 10 && sideLength <= 20) {
             this.fields = new Pawn[sideLength][sideLength];
-            whitePawnsCounter = 2 * sideLength;
-            blackPawnsCounter = 2 * sideLength;
+            whitePawnsCounter = 2; //2 * sideLength;
+            blackPawnsCounter = 4; //2 * sideLength;
         }
     }
 
@@ -180,39 +180,58 @@ public class Board {
         int sideLength = this.getBoardSize();
         int numberOfPawns = blackPawnsCounter;
 
-        for (int row = 0; row < sideLength; row++) {
-            for (int col = 0; col < sideLength; col = col + 2) {
-                if (row % 2 == 0) {
-                    if (numberOfPawns > 0) {
-                        this.fields[row][col + 1] = new Pawn(new Coordinates(row, col + 1), black);
-                        numberOfPawns--;
-                    }
-                } else {
-                    if (numberOfPawns > 0) {
-                        this.fields[row][col] = new Pawn(new Coordinates(row, col), black);
-                        numberOfPawns--;
-                    }
-                }
-            }
-        }
+//        for (int row = 0; row < sideLength; row++) {
+//            for (int col = 0; col < sideLength; col = col + 2) {
+//                if (row % 2 == 0) {
+//                    if (numberOfPawns > 0) {
+//                        this.fields[row][col + 1] = new Pawn(new Coordinates(row, col + 1), black);
+//                        numberOfPawns--;
+//                    }
+//                } else {
+//                    if (numberOfPawns > 0) {
+//                        this.fields[row][col] = new Pawn(new Coordinates(row, col), black);
+//                        numberOfPawns--;
+//                    }
+//                }
+//            }
+//        }
+//
+//        // other side of the board
+//        numberOfPawns = whitePawnsCounter;
+//        for (int row = sideLength - 1; row > sideLength - 5; row--) {
+//            for (int col = 0; col < sideLength; col = col + 2) {
+//                if (row % 2 == 0) {
+//                    if (numberOfPawns > 0) {
+//                        this.fields[row][col + 1] = new Pawn(new Coordinates(row, col + 1), white);
+//                        numberOfPawns--;
+//                    }
+//                } else {
+//                    if (numberOfPawns > 0) {
+//                        this.fields[row][col] = new Pawn(new Coordinates(row, col), white);
+//                        numberOfPawns--;
+//                    }
+//                }
+//            }
+//        }
 
-        // other side of the board
-        numberOfPawns = whitePawnsCounter;
-        for (int row = sideLength - 1; row > sideLength - 5; row--) {
-            for (int col = 0; col < sideLength; col = col + 2) {
-                if (row % 2 == 0) {
-                    if (numberOfPawns > 0) {
-                        this.fields[row][col + 1] = new Pawn(new Coordinates(row, col + 1), white);
-                        numberOfPawns--;
-                    }
-                } else {
-                    if (numberOfPawns > 0) {
-                        this.fields[row][col] = new Pawn(new Coordinates(row, col), white);
-                        numberOfPawns--;
-                    }
-                }
-            }
-        }
+        int row = 6;
+        int col = 7;
+        this.fields[row][col] = new Pawn(new Coordinates(row, col), white);
+        row = 1;
+        col = 6;
+        this.fields[row][col] = new Pawn(new Coordinates(row, col), white);
+        row = 3;
+        col = 8;
+        this.fields[row][col] = new Pawn(new Coordinates(row, col), black);
+        row = 5;
+        col = 8;
+        this.fields[row][col] = new Pawn(new Coordinates(row, col), black);
+        row = 2;
+        col = 1;
+        this.fields[row][col] = new Pawn(new Coordinates(row, col), black);
+        row = 5;
+        col = 2;
+        this.fields[row][col] = new Pawn(new Coordinates(row, col), black);
     }
 
     /**

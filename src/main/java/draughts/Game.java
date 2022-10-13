@@ -23,8 +23,8 @@ public class Game {
         String boardSize;
         String regex = "^(1[0-9]|20)$";
         do {
-            System.out.println("Enter the board size, it must be larger or equal 10 and smaller or equal 20, also even.");
-            boardSize = readBoardSize.nextLine();
+            //System.out.println("Enter the board size, it must be larger or equal 10 and smaller or equal 20, also even.");
+            boardSize = "10"; //readBoardSize.nextLine();
         } while (!boardSize.matches(regex) || Integer.parseInt(boardSize) % 2 != 0);
         return Integer.parseInt(boardSize);
     }
@@ -34,15 +34,15 @@ public class Game {
      * It allows us to choose game mode: human vs human or human vs AI player.
      */
     public void start() {
-        PrintingRules.showRulesForPlayers();
+        //PrintingRules.showRulesForPlayers();
         Scanner scanner = new Scanner(System.in);
         this.board.createBoard();
         int opponent = 0;
 
         while (opponent != 1 && opponent != 2 && opponent != 3) {
             try {
-                System.out.println("\nChoose your opponent: \n1. Human player \n2. AI player ");
-                opponent = scanner.nextInt();
+                //System.out.println("\nChoose your opponent: \n1. Human player \n2. AI player ");
+                opponent = 1; //scanner.nextInt();
             } catch (InputMismatchException ex) {
                 scanner.nextLine();
             }
