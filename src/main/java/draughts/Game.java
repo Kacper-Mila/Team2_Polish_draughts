@@ -170,7 +170,14 @@ public class Game {
                         } catch (Exception ignored) {
                         }
                         if(board.getFields()[row][col].isCrowned()){
-
+                            try {
+                                if (board.validateMove(board.getFields()[row][col], new Coordinates(row + moveFactor, col + moveFactor))) return true;
+                            } catch (Exception ignored) {
+                            }
+                            try {
+                                if (board.validateMove(board.getFields()[row][col], new Coordinates(row + moveFactor, col - moveFactor))) return true;
+                            } catch (Exception ignored) {
+                            }
                         }
                     }
                 }
