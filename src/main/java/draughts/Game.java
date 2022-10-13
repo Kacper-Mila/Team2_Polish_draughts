@@ -11,6 +11,7 @@ public class Game {
     private final Board board;
     private int drawCondition = 15;
 
+
     public Game() {
         this.board = new Board(getBoardSizeFromUser());
     }
@@ -63,7 +64,7 @@ public class Game {
                     while (playRoundWithAI()){
                     }
                     System.out.println(board);
-                break;
+                    break;
 
             case 3:
                 while (playRoundAIvsAI()){
@@ -84,35 +85,29 @@ public class Game {
         System.out.println("Player 1 move - white");
         getStatusOfGame();
         checkStartingPosition(1);
-        if (checkForTheDraw()){
-            System.out.println("It's a draw!");
-            return false;
-        }
-        if (checkForWinner(1)) {
-            System.out.println("Player 1 won. Congratulations!");
-            return false;
-        }
-        if(checkForWinner(2) ){
-            System.out.println("Player 2 won. Congratulations!");
-            return false;
-        }
+        if (isEndGame()) return false;
         //ruch 2 gracza
         System.out.println("Player 2 move- black");
         getStatusOfGame();
         checkStartingPosition(2);
+        return !isEndGame();
+    }
+
+    public boolean isEndGame() {
+
         if (checkForTheDraw()){
             System.out.println("It's a draw!");
-            return false;
+            return true;
         }
         if (checkForWinner(1)) {
             System.out.println("Player 1 won. Congratulations!");
-            return false;
+            return true;
         }
         if(checkForWinner(2) ){
             System.out.println("Player 2 won. Congratulations!");
-            return false;
+            return true;
         }
-        return true;
+        return false;
     }
 
 
@@ -120,68 +115,22 @@ public class Game {
         //ruch 1 gracza - human
         System.out.println("Player 1 move - white");
         checkStartingPosition(1);
-        if (checkForTheDraw()){
-            System.out.println("It's a draw!");
-            return false;
-        }
-        if (checkForWinner(1)) {
-            System.out.println("Player 1 won. Congratulations!");
-            return false;
-        }
-        if(checkForWinner(2) ){
-            System.out.println("Player 2 won. Congratulations!");
-            return false;
-        }
+        if (isEndGame()) return false;
         //ruch 2 gracza - ai
         System.out.println("Player 2 move - black");
         getAiMove(2);
-        if (checkForTheDraw()){
-            System.out.println("It's a draw!");
-            return false;
-        }
-        if (checkForWinner(1)) {
-            System.out.println("Player 1 won. Congratulations!");
-            return false;
-        }
-        if(checkForWinner(2) ){
-            System.out.println("Player 2 won. Congratulations!");
-            return false;
-        }
-        return true;
+        return !isEndGame();
     }
 
     public boolean playRoundAIvsAI() {
         //ruch 1 gracza - ai
         System.out.println("Player 1 move - white");
         getAiMove(1);
-        if (checkForTheDraw()){
-            System.out.println("It's a draw!");
-            return false;
-        }
-        if (checkForWinner(1)) {
-            System.out.println("Player 1 won. Congratulations!");
-            return false;
-        }
-        if(checkForWinner(2) ){
-            System.out.println("Player 2 won. Congratulations!");
-            return false;
-        }
+        if (isEndGame()) return false;
         //ruch 2 gracza - ai
         System.out.println("Player 2 move - black");
         getAiMove(2);
-        if (checkForTheDraw()){
-            System.out.println("It's a draw!");
-            return false;
-        }
-        if (checkForWinner(1)) {
-            System.out.println("Player 1 won. Congratulations!");
-            return false;
-        }
-        if(checkForWinner(2) ){
-            System.out.println("Player 2 won. Congratulations!");
-            return false;
-        }
-        return true;
+        return !isEndGame();
     }
     /**
      * method that checks whether there is a winner after each round.
@@ -572,7 +521,7 @@ public class Game {
         LinkedList<Coordinates> possibleMovesWithoutCapture = new LinkedList<>();
 
         try {
-            Thread.sleep(2000);
+            Thread.sleep(1000);
         } catch (InterruptedException ie) {
             Thread.currentThread().interrupt();
         }
