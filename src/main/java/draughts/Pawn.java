@@ -43,7 +43,6 @@ public class Pawn {
     //sprawdzanie bicia po przekatnej jest jako extra
 
 
-
     public Color getColor() {
         return color;
     }
@@ -55,10 +54,5 @@ public class Pawn {
     public boolean isCrowned() {
         return this.isCrowned;
     }
-
-    public void setCrowned() {
-        this.isCrowned = true;
-    }
-
 
 }
