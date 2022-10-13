@@ -37,13 +37,11 @@ public class Game {
         PrintingRules.showRulesForPlayers();
         Scanner scanner = new Scanner(System.in);
         this.board.createBoard();
-        //System.out.println("Choose your opponent: \n1. human\n2. AI");
         int opponent = 0;
-        //opponent = scanner.nextInt();
 
         while (opponent != 1 && opponent != 2 && opponent != 3) {
             try {
-                System.out.println("\nChoose your opponent: \n1. human\n2. AI");
+                System.out.println("\nChoose your opponent: \n1. Human player \n2. AI player ");
                 opponent = scanner.nextInt();
             } catch (InputMismatchException ex) {
                 scanner.nextLine();
@@ -499,7 +497,6 @@ public class Game {
     /**
      * Selects random AI player's pawn, looking for valid capture and non-capture moves and
      * selects one of them, then makes chosen move.
-     * @param player
      */
     public void getAiMove(int player) {
         // create list with all current player's pawns
