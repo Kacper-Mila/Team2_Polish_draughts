@@ -137,10 +137,10 @@ public class Board {
         //******* setCrowned *******//
         if (!pawn.isCrowned()){
             if(pawn.getColor() == white && goalRow == 0){
-                pawn.setCrowned();
+                pawn.setCrowned(this);
             }
             if (pawn.getColor() == black && goalRow == this.getBoardSize() - 1){
-                pawn.setCrowned();
+                pawn.setCrowned(this);
             }
         }
         //**************************//
@@ -187,7 +187,7 @@ public class Board {
         int row = 5;
         int col = 4;
         this.fields[row][col] = new Pawn(new Coordinates(row, col), white);
-        this.fields[row][col].setCrowned();
+        this.fields[row][col].setCrowned(this);
     }
 
     /**
