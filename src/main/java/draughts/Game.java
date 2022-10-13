@@ -169,6 +169,9 @@ public class Game {
                                 return true;
                         } catch (Exception ignored) {
                         }
+                        if(board.getFields()[row][col].isCrowned()){
+
+                        }
                     }
                 }
             }
