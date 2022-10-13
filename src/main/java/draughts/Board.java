@@ -362,24 +362,8 @@ public class Board {
         //Crown pawn if allowed (is on the correct edge of the board and is not forced to capture an enemy pawn
         if (!pawn.isCrowned()) {
             //check if pawn is on the edge of the board
-            if (pawn.getColor() == white && position.getRow() == 0 ||
-                    pawn.getColor() == black && position.getRow() == this.getBoardSize() - 1) {
-                //check if there is a possible capture not allowing to upgrade a pawn to a queen
-                int horizontalMoveDirection = position.getCol() - pawn.getPosition().getCol(); //get direction in which
-                // should be checked field for blocking capture
-                if (pawn.getPosition().getCol() + 2 * horizontalMoveDirection  > 0 &&
-                        pawn.getPosition().getCol() + 2 * horizontalMoveDirection< this.getBoardSize()) {
-                    //check if there is pawn that should be capture what disallow to crown a pawn
-                    Pawn possiblePawnToCapture = this.getFields()
-                            [pawn.getPosition().getRow() ]
-                            [pawn.getPosition().getCol()+ 2 * horizontalMoveDirection];
-                    return possiblePawnToCapture == null;
-                    //there is no possible capture -> return true
-                    //there is optional capture not allowing to crown a pawn. -> return false
-                }
-                //it is the case when pawn moves to the corner
-                return true;
-            }
+            return(pawn.getColor() == white && position.getRow() == 0 ||
+                    pawn.getColor() == black && position.getRow() == this.getBoardSize() - 1);
         }
         //the Pawn can not be crowned
         return false;

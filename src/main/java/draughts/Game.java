@@ -412,7 +412,7 @@ public class Game {
             if (pawnToCapture != null ) {
                 //wykonaj ruch z biciem
                 //check crown
-                if(this.board.validateCrowning(pawn,movePosition)) pawn.setCrowned(this.board);
+                if(this.board.validateCrowning(pawn,movePosition)&&!isNextCapturePossiblePawn(pawn)) pawn.setCrowned(this.board);
                 this.board.movePawn(pawn, movePosition);
                 this.board.removePawn(pawnToCapture);
                 drawCondition = 15;
