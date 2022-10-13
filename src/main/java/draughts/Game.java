@@ -12,6 +12,7 @@ public class Game {
     private int drawCondition = 15;
 
     public Game() {
+        //singleton pattern. Create new board object then, assign it to the Game.board.
         Board.newInstance(getBoardSizeFromUser());
         this.board = Board.getInstance();
     }
@@ -49,19 +50,19 @@ public class Game {
 
         switch (opponent) {
             case 1: // human vs human
-                while (playRound()){
+                while (playRound()) {
                 }
                 System.out.println(board);
                 break;
 
-                case 2: // human vs ai
-                    while (playRoundWithAI()){
-                    }
-                    System.out.println(board);
-                    break;
+            case 2: // human vs ai
+                while (playRoundWithAI()) {
+                }
+                System.out.println(board);
+                break;
 
             case 3:
-                while (playRoundAIvsAI()){
+                while (playRoundAIvsAI()) {
                 }
                 System.out.println(board);
                 break;
@@ -75,21 +76,25 @@ public class Game {
      * @return true if game is over, otherwise false
      */
     public boolean playRound() {
-        //ruch 1 gracza
+        //player 1 move
         System.out.println("\n \tPlayer 1 move - white\n");
         getStatusOfGame();
         checkStartingPosition(1);
         if (isEndGame()) return false;
-        //ruch 2 gracza
+        //player 2 move
         System.out.println("\n \tPlayer 2 move- black\n");
         getStatusOfGame();
         checkStartingPosition(2);
         return !isEndGame();
     }
 
+    /**
+     * Method checks if any of the conditions (draw, win) are fulfilled to end a game.
+     *
+     * @return if game is over, otherwise false.
+     */
     public boolean isEndGame() {
-
-        if (checkForTheDraw()){
+        if (checkForTheDraw()) {
             System.out.println("It's a draw!");
             return true;
         }
@@ -97,7 +102,7 @@ public class Game {
             System.out.println("Player 1 won. Congratulations!");
             return true;
         }
-        if(checkForWinner(2) ){
+        if (checkForWinner(2)) {
             System.out.println("Player 2 won. Congratulations!");
             return true;
         }
@@ -125,40 +130,46 @@ public class Game {
         getAiMove(2);
         return !isEndGame();
     }
+
     /**
-     * method that checks whether there is a winner after each round.
-     * also checks for draws.
+     * Method that checks whether there is a winner.
      */
     public boolean checkForWinner(int player) {
-        if(isItPossibleToMove(player)&&!isItPossibleToMove(3 - player)) return true;
+        if (isItPossibleToMove(player) && !isItPossibleToMove(3 - player)) return true;
         if (player == 1 && board.getBlackPawnsCounter() == 0) {
             return true;
         } else return player == 2 && board.getWhitePawnsCounter() == 0;
     }
 
+    /**
+     * Method that checks whether a game is a draw.
+     */
     public boolean checkForTheDraw() {
+        //drawCondition ==0 -> for 15 moves none of the players have captured enemy.
         if (drawCondition == 0) {
             return true;
         }
+        //it is draw if no one can move.
         if ((!isItPossibleToMove(1) && !isItPossibleToMove(2))) {
             return true;
         }
+        //it is a draw if any of the queens on the bord was placed for the third time on the same field.
         if (wasAtLeastOneQueen3TimesOnTheSameField()) return true;
         return areOnlyTwoCrownsOnBoard();
     }
 
-    public boolean wasAtLeastOneQueen3TimesOnTheSameField(){
-        for (Pawn[] pawns:
+    public boolean wasAtLeastOneQueen3TimesOnTheSameField() {
+        for (Pawn[] pawns :
                 board.getFields()) {
-            for (Pawn pawn:
+            for (Pawn pawn :
                     pawns) {
-                if(pawn != null) {
+                if (pawn != null) {
                     if (pawn.isCrowned()) {
-                        for (int [] rows:
+                        for (int[] rows :
                                 pawn.getFieldsPickedWhenCrowned()) {
-                            for (int col:
+                            for (int col :
                                     rows) {
-                                if(col >=3 ) {
+                                if (col >= 3) {
                                     return true;
                                 }
                             }
@@ -173,23 +184,25 @@ public class Game {
     public boolean isItPossibleToMove(int player) {
         int moveFactor;
         Color color;
-        if(player==1){
+        if (player == 1) {
             color = Color.WHITE;
             moveFactor = 1;
-        }else{
+        } else {
             color = Color.BLACK;
             moveFactor = -1;
         }
         for (int row = 0; row < board.getBoardSize(); row++) {
             for (int col = 0; col < board.getBoardSize(); col++) {
-                if(board.getFields()[row][col] != null){
-                    if(board.getFields()[row][col].getColor().equals(color)){
+                if (board.getFields()[row][col] != null) {
+                    if (board.getFields()[row][col].getColor().equals(color)) {
                         try {
-                            if (board.validateMove(board.getFields()[row][col], new Coordinates(row - moveFactor, col - moveFactor))) return true;
+                            if (board.validateMove(board.getFields()[row][col], new Coordinates(row - moveFactor, col - moveFactor)))
+                                return true;
                         } catch (Exception ignored) {
                         }
                         try {
-                            if (board.validateMove(board.getFields()[row][col], new Coordinates(row - moveFactor, col + moveFactor))) return true;
+                            if (board.validateMove(board.getFields()[row][col], new Coordinates(row - moveFactor, col + moveFactor)))
+                                return true;
                         } catch (Exception ignored) {
                         }
                         try {
@@ -212,13 +225,15 @@ public class Game {
                                 return true;
                         } catch (Exception ignored) {
                         }
-                        if(board.getFields()[row][col].isCrowned()){
+                        if (board.getFields()[row][col].isCrowned()) {
                             try {
-                                if (board.validateMove(board.getFields()[row][col], new Coordinates(row + moveFactor, col + moveFactor))) return true;
+                                if (board.validateMove(board.getFields()[row][col], new Coordinates(row + moveFactor, col + moveFactor)))
+                                    return true;
                             } catch (Exception ignored) {
                             }
                             try {
-                                if (board.validateMove(board.getFields()[row][col], new Coordinates(row + moveFactor, col - moveFactor))) return true;
+                                if (board.validateMove(board.getFields()[row][col], new Coordinates(row + moveFactor, col - moveFactor)))
+                                    return true;
                             } catch (Exception ignored) {
                             }
                         }
@@ -232,12 +247,12 @@ public class Game {
     public boolean areOnlyTwoCrownsOnBoard() {
         boolean isBlackCrowned = false;
         boolean isWhiteCrowned = false;
-        if(board.getBlackPawnsCounter()==1 && board.getWhitePawnsCounter()==1){
-            for (Pawn[] pawns:
-                 board.getFields()) {
-                for (Pawn pawn:
-                     pawns) {
-                    if(pawn != null) {
+        if (board.getBlackPawnsCounter() == 1 && board.getWhitePawnsCounter() == 1) {
+            for (Pawn[] pawns :
+                    board.getFields()) {
+                for (Pawn pawn :
+                        pawns) {
+                    if (pawn != null) {
                         if (pawn.isCrowned()) {
                             if (pawn.getColor() == Color.black) {
                                 isBlackCrowned = true;
@@ -266,18 +281,6 @@ public class Game {
         return (Pattern.compile("^((?i)([a-z])(\\d+))$").matcher(inputCoordinate).matches() || inputCoordinate.equals("end"));
     }
 
-    //return user color
-    public int getUserPawnColor() {
-        Scanner scanner = new Scanner(System.in);
-        int userColor = scanner.nextInt();
-        System.out.println("Choose yours pawns color");
-        String pattern = "^[1-2]$";
-        do {
-
-        } while (!String.valueOf(userColor).matches(pattern));
-        return 0;
-    }
-
     public void checkStartingPosition(int player) {
         int[] startPawnCoordinates = {0, 0};
         int[] endPawnCoordinates = {0, 0};
@@ -293,7 +296,7 @@ public class Game {
         } while (!tryToMakeMove(pawn, newPawnPosition));
 
         if (isCapture) {
-            while(isNextCapturePossible(endPawnCoordinates)) {
+            while (isNextCapturePossible(endPawnCoordinates)) {
                 startPawnCoordinates = endPawnCoordinates;
                 do {
                     endPawnCoordinates = getNewPawnPosition(true);
@@ -306,10 +309,9 @@ public class Game {
         }
     }
 
-
     private boolean isNextCapturePossible(int[] pawnCoordinates) {
         Pawn pawn = board.getFields()[pawnCoordinates[0]][pawnCoordinates[1]];
-        if(pawn.isCrowned()) {
+        if (pawn.isCrowned()) {
             return isNextCapturePossibleQueen(pawn);
         } else {
             return isNextCapturePossiblePawn(pawn);
@@ -321,7 +323,7 @@ public class Game {
         for (int row = pawnCoordinates.getRow() - 2; row <= pawnCoordinates.getRow() + 2; row += 4) {
             for (int col = pawnCoordinates.getCol() - 2; col <= pawnCoordinates.getCol() + 2; col += 4) {
                 if (areCoordinatesInBoardRange(row, col) &&
-                    board.validateMoveWithCapture(pawn, new Coordinates(row, col)) != null
+                        board.validateMoveWithCapture(pawn, new Coordinates(row, col)) != null
                 ) {
                     return true;
                 }
@@ -440,55 +442,47 @@ public class Game {
     }
 
     /**
-     * There is a method that checks if the starting position from user input
-     * is a valid pawn and if the ending position is within board boundaries.
-     * If so, it calls tryToMakeMove() on pawn instance.
+     * Checks if the starting position from user input
+     * is a pawn valid, and is an ending position within the board boundaries.
      *
      * @return true if move is possible and executed, otherwise false.
      */
     public boolean tryToMakeMove(Pawn pawn, Coordinates movePosition) {
-            if (this.board.validateMove(pawn, movePosition)) {
-                //nastepuje sam ruch, bez bicia
-                //check crown
-                if(this.board.validateCrowning(pawn,movePosition)) pawn.setCrowned(this.board);
-                this.board.movePawn(pawn, movePosition);
-                drawCondition--;
-                if(pawn.isCrowned()){
-                    int [][] tmpQueenFields = pawn.getFieldsPickedWhenCrowned();
-                    tmpQueenFields[movePosition.getRow()][movePosition.getCol()] ++;
-                    pawn.setFieldsPickedWhenCrowned(tmpQueenFields);
-                }
-                return true;
-            }
-            //sprawdz czy ruch jest o dwa pola a miedzy nimi jest pionek przeciwnika
-            Pawn pawnToCapture = this.board.validateMoveWithCapture(pawn, movePosition);
-            if (pawnToCapture != null ) {
-                //wykonaj ruch z biciem
-                //check crown
-                if(this.board.validateCrowning(pawn,movePosition)&&!isNextCapturePossiblePawn(pawn)) pawn.setCrowned(this.board);
-                this.board.movePawn(pawn, movePosition);
-                this.board.removePawn(pawnToCapture);
-                drawCondition = 15;
-                if(pawn.isCrowned()){
-                    int [][] tmpQueenFields = pawn.getFieldsPickedWhenCrowned();
-                    tmpQueenFields[movePosition.getRow()][movePosition.getCol()] ++;
-                    pawn.setFieldsPickedWhenCrowned(tmpQueenFields);
-                }
-                return true;
-            }
+        if (this.board.validateMove(pawn, movePosition)) {
+            //move without capture
+            //check crown
+            if (this.board.validateCrowning(pawn, movePosition)) pawn.setCrowned(this.board);
+            this.board.movePawn(pawn, movePosition);
+            //decrement drawCondition counter because in this move no pawn was captured
+            drawCondition--;
+            return true;
+        }
+        Pawn pawnToCapture = this.board.validateMoveWithCapture(pawn, movePosition);
+        if (pawnToCapture != null) {
+            //move with capture
+            //check crown
+            if (this.board.validateCrowning(pawn, movePosition) && !isNextCapturePossiblePawn(pawn))
+                pawn.setCrowned(this.board);
+            this.board.movePawn(pawn, movePosition);
+            this.board.removePawn(pawnToCapture);
+            //reset drawCondition because there was capture
+            drawCondition = 15;
+            return true;
+        }
 
         System.out.println("Your move is incorrect");
         return false;
     }
-    public void getStatusOfGame(){
-        int numberOfPawnsAtTheBeginningOfGame = board.getBoardSize() *2;
+
+    public void getStatusOfGame() {
+        int numberOfPawnsAtTheBeginningOfGame = board.getBoardSize() * 2;
         int numberOfWhitePawnsCaptured = numberOfPawnsAtTheBeginningOfGame - board.getWhitePawnsCounter();
         int numberOfBlackPawnsCaptured = numberOfPawnsAtTheBeginningOfGame - board.getBlackPawnsCounter();
         System.out.println("\tThere are " + numberOfWhitePawnsCaptured + " white pawns captured!");
         System.out.println("\tThere are " + numberOfBlackPawnsCaptured + " black pawns captured!");
     }
 
-    public void getAiMove (int player) {
+    public void getAiMove(int player) {
         // create list with all current player's pawns
         Color color;
         if (player == 1) {
@@ -519,7 +513,7 @@ public class Game {
             Thread.currentThread().interrupt();
         }
 
-        while (!pawns.isEmpty()){
+        while (!pawns.isEmpty()) {
             // select one random pawn to move
             int index = (int) (Math.random() * pawns.size());
             Pawn chosenPawn = pawns.get(index);
@@ -598,24 +592,6 @@ public class Game {
                 }
             }
             pawns.remove(index);
-         }
+        }
     }
 }
-
-//  logika wykonania ruchu. (sa dwie mozliwosci: 1. ruch bez bicia, 2. ruch z biciem)
-//  (etapy rozwoju logiki, od prostszego do bardziej zlozonego)
-//      etap 1 logiki:
-//          wykonuje jeden z mozilwych ruchow (z biciem albo bez) z wykorzystaniem metod z pozostalych klas.
-//          prawdopodbnie logika bedzie rozbudowana dlatego sugerujemy z gory rozbijanie jej na osobne metody ktore,
-//          tutaj beda wywolywane
-
-//          jezeli bicie nastapilo to ustawiamy licznik drawCondition na 15
-//          jezeli bicia nie bylo licznik zmniejszamy o 1
-
-//      etap 2 logiki:
-//          Sprawdzanie wszystkich mozliwych bic przez rekurencyjne sprawdzanie warunku az do wyczerpania mozliwosci
-//          najlepsza sciezka bicia = sciezka z nadluzszego stosu.
-//          jezeli wybor gracza nie bedzie najlepszym wyborem nie wykonuj ruchu, zwroc false
-//
-//  }else return false // zwroc false jezeli ruch nie moze zostac wykonany. true jeseli ruch zostal wykonany
-//

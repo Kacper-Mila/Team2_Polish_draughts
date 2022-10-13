@@ -4,9 +4,17 @@ import java.awt.*;
 
 public class Pawn {
 
+    private final Color color;
     private Coordinates position;
-    private Color color;
     private boolean isCrowned;
+
+    private int[][] fieldsPickedWhenCrowned; //array of counters for each field counting how many times this pawn was
+    // moved on that fields when it was crowned
+
+    public Pawn(Coordinates position, Color color) {
+        this.color = color;
+        this.position = position;
+    }
 
     public int[][] getFieldsPickedWhenCrowned() {
         return fieldsPickedWhenCrowned;
@@ -16,33 +24,6 @@ public class Pawn {
         this.fieldsPickedWhenCrowned = fieldsPickedWhenCrowned;
     }
 
-    private int [][] fieldsPickedWhenCrowned;
-
-    public Pawn(Coordinates position, Color color) {
-        this.color = color;
-        this.position = position;
-    }
-
-    public void setPosition(Coordinates position) {
-        this.position = position;
-    }
-
-
-    public void setColor(Color color) {
-        this.color = color;
-    }
-
-    public void setCrowned(Board board) {
-        isCrowned = true;
-        this.fieldsPickedWhenCrowned = new int [board.getBoardSize()][board.getBoardSize()];
-    }
-
-    //The Pawn class contains a method that validates the move (whether it is within the game rules) before it is performed.
-    // missing other rules. Chapter 'Moves and captures' from https://en.wikipedia.org/wiki/International_draughts
-    //sprawdza czy moge sie przesunac na podane pole
-    //sprawdzanie bicia po przekatnej jest jako extra
-
-
     public Color getColor() {
         return color;
     }
@@ -51,8 +32,17 @@ public class Pawn {
         return position;
     }
 
+    public void setPosition(Coordinates position) {
+        this.position = position;
+    }
+
     public boolean isCrowned() {
         return this.isCrowned;
+    }
+
+    public void setCrowned(Board board) {
+        isCrowned = true;
+        this.fieldsPickedWhenCrowned = new int[board.getBoardSize()][board.getBoardSize()];
     }
 
 }
