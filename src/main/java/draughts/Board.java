@@ -209,6 +209,17 @@ public class Board {
                 }
             }
         }
+
+
+        int row = 1;
+        int col = 0;
+        this.fields[row][col] = new Pawn(new Coordinates(row, col), black);
+        row = 1;
+        col = 2;
+        this.fields[row][col] = new Pawn(new Coordinates(row, col), white);
+        row = 5;
+        col = 5;
+        this.fields[row][col] = new Pawn(new Coordinates(row, col), white);
     }
 
     /**
