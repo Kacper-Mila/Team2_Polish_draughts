@@ -242,11 +242,52 @@ public class Board {
         }
         return true;
     }
-    public Pawn validateQueenMoveWithCapture(Pawn pawn, Coordinates position){
 
+    /**
+     * Check if Queen can move on the given field (coordinates). Can move if the field is empty, and it is diagonally.
+     * Also chceck if on the way there is a
+     * @param pawn pawn object that is crowned (queen)
+     * @param position coordinates of target pawn move
+     * @return true if move is valid, otherwise false
+     */
+    public Pawn validateQueenMoveWithCapture(Pawn pawn, Coordinates position){
+        int startX = pawn.getPosition().getRow();
+        int startY = pawn.getPosition().getCol();
+        int goalX = position.getRow();
+        int goalY = position.getCol();
+        Color pawnColor = pawn.getColor();
+
+        //check if the field is empty
+        if(this.fields[goalX][goalY] != null) return null;
+        //check if the move is diagonally
+        if(!(abs(goalX-startX) == abs(goalY-startY))) return null;
+        int col = 0;
+        for (int row = -(goalX+1)/(abs(goalX)+1); abs(row) <= abs(goalX-startX); row +=-(goalX+1)/(abs(goalX)+1)){
+            col +=(goalY+1)/(abs(goalY)+1);
+            if (getFields()[startX+row][startY + col] != null){
+                if(getFields()[startX+row][startY + col].getColor()==pawnColor){
+                    // there is pawn with the same color as the queen on the way of the queen's move. It can't move so far.
+                    return null;
+                }else {
+                    Coordinates tmpFieldBehindThePawn = new Coordinates(
+                            startX + row - (goalX+1)/(abs(goalX)+1),
+                            startY + col + (goalY+1)/(abs(goalY)+1));
+                    if(getFields()[tmpFieldBehindThePawn.getRow()][tmpFieldBehindThePawn.getCol()]==null
+                    && position == tmpFieldBehindThePawn //TODO: werifiy it can compare two coordinates
+                    ){
+                        //the field behind the pawn ot the opposite color is empty so queen can capture this pawn.
+                        //It is also the field that queen want to move.
+                        return getFields()[startX+row][startY + col];
+                    }else {
+                        //the field behind the pawn is occupied so queen cant capture it, or the field behind the pawn is
+                        //not the field queen wants to move.
+                        return null;
+                    }
+                }
+            }
+        }
         return null;
     }
-    //******** Queen Validation END ********//
 
     public Pawn checkForPossibleMoves(Pawn pawn, Coordinates position, Color color) {
         int startRow = pawn.getPosition().getRow();
@@ -282,21 +323,23 @@ public class Board {
         return null;
     }
 
-    //TODO: inside this method validate both pawn and queen
     public Pawn validateMoveWithCapture(Pawn pawn, Coordinates position) {
-
-        // if goal field is empty
-        if (this.fields[position.getRow()][position.getCol()] == null) {
-            // if my color is black
-            if (pawn.getColor().equals(black)) {
-                // if my goal move is 2 fields diagonally away
-                return checkForPossibleMoves(pawn, position, Color.white);
-            } else if (pawn.getColor().equals(white)) {
-                return checkForPossibleMoves(pawn, position, Color.black);
+        if (pawn.isCrowned()){
+            return validateQueenMoveWithCapture(pawn,position);
+        }else{
+            // if goal field is empty
+            if (this.fields[position.getRow()][position.getCol()] == null) {
+                // if my color is black
+                if (pawn.getColor().equals(black)) {
+                    // if my goal move is 2 fields diagonally away
+                    return checkForPossibleMoves(pawn, position, Color.white);
+                } else if (pawn.getColor().equals(white)) {
+                    return checkForPossibleMoves(pawn, position, Color.black);
+                }
+            } else {
+                return null;
             }
-        } else {
             return null;
         }
-        return null;
     }
 }
