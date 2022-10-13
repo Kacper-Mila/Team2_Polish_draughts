@@ -13,15 +13,22 @@
 			How to capture Polish draughts?
 
 1. All pawns can capture both forward and backward. Capture means that the pawn jumps over the opponent's pawn and stops in an empty field right behind him.
-2. You can also capture more than one pawn in one move (multiple capture), and even change the capture direction, provided that there is one empty space between the opponent's pawns (so that your pawn can freely jump between them.
-3. It is compulsory to capture in checkers.
-4. If we start a beating, it should be finished - you cannot stop halfway through the beating.
-5. If we have a choice of at least two beats, then you have complete freedom - it is up to you to decide which one you choose.
+2. You can also capture more than one pawn in one move (multiple capture), and even change the capture direction.
+3. provided that there is one empty space between the opponent's pawns (so that your pawn can freely jump between them).
+4. There is freedom when it comes to capturing pawns - you can do it, you should, but don't have to.
+5. If we start a beating, it can be finished, but you don't have to.
+6. If we have a choice of at least two beats, also then you have complete freedom
+
+            Crowned
+1. You have to pass the pawn through the whole board, i.e. reach the line of transformation on the opponent's side and stop on it.
+2. Crowned can move backwards.
+3. the crown can move any number of squares diagonally.
+3. The queen can capture one opponent's pawn at the same time.
 
 			You will win if:
 
-7. You will capture all your opponent's pieces.
-8. If you manage to block the opponent's pawns in such a way that he will not be able to make any move.
+1. You will capture all your opponent's pieces.
+2. If you manage to block the opponent's pawns in such a way that he will not be able to make any move.
  
 			Draw
 
