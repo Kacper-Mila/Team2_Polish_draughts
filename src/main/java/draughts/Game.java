@@ -46,9 +46,9 @@ public class Game {
     public void start() {
         Scanner scanner = new Scanner(System.in);
         this.board.createBoard();
-        System.out.println("Choose your opponent: \n1. human\n2. AI");
+        //System.out.println("Choose your opponent: \n1. human\n2. AI");
         int opponent = 0;
-        opponent = scanner.nextInt();
+        //opponent = scanner.nextInt();
 
         while (opponent != 1 && opponent != 2 && opponent != 3) {
             try {
@@ -62,21 +62,18 @@ public class Game {
         switch (opponent) {
             case 1: // human vs human
                 while (playRound()){
-                    //within playRound() player's moves are played. If none of them wins, or it is draw then game is kept running
                 }
                 System.out.println(board);
                 break;
 
                 case 2: // human vs ai
                     while (playRoundWithAI()){
-                        //within playRound() player's moves are played. If none of them wins, or it is draw then game is kept running
                     }
                     System.out.println(board);
                 break;
 
             case 3:
                 while (playRoundAIvsAI()){
-                    //within playRound() player's moves are played. If none of them wins, or it is draw then game is kept running
                 }
                 System.out.println(board);
                 break;
@@ -121,10 +118,6 @@ public class Game {
             return false;
         }
         return true;
-    }
-
-    public void checkIfGameEnds() {
-
     }
 
 
@@ -549,7 +542,7 @@ public class Game {
         LinkedList<Coordinates> possibleMovesWithoutCapture = new LinkedList<>();
 
         try {
-            Thread.sleep(1500);
+            Thread.sleep(2000);
         } catch (InterruptedException ie) {
             Thread.currentThread().interrupt();
         }
