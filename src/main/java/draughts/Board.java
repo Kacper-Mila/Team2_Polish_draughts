@@ -7,6 +7,7 @@ import static java.lang.Math.abs;
 
 public class Board {
     private Pawn[][] fields;
+    private static Board single_instance;
     private int whitePawnsCounter; // number of white pawns in the game at the moment
     private int blackPawnsCounter; // same as above but black one
 
@@ -18,7 +19,7 @@ public class Board {
         return blackPawnsCounter;
     }
 
-    public Board(int sideLength) { // n -> sideLength
+    private Board(int sideLength) { // n -> sideLength
         if (sideLength >= 10 && sideLength <= 20) {
             this.fields = new Pawn[sideLength][sideLength];
             whitePawnsCounter = 2 * sideLength;
@@ -26,7 +27,21 @@ public class Board {
         }
     }
 
-    public int getBoardSize() {
+    public static Board newInstance(int n){
+        if (single_instance == null){
+            single_instance = new Board(n);
+        }else {
+            throw new IllegalStateException("The board instance already exists");
+        }
+        return null;
+    }
+
+    public static Board getInstance(){
+        if (single_instance == null) return null;
+        return single_instance;
+    }
+
+    public int getBoardSize(){
         return fields.length;
     }
     /**
@@ -48,7 +63,7 @@ public class Board {
         final String ANSI_QUEEN = "\u265B";
         final String FORMAT = "%-3.40s"; //String format that keeps field width min 3 chars and max 40.
         // Its 40 because invisible formatting escape symbols are included in string length
-        Pawn[][] board = this.fields;
+        Pawn [][] board = this.fields;
         StringBuilder result = new StringBuilder();
         Color background;
         for (int row = 0; row < board.length + 1; row++) { // i -> row
