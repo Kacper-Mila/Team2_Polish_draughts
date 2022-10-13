@@ -249,7 +249,7 @@ public class Board {
 
     /**
      * Check if Queen can move on the given field (coordinates). Can move if the field is empty, and it is diagonally.
-     * Also chceck if on the way there is a
+     * Also, chceck if on the way there is a
      * @param pawn pawn object that is crowned (queen)
      * @param position coordinates of target pawn move
      * @return true if move is valid, otherwise false
@@ -260,8 +260,9 @@ public class Board {
         int goalX = position.getRow();
         int goalY = position.getCol();
         Color pawnColor = pawn.getColor();
-
-        //check if the field is empty
+        int numberOfEnemyPawnsOnTheQueenWay = 0;
+        Pawn pawnToCapture = null;
+        //check if the goal field is empty
         if(this.fields[goalX][goalY] != null) return null;
         //check if the move is diagonally
         if(!(abs(goalX-startX) == abs(goalY-startY))) return null;
@@ -273,25 +274,15 @@ public class Board {
                     // there is pawn with the same color as the queen on the way of the queen's move. It can't move so far.
                     return null;
                 }else {
-                    Coordinates tmpFieldBehindThePawn = new Coordinates(
-                            startX + row + (goalX-startX)/(abs(goalX-startX)),
-                            startY + col + (goalY-startY)/(abs(goalY-startY)));
-                    if(getFields()[tmpFieldBehindThePawn.getRow()][tmpFieldBehindThePawn.getCol()]==null
-                    && position.getRow() == tmpFieldBehindThePawn.getRow()
-                        && position.getCol() == tmpFieldBehindThePawn.getCol()
-                    ){
-                        //the field behind the pawn ot the opposite color is empty so queen can capture this pawn.
-                        //It is also the field that queen want to move.
-                        return getFields()[startX+row][startY + col];
-                    }else {
-                        //the field behind the pawn is occupied so queen cant capture it, or the field behind the pawn is
-                        //not the field queen wants to move.
-                        return null;
-                    }
+                    //there is pawn with the opposite color on the way
+                    numberOfEnemyPawnsOnTheQueenWay++;
+                    pawnToCapture = getFields()[startX+row][startY + col];
+                    //If on the way is more than one pawn then queen cant move.
+                    if(numberOfEnemyPawnsOnTheQueenWay>1) return null;
                 }
             }
         }
-        return null;
+        return pawnToCapture;
     }
 
     public Pawn checkForPossibleMoves(Pawn pawn, Coordinates position, Color color) {
