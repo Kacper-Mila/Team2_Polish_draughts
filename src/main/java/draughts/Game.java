@@ -32,6 +32,7 @@ public class Game {
      * method that starts game between players.
      */
     public void start() {
+        PrintingRules.showRulesForPlayers();
         this.board.createBoard();
         while (playRound()){
             //within playRound() player's moves are played. If none of them wins, or it is draw then game is kept running
