@@ -6,18 +6,10 @@ import static java.awt.Color.*;
 import static java.lang.Math.abs;
 
 public class Board {
+    private static Board single_instance; //singleton pattern
     private Pawn[][] fields;
-    private static Board single_instance;
     private int whitePawnsCounter; // number of white pawns in the game at the moment
     private int blackPawnsCounter; // same as above but black one
-
-    public int getWhitePawnsCounter() {
-        return whitePawnsCounter;
-    }
-
-    public int getBlackPawnsCounter() {
-        return blackPawnsCounter;
-    }
 
     private Board(int sideLength) { // n -> sideLength
         if (sideLength >= 10 && sideLength <= 20) {
@@ -27,26 +19,47 @@ public class Board {
         }
     }
 
-    public static Board newInstance(int n){
-        if (single_instance == null){
+    /**
+     * Allows to create only one object of the board (singleton pattern)
+     *
+     * @param n board size
+     * @return null if it doesn't exist otherwise throw IllegalStateException
+     */
+    public static Board newInstance(int n) {
+        if (single_instance == null) {
             single_instance = new Board(n);
-        }else {
+        } else {
             throw new IllegalStateException("The board instance already exists");
         }
         return null;
     }
 
-    public static Board getInstance(){
+    /**
+     * Allows to get the board object if it exists (singleton pattern)
+     *
+     * @return board object if exists, otherwise null
+     */
+    public static Board getInstance() {
         if (single_instance == null) return null;
         return single_instance;
     }
 
-    public int getBoardSize(){
+    public int getWhitePawnsCounter() {
+        return whitePawnsCounter;
+    }
+
+    public int getBlackPawnsCounter() {
+        return blackPawnsCounter;
+    }
+
+    public int getBoardSize() {
         return fields.length;
     }
+
     /**
      * Print current board.
      * This method marks row as numbers and col as letters.
+     *
      * @return String representing board
      */
     @Override
@@ -63,7 +76,7 @@ public class Board {
         final String ANSI_QUEEN = "\u265B";
         final String FORMAT = "%-3.40s"; //String format that keeps field width min 3 chars and max 40.
         // Its 40 because invisible formatting escape symbols are included in string length
-        Pawn [][] board = this.fields;
+        Pawn[][] board = this.fields;
         StringBuilder result = new StringBuilder();
         Color background;
         for (int row = 0; row < board.length + 1; row++) { // i -> row
@@ -126,12 +139,7 @@ public class Board {
         return fields;
     }
 
-    public void setFields(Pawn[][] fields) {
-        this.fields = fields;
-    }
-
     public void removePawn(Pawn pawn) {
-        //zmniejsza o 1 licznik pionkow w klasie board, zgodnie z kolorem jaki zawiera obiekt pawn
         int coordinatesRow = pawn.getPosition().getRow();
         int coordinatesCol = pawn.getPosition().getCol();
         this.fields[coordinatesRow][coordinatesCol] = null;
@@ -140,17 +148,27 @@ public class Board {
         } else blackPawnsCounter--;
     }
 
+    /**
+     * Moves pawns from a specified position to another field.
+     * This method is just changing pawns coordinates
+     *
+     * @param pawn     that is moving
+     * @param position on which pawn is being moved
+     */
     public void movePawn(Pawn pawn, Coordinates position) {
-        //There is a movePawn() method that moves pawns from a specified position to another field.
-        //This method is just changing pawns coordinates
-        //removes pawn from startPosition and moves it to endPosition
-        int startRow = pawn.getPosition().getRow(); // startX -> startRow
-        int startCol = pawn.getPosition().getCol();// startY -> startCol
+        int startRow = pawn.getPosition().getRow();
+        int startCol = pawn.getPosition().getCol();
         this.fields[startRow][startCol] = null;
-        int goalRow = position.getRow(); // goalX -> goalRow
-        int goalCol = position.getCol(); // goalY -> goalCol
+        int goalRow = position.getRow();
+        int goalCol = position.getCol();
         pawn.setPosition(position);
         this.fields[goalRow][goalCol] = pawn;
+        //Each pawn that is crowned (is queen) counts fields on that it was moved. After each move update its field.
+        if (pawn.isCrowned()) {
+            int[][] tmpQueenFields = pawn.getFieldsPickedWhenCrowned();
+            tmpQueenFields[position.getRow()][position.getCol()]++;
+            pawn.setFieldsPickedWhenCrowned(tmpQueenFields);
+        }
     }
 
     public void createBoard() {
@@ -194,7 +212,7 @@ public class Board {
     }
 
     /**
-     * @param pawn pawn object
+     * @param pawn     pawn object
      * @param position coordinates of pawn move
      * @return true if move is valid, otherwise false
      */
@@ -230,7 +248,8 @@ public class Board {
 
     /**
      * Check if Queen can move on the given field (coordinates). Can move if the field is empty, and it is diagonally.
-     * @param pawn pawn object that is crowned (queen)
+     *
+     * @param pawn     pawn object that is crowned (queen)
      * @param position coordinates of target pawn move
      * @return true if move is valid, otherwise false
      */
@@ -257,7 +276,8 @@ public class Board {
     /**
      * Check if Queen can move on the given field (coordinates). Can move if the field is empty, and it is diagonally.
      * Also, chceck if on the way there is a
-     * @param pawn pawn object that is crowned (queen)
+     *
+     * @param pawn     pawn object that is crowned (queen)
      * @param position coordinates of target pawn move
      * @return true if move is valid, otherwise false
      */
@@ -270,7 +290,7 @@ public class Board {
         int numberOfEnemyPawnsOnTheQueenWay = 0;
         Pawn pawnToCapture = null;
         //check if the goal field is empty
-        if(this.fields[goalRow][goalCol] != null) return null;
+        if (this.fields[goalRow][goalCol] != null) return null;
         //check if the move is diagonally
         if (!(abs(goalRow - startRow) == abs(goalCol - startCol))) return null;
         int col = 0;
@@ -280,12 +300,12 @@ public class Board {
                 if (getFields()[startRow + row][startCol + col].getColor() == pawnColor) {
                     // there is pawn with the same color as the queen on the way of the queen's move. It can't move so far.
                     return null;
-                }else {
+                } else {
                     //there is pawn with the opposite color on the way
                     numberOfEnemyPawnsOnTheQueenWay++;
-                    pawnToCapture = getFields()[startRow+row][startCol + col];
+                    pawnToCapture = getFields()[startRow + row][startCol + col];
                     //If on the way is more than one pawn then queen cant move.
-                    if(numberOfEnemyPawnsOnTheQueenWay>1) return null;
+                    if (numberOfEnemyPawnsOnTheQueenWay > 1) return null;
                 }
             }
         }
@@ -350,42 +370,21 @@ public class Board {
     }
 
     /**
-     * Method check if pawn should be crowned (pawn is on the edge) if is so then check if there is pawn blocking it.
-     * There shouldn't be enemy blocking pawn (that has to be captured) because such possibility should be prevented earlier.
-     * @param pawn Pawn object
+     * Method check if pawn should be crowned (pawn is on the edge).
+     *
+     * @param pawn     Pawn object
      * @param position position to move Pawn
      * @return true if pawn can be crowned
      */
     public boolean validateCrowning(Pawn pawn, Coordinates position) {
-        //Crown pawn if allowed (is on the correct edge of the board and is not forced to capture an enemy pawn
+        //Crown pawn if allowed (is on the correct edge of the board
         if (!pawn.isCrowned()) {
             //check if pawn is on the edge of the board
-            return(pawn.getColor() == white && position.getRow() == 0 ||
+            return (pawn.getColor() == white && position.getRow() == 0 ||
                     pawn.getColor() == black && position.getRow() == this.getBoardSize() - 1);
         }
         //the Pawn can not be crowned
         return false;
-    }
-
-    /**
-     * Method that return pawn blocking crowning if there is such
-     * @param pawn Pawn object
-     * @param position position to which move the pawn
-     * @return blocking pawn if exists otherwise return null
-     */
-    public Pawn getPawnBlockingCrowning(Pawn pawn, Coordinates position) {
-        int horizontalMoveDirection = position.getRow() - pawn.getPosition().getRow(); //get direction in which
-        // should be checked field for blocking capture
-        if (pawn.getPosition().getRow() + 2 * horizontalMoveDirection > 0 && horizontalMoveDirection < this.getBoardSize()) {
-            Pawn possiblePawnToCapture = this.getFields()
-                    [pawn.getPosition().getRow() + 2 * horizontalMoveDirection]
-                    [pawn.getPosition().getCol()];
-            //there is optional capture not allowing to crown a pawn
-            return possiblePawnToCapture;
-        } else {
-            //there cant be pawn to capture because there is no field to check (corner scenarios)
-            return null;
-        }
     }
 
 }
