@@ -11,9 +11,9 @@ public class Game {
     private final Board board;
     private int drawCondition = 15;
 
-
     public Game() {
-        this.board = new Board(getBoardSizeFromUser());
+        Board.newInstance(getBoardSizeFromUser());
+        this.board = Board.getInstance();
     }
 
     private static int getBoardSizeFromUser() {
@@ -27,15 +27,9 @@ public class Game {
         return Integer.parseInt(boardSize);
     }
 
-    public Board getBoard() {
-        return this.board;
-    }
-
-
     /**
      * method that starts game between players.
      */
-
     public void start() {
         PrintingRules.showRulesForPlayers();
         Scanner scanner = new Scanner(System.in);
@@ -109,7 +103,6 @@ public class Game {
         }
         return false;
     }
-
 
     public boolean playRoundWithAI() {
         //ruch 1 gracza - human

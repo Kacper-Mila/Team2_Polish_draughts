@@ -7,7 +7,6 @@ import static java.lang.Math.abs;
 
 public class Board {
     private Pawn[][] fields;
-
     private static Board single_instance;
     private int whitePawnsCounter; // number of white pawns in the game at the moment
     private int blackPawnsCounter; // same as above but black one
@@ -20,7 +19,7 @@ public class Board {
         return blackPawnsCounter;
     }
 
-    public Board(int sideLength) { // n -> sideLength
+    private Board(int sideLength) { // n -> sideLength
         if (sideLength >= 10 && sideLength <= 20) {
             this.fields = new Pawn[sideLength][sideLength];
             whitePawnsCounter = 2 * sideLength;
