@@ -193,6 +193,10 @@ public class Board {
         row = 1;
         col =6;
         this.fields[row][col] = new Pawn(new Coordinates(row, col), black);
+        row = 2;
+        col =3;
+        this.fields[row][col] = new Pawn(new Coordinates(row, col), white);
+        this.fields[row][col].setCrowned(this);
     }
 
     /**
