@@ -136,17 +136,6 @@ public class Board {
         int goalCol = position.getCol(); // goalY -> goalCol
         pawn.setPosition(position);
         this.fields[goalRow][goalCol] = pawn;
-
-        //******* setCrowned *******//
-        if (!pawn.isCrowned()){
-            if(pawn.getColor() == white && goalRow == 0){
-                pawn.setCrowned(this);
-            }
-            if (pawn.getColor() == black && goalRow == this.getBoardSize() - 1){
-                pawn.setCrowned(this);
-            }
-        }
-        //**************************//
     }
 
     public void createBoard() {
@@ -384,7 +373,6 @@ public class Board {
                     Pawn possiblePawnToCapture = this.getFields()
                             [pawn.getPosition().getRow() ]
                             [pawn.getPosition().getCol()+ 2 * horizontalMoveDirection];
-
                     return possiblePawnToCapture == null;
                     //there is no possible capture -> return true
                     //there is optional capture not allowing to crown a pawn. -> return false
