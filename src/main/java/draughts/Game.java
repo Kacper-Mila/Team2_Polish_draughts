@@ -18,6 +18,10 @@ public class Game {
         this.board = Board.getInstance();
     }
 
+    /**
+     * Get size of board from user
+     * @return size of board
+     */
     private static int getBoardSizeFromUser() {
         Scanner readBoardSize = new Scanner(System.in);
         String boardSize;
@@ -276,19 +280,28 @@ public class Game {
     }
 
     /**
-     * There is a method that checks if the starting position from user input
-     * is a valid pawn and if the ending position is within board boundaries.
-     * If so, it calls tryToMakeMove() on pawn instance.
+     * Check if coordinate from user is correct
+     * @param inputCoordinate coordinate from user
+     * @return true when coordinate is correct
      */
-
     public boolean isValidCoordinate(String inputCoordinate) {
         return Pattern.compile("^((?i)([a-z])(\\d+))$").matcher(inputCoordinate).matches();
     }
 
+    /**
+     * Check if coordinate from user is correct, with 'end' move choose
+     * @param inputCoordinate coordinate from user
+     * @return true when coordinate is correct or user want end move by 'end'
+     */
     public boolean isValidCoordinateWithEnd(String inputCoordinate) {
         return (Pattern.compile("^((?i)([a-z])(\\d+))$").matcher(inputCoordinate).matches() || inputCoordinate.equals("end"));
     }
 
+    /**
+     * Check if start coordinate and end coordinate from user are correct and consistent with rules of game
+     * Ask user about multiple capture if it possible
+     * @param player is a player who try to make move
+     */
     public void checkStartingPosition(int player) {
         isAIPlaying = false;
         int[] startPawnCoordinates = {0, 0};
@@ -318,6 +331,11 @@ public class Game {
         }
     }
 
+    /**
+     * Check if next capture is possible depending on if it is a pawn or queen
+     * @param pawnCoordinates is actual coordinate of pawn
+     * @return true when next capture is possible
+     */
     private boolean isNextCapturePossible(int[] pawnCoordinates) {
         Pawn pawn = board.getFields()[pawnCoordinates[0]][pawnCoordinates[1]];
         if (pawn.isCrowned()) {
@@ -327,6 +345,11 @@ public class Game {
         }
     }
 
+    /**
+     * Check if next capture for pawn is possible
+     * @param pawn pawn which is checking
+     * @return true when next capture is possible
+     */
     private boolean isNextCapturePossiblePawn(Pawn pawn) {
         Coordinates pawnCoordinates = pawn.getPosition();
         for (int row = pawnCoordinates.getRow() - 2; row <= pawnCoordinates.getRow() + 2; row += 4) {
@@ -341,6 +364,11 @@ public class Game {
         return false;
     }
 
+    /**
+     * Check if next capture for queen is possible
+     * @param pawn pawn which is checking
+     * @return true when next capture is possible
+     */
     private boolean isNextCapturePossibleQueen(Pawn pawn) {
         Coordinates pawnCoordinates = pawn.getPosition();
         for (int i = -board.getBoardSize(); i <= board.getBoardSize(); i++) {
@@ -362,6 +390,11 @@ public class Game {
         return false;
     }
 
+    /**
+     * Get position the pawn which player want to move
+     * @param player is a player who want to move
+     * @return coordinate pawn
+     */
     private int[] getStartPawnPosition(int player) {
         int[] pawnPosition;
         Scanner scanner = new Scanner(System.in);
@@ -395,6 +428,11 @@ public class Game {
         return pawnPosition;
     }
 
+    /**
+     * Get possition where player want to move pawn
+     * @param isEndAccepted means if it is first get pawn position or multiple capture pawn possition
+     * @return coordinate where player want to move pawn
+     */
     private int[] getNewPawnPosition(boolean isEndAccepted) {
         int[] newPawnPosition = null;
         Scanner scanner = new Scanner(System.in);
@@ -430,10 +468,21 @@ public class Game {
         return newPawnPosition;
     }
 
+    /**
+     * Check if coordinate is in range of board
+     * @param coordinates is coordinate to check
+     * @return true when coordinate is in range of board
+     */
     private boolean areCoordinatesInBoardRange(int[] coordinates) {
         return areCoordinatesInBoardRange(coordinates[0], coordinates[1]);
     }
 
+    /**
+     * Check if coordinate is in range of board
+     * @param row is row of coordinate to check
+     * @param col is column of coordinate to check
+     * @return true when coordinate is in range of board
+     */
     private boolean areCoordinatesInBoardRange(int row, int col) {
         return (
                 row >= 0 && row < board.getBoardSize() &&
@@ -441,6 +490,11 @@ public class Game {
         );
     }
 
+    /**
+     * Parse coordinate from String to array of coordinate
+     * @param coordinate coordinate as String
+     * @return coordinate as two elements array
+     */
     private int[] parseCoordinate(String coordinate) {
         String endCol = coordinate.toUpperCase().substring(0, 1);
         int endRow = Integer.parseInt(coordinate.substring(1));
@@ -453,7 +507,6 @@ public class Game {
     /**
      * Checks if the starting position from user input
      * is a pawn valid, and is an ending position within the board boundaries.
-     *
      * @return true if move is possible and executed, otherwise false.
      */
     public boolean tryToMakeMove(Pawn pawn, Coordinates movePosition) {

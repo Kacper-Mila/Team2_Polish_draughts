@@ -52,6 +52,10 @@ public class Board {
         return blackPawnsCounter;
     }
 
+    /**
+     * Get size of board
+     * @return size of board
+     */
     public int getBoardSize() {
         return fields.length;
     }
