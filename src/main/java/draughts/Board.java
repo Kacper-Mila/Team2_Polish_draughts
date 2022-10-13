@@ -149,45 +149,41 @@ public class Board {
     public void createBoard(){
         // one side of the board
         int sideLength = this.getBoardSize();
-//        int numberOfPawns = blackPawnsCounter;
-//
-//        for (int row = 0; row < sideLength; row++) {
-//            for (int col = 0; col < sideLength; col = col + 2) {
-//                if (row % 2 == 0) {
-//                    if (numberOfPawns > 0) {
-//                        this.fields[row][col + 1] = new Pawn(new Coordinates(row, col+1), black);
-//                        numberOfPawns--;
-//                    }
-//                } else {
-//                    if (numberOfPawns > 0) {
-//                        this.fields[row][col] = new Pawn(new Coordinates(row, col), black);
-//                        numberOfPawns--;
-//                    }
-//                }
-//            }
-//        }
-//
-//        // other side of the board
-//        numberOfPawns = whitePawnsCounter;
-//        for (int row = sideLength - 1; row > sideLength - 5; row--) {
-//            for (int col = 0; col < sideLength; col = col + 2) {
-//                if (row % 2 == 0) {
-//                    if (numberOfPawns > 0) {
-//                        this.fields[row][col + 1] = new Pawn(new Coordinates(row, col+1), white);
-//                        numberOfPawns--;
-//                    }
-//                } else {
-//                    if (numberOfPawns > 0) {
-//                        this.fields[row][col] = new Pawn(new Coordinates(row, col), white);
-//                        numberOfPawns--;
-//                    }
-//                }
-//            }
-//        }
-        int row = 5;
-        int col = 4;
-        this.fields[row][col] = new Pawn(new Coordinates(row, col), white);
-        this.fields[row][col].setCrowned(this);
+        int numberOfPawns = blackPawnsCounter;
+
+        for (int row = 0; row < sideLength; row++) {
+            for (int col = 0; col < sideLength; col = col + 2) {
+                if (row % 2 == 0) {
+                    if (numberOfPawns > 0) {
+                        this.fields[row][col + 1] = new Pawn(new Coordinates(row, col+1), black);
+                        numberOfPawns--;
+                    }
+                } else {
+                    if (numberOfPawns > 0) {
+                        this.fields[row][col] = new Pawn(new Coordinates(row, col), black);
+                        numberOfPawns--;
+                    }
+                }
+            }
+        }
+
+        // other side of the board
+        numberOfPawns = whitePawnsCounter;
+        for (int row = sideLength - 1; row > sideLength - 5; row--) {
+            for (int col = 0; col < sideLength; col = col + 2) {
+                if (row % 2 == 0) {
+                    if (numberOfPawns > 0) {
+                        this.fields[row][col + 1] = new Pawn(new Coordinates(row, col+1), white);
+                        numberOfPawns--;
+                    }
+                } else {
+                    if (numberOfPawns > 0) {
+                        this.fields[row][col] = new Pawn(new Coordinates(row, col), white);
+                        numberOfPawns--;
+                    }
+                }
+            }
+        }
     }
 
     /**
@@ -242,9 +238,11 @@ public class Board {
         //check if the move is diagonally
         if(!(abs(goalX-startX) == abs(goalY-startY))) return false;
         int col = 0;
-        for (int row = -(goalX+1)/(abs(goalX)+1); abs(row) <= abs(goalX-startX); row +=-(goalX+1)/(abs(goalX)+1)){
-            col +=(goalY+1)/(abs(goalY)+1);
-            if (getFields()[startX+row][startY + col] != null) return false;
+        for (int row = (goalX-startX)/(abs(goalX-startX)); abs(row) < abs(goalX-startX); row +=(goalX-startX)/(abs(goalX-startX))){
+            col +=(goalY-startY)/(abs(goalY-startY));
+            if (getFields()[startX+row][startY + col] != null){
+                return false;
+            }
         }
         return true;
     }
@@ -268,18 +266,19 @@ public class Board {
         //check if the move is diagonally
         if(!(abs(goalX-startX) == abs(goalY-startY))) return null;
         int col = 0;
-        for (int row = -(goalX+1)/(abs(goalX)+1); abs(row) <= abs(goalX-startX); row +=-(goalX+1)/(abs(goalX)+1)){
-            col +=(goalY+1)/(abs(goalY)+1);
+        for (int row = (goalX-startX)/(abs(goalX-startX)); abs(row) < abs(goalX-startX); row +=(goalX-startX)/(abs(goalX-startX))){
+            col +=(goalY-startY)/(abs(goalY-startY));
             if (getFields()[startX+row][startY + col] != null){
                 if(getFields()[startX+row][startY + col].getColor()==pawnColor){
                     // there is pawn with the same color as the queen on the way of the queen's move. It can't move so far.
                     return null;
                 }else {
                     Coordinates tmpFieldBehindThePawn = new Coordinates(
-                            startX + row - (goalX+1)/(abs(goalX)+1),
-                            startY + col + (goalY+1)/(abs(goalY)+1));
+                            startX + row + (goalX-startX)/(abs(goalX-startX)),
+                            startY + col + (goalY-startY)/(abs(goalY-startY)));
                     if(getFields()[tmpFieldBehindThePawn.getRow()][tmpFieldBehindThePawn.getCol()]==null
-                    && position == tmpFieldBehindThePawn //TODO: werifiy it can compare two coordinates
+                    && position.getRow() == tmpFieldBehindThePawn.getRow()
+                        && position.getCol() == tmpFieldBehindThePawn.getCol()
                     ){
                         //the field behind the pawn ot the opposite color is empty so queen can capture this pawn.
                         //It is also the field that queen want to move.
