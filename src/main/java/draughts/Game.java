@@ -229,35 +229,30 @@ public class Game {
         int[] startPawnCoordinates = {0, 0};
         int[] endPawnCoordinates = {0, 0};
         Coordinates newPawnPosition;
-
-        boolean isFirstMovement = true;
-        boolean isNextCapturePossible = false;
         boolean isCapture = false;
         Pawn pawn = null;
         do {
-            do {
-                if (isFirstMovement) {
-                    startPawnCoordinates = getStartPawnPosition(player);
-                    endPawnCoordinates = getNewPawnPosition(isFirstMovement);
-                }
-                newPawnPosition = new Coordinates(endPawnCoordinates[0], endPawnCoordinates[1]);
-                pawn = board.getFields()[startPawnCoordinates[0]][startPawnCoordinates[1]];
-                isCapture = board.validateMoveWithCapture(pawn, newPawnPosition) != null;
-            } while (!tryToMakeMove(pawn, newPawnPosition));
+            startPawnCoordinates = getStartPawnPosition(player);
+            endPawnCoordinates = getNewPawnPosition(false);
+            newPawnPosition = new Coordinates(endPawnCoordinates[0], endPawnCoordinates[1]);
+            pawn = board.getFields()[startPawnCoordinates[0]][startPawnCoordinates[1]];
+            isCapture = board.validateMoveWithCapture(pawn, newPawnPosition) != null;
+        } while (!tryToMakeMove(pawn, newPawnPosition));
 
-            if (isCapture) {
-                isFirstMovement = false;
-                isNextCapturePossible = isNextCapturePossible(endPawnCoordinates);
-                if (isNextCapturePossible) {
-                    startPawnCoordinates = endPawnCoordinates;
-                    endPawnCoordinates = getNewPawnPosition(isFirstMovement);
-                }
-                if (endPawnCoordinates == null) {
-                    return;
-                }
+        if (isCapture) {
+            while(isNextCapturePossible(endPawnCoordinates)) {
+                startPawnCoordinates = endPawnCoordinates;
+                do {
+                    endPawnCoordinates = getNewPawnPosition(true);
+                    if (endPawnCoordinates == null) {
+                        return;
+                    }
+                    newPawnPosition = new Coordinates(endPawnCoordinates[0], endPawnCoordinates[1]);
+                } while (!tryToMakeMove(board.getFields()[startPawnCoordinates[0]][startPawnCoordinates[1]], newPawnPosition));
             }
         }
     }
+
 
     private boolean isNextCapturePossible(int[] pawnCoordinates) {
         Pawn pawn = board.getFields()[pawnCoordinates[0]][pawnCoordinates[1]];
