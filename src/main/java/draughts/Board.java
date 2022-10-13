@@ -179,11 +179,21 @@ public class Board {
 //            }
 //        }
         //TODO: remove before pushing
+        //TODO: poprawic remisy zeby nie sprawdzaly ruchu dla krolowki. teraz mysli ze gracz nie ma ruchu bo zaklada ze krolowka rusz asie jak pionek
         int row = 1;
         int col = 4;
         this.fields[row][col] = new Pawn(new Coordinates(row, col), white);
         row = 2;
         col = 5;
+        this.fields[row][col] = new Pawn(new Coordinates(row, col), black);
+        row = 3;
+        col = 1;
+        this.fields[row][col] = new Pawn(new Coordinates(row, col), white);
+        row = 8;
+        col =5;
+        this.fields[row][col] = new Pawn(new Coordinates(row, col), black);
+        row = 1;
+        col =6;
         this.fields[row][col] = new Pawn(new Coordinates(row, col), black);
     }
 
@@ -242,6 +252,7 @@ public class Board {
         for (int row = (goalX - startX) / (abs(goalX - startX)); abs(row) < abs(goalX - startX); row += (goalX - startX) / (abs(goalX - startX))) {
             col += (goalY - startY) / (abs(goalY - startY));
             if (getFields()[startX + row][startY + col] != null) {
+
                 return false;
             }
         }
@@ -357,7 +368,7 @@ public class Board {
      * There shouldn't be enemy blocking pawn (that has to be captured) because such possibility should be prevented earlier.
      * @param pawn Pawn object
      * @param position position to move Pawn
-     * @return true if can be crowned
+     * @return true if pawn can be crowned
      */
     public boolean validateCrowning(Pawn pawn, Coordinates position) {
         //Crown pawn if allowed (is on the correct edge of the board and is not forced to capture an enemy pawn
@@ -366,13 +377,14 @@ public class Board {
             if (pawn.getColor() == white && position.getRow() == 0 ||
                     pawn.getColor() == black && position.getRow() == this.getBoardSize() - 1) {
                 //check if there is a possible capture not allowing to upgrade a pawn to a queen
-                int horizontalMoveDirection = position.getRow() - pawn.getPosition().getRow(); //get direction in which
+                int horizontalMoveDirection = position.getCol() - pawn.getPosition().getCol(); //get direction in which
                 // should be checked field for blocking capture
-                if (pawn.getPosition().getRow() + 2 * horizontalMoveDirection > 0 && horizontalMoveDirection < this.getBoardSize()) {
+                if (pawn.getPosition().getCol() + 2 * horizontalMoveDirection  > 0 &&
+                        pawn.getPosition().getCol() + 2 * horizontalMoveDirection< this.getBoardSize()) {
                     //check if there is pawn that should be capture what disallow to crown a pawn
                     Pawn possiblePawnToCapture = this.getFields()
-                            [pawn.getPosition().getRow() + 2 * horizontalMoveDirection]
-                            [pawn.getPosition().getCol()];
+                            [pawn.getPosition().getRow() ]
+                            [pawn.getPosition().getCol()+ 2 * horizontalMoveDirection];
 
                     return possiblePawnToCapture == null;
                     //there is no possible capture -> return true

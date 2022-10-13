@@ -394,11 +394,10 @@ public class Game {
      * @return true if move is possible and executed, otherwise false.
      */
     public boolean tryToMakeMove(Pawn pawn, Coordinates movePosition) {
-            Coordinates originalPawnPosition = pawn.getPosition();
             if (this.board.validateMove(pawn, movePosition)) {
                 //nastepuje sam ruch, bez bicia
                 //check crown
-                if(this.board.validateCrowning(pawn,originalPawnPosition)) pawn.setCrowned(this.board);
+                if(this.board.validateCrowning(pawn,movePosition)) pawn.setCrowned(this.board);
                 this.board.movePawn(pawn, movePosition);
                 drawCondition--;
                 if(pawn.isCrowned()){
@@ -413,7 +412,7 @@ public class Game {
             if (pawnToCapture != null ) {
                 //wykonaj ruch z biciem
                 //check crown
-                if(this.board.validateCrowning(pawn,originalPawnPosition)) pawn.setCrowned(this.board);
+                if(this.board.validateCrowning(pawn,movePosition)) pawn.setCrowned(this.board);
                 this.board.movePawn(pawn, movePosition);
                 this.board.removePawn(pawnToCapture);
                 drawCondition = 15;
