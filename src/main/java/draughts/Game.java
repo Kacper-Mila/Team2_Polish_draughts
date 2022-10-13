@@ -1,6 +1,7 @@
 package main.java.draughts;
 
 import java.awt.*;
+import java.util.InputMismatchException;
 import java.util.LinkedList;
 import java.util.Scanner;
 import java.util.regex.Pattern;
@@ -28,16 +29,58 @@ public class Game {
     public Board getBoard() {
         return this.board;
     }
-
-    /**
-     * method that starts game between players.
-     */
+/*
     public void start() {
         this.board.createBoard();
         while (playRound()){
             //within playRound() player's moves are played. If none of them wins, or it is draw then game is kept running
         }
         System.out.println(board);
+    }
+
+    */
+    /**
+     * method that starts game between players.
+     */
+
+    public void start() {
+        Scanner scanner = new Scanner(System.in);
+        this.board.createBoard();
+        System.out.println("Choose your opponent: \n1. human\n2. AI");
+        int opponent = 0;
+        opponent = scanner.nextInt();
+
+        while (opponent != 1 && opponent != 2 && opponent != 3) {
+            try {
+                System.out.println("Choose your opponent: \n1. human\n2. AI");
+                opponent = scanner.nextInt();
+            } catch (InputMismatchException ex) {
+                scanner.nextLine();
+            }
+        }
+
+        switch (opponent) {
+            case 1: // human vs human
+                while (playRound()){
+                    //within playRound() player's moves are played. If none of them wins, or it is draw then game is kept running
+                }
+                System.out.println(board);
+                break;
+
+                case 2: // human vs ai
+                    while (playRoundWithAI()){
+                        //within playRound() player's moves are played. If none of them wins, or it is draw then game is kept running
+                    }
+                    System.out.println(board);
+                break;
+
+            case 3:
+                while (playRoundAIvsAI()){
+                    //within playRound() player's moves are played. If none of them wins, or it is draw then game is kept running
+                }
+                System.out.println(board);
+                break;
+        }
     }
 
     /**
@@ -80,6 +123,10 @@ public class Game {
         return true;
     }
 
+    public void checkIfGameEnds() {
+
+    }
+
 
     public boolean playRoundWithAI() {
         //ruch 1 gracza - human
@@ -97,7 +144,41 @@ public class Game {
             System.out.println("Player 2 won. Congratulations!");
             return false;
         }
-        //ruch 2 gracza - human
+        //ruch 2 gracza - ai
+        System.out.println("Player 2 move - black");
+        getAiMove(2);
+        if (checkForTheDraw()){
+            System.out.println("It's a draw!");
+            return false;
+        }
+        if (checkForWinner(1)) {
+            System.out.println("Player 1 won. Congratulations!");
+            return false;
+        }
+        if(checkForWinner(2) ){
+            System.out.println("Player 2 won. Congratulations!");
+            return false;
+        }
+        return true;
+    }
+
+    public boolean playRoundAIvsAI() {
+        //ruch 1 gracza - ai
+        System.out.println("Player 1 move - white");
+        getAiMove(1);
+        if (checkForTheDraw()){
+            System.out.println("It's a draw!");
+            return false;
+        }
+        if (checkForWinner(1)) {
+            System.out.println("Player 1 won. Congratulations!");
+            return false;
+        }
+        if(checkForWinner(2) ){
+            System.out.println("Player 2 won. Congratulations!");
+            return false;
+        }
+        //ruch 2 gracza - ai
         System.out.println("Player 2 move - black");
         getAiMove(2);
         if (checkForTheDraw()){
@@ -263,7 +344,7 @@ public class Game {
         Coordinates newPawnPosition;
         do {
             startPawnCoordinates = getStartPawnPosition(player);
-            endPawnCoordinates = getNewPawnPosition(true);
+            endPawnCoordinates = getNewPawnPosition(false);
             newPawnPosition = new Coordinates(endPawnCoordinates[0], endPawnCoordinates[1]);
         } while (!tryToMakeMove(board.getFields()[startPawnCoordinates[0]][startPawnCoordinates[1]], newPawnPosition));
 
@@ -271,7 +352,7 @@ public class Game {
             while(isNextCapturePossible(endPawnCoordinates)) {
                 startPawnCoordinates = endPawnCoordinates;
                 do {
-                    endPawnCoordinates = getNewPawnPosition(false);
+                    endPawnCoordinates = getNewPawnPosition(true);
                     if (endPawnCoordinates == null) {
                         return;
                     }
