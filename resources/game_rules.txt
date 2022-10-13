@@ -14,9 +14,9 @@
 
 1. All pawns can capture both forward and backward. Capture means that the pawn jumps over the opponent's pawn and stops in an empty field right behind him.
 2. You can also capture more than one pawn in one move (multiple capture), and even change the capture direction, provided that there is one empty space between the opponent's pawns (so that your pawn can freely jump between them.
-3. It is compulsory to capture in checkers.
-4. If we start a beating, it should be finished - you cannot stop halfway through the beating.
-5. If we have a choice of at least two beats, then you have complete freedom - it is up to you to decide which one you choose.
+3. There is freedom when it comes to capturing pawns - you can do it, you should, but don't have to.
+4. If we start a beating, it can be finished, but you don't have to.
+5. If we have a choice of at least two beats, also then you have complete freedom
 
 			You will win if:
 
