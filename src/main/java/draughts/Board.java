@@ -143,56 +143,39 @@ public class Board {
         int sideLength = this.getBoardSize();
         int numberOfPawns = blackPawnsCounter;
 
-//        for (int row = 0; row < sideLength; row++) {
-//            for (int col = 0; col < sideLength; col = col + 2) {
-//                if (row % 2 == 0) {
-//                    if (numberOfPawns > 0) {
-//                        this.fields[row][col + 1] = new Pawn(new Coordinates(row, col + 1), black);
-//                        numberOfPawns--;
-//                    }
-//                } else {
-//                    if (numberOfPawns > 0) {
-//                        this.fields[row][col] = new Pawn(new Coordinates(row, col), black);
-//                        numberOfPawns--;
-//                    }
-//                }
-//            }
-//        }
-//
-//        // other side of the board
-//        numberOfPawns = whitePawnsCounter;
-//        for (int row = sideLength - 1; row > sideLength - 5; row--) {
-//            for (int col = 0; col < sideLength; col = col + 2) {
-//                if (row % 2 == 0) {
-//                    if (numberOfPawns > 0) {
-//                        this.fields[row][col + 1] = new Pawn(new Coordinates(row, col + 1), white);
-//                        numberOfPawns--;
-//                    }
-//                } else {
-//                    if (numberOfPawns > 0) {
-//                        this.fields[row][col] = new Pawn(new Coordinates(row, col), white);
-//                        numberOfPawns--;
-//                    }
-//                }
-//            }
-//        }
-        //TODO: remove before pushing
-        //TODO: poprawic remisy zeby nie sprawdzaly ruchu dla krolowki. teraz mysli ze gracz nie ma ruchu bo zaklada ze krolowka rusz asie jak pionek
-        int row = 1;
-        int col = 4;
-        this.fields[row][col] = new Pawn(new Coordinates(row, col), white);
-        row = 2;
-        col = 5;
-        this.fields[row][col] = new Pawn(new Coordinates(row, col), black);
-        row = 3;
-        col = 1;
-        this.fields[row][col] = new Pawn(new Coordinates(row, col), white);
-        row = 8;
-        col =5;
-        this.fields[row][col] = new Pawn(new Coordinates(row, col), black);
-        row = 1;
-        col =6;
-        this.fields[row][col] = new Pawn(new Coordinates(row, col), black);
+        for (int row = 0; row < sideLength; row++) {
+            for (int col = 0; col < sideLength; col = col + 2) {
+                if (row % 2 == 0) {
+                    if (numberOfPawns > 0) {
+                        this.fields[row][col + 1] = new Pawn(new Coordinates(row, col + 1), black);
+                        numberOfPawns--;
+                    }
+                } else {
+                    if (numberOfPawns > 0) {
+                        this.fields[row][col] = new Pawn(new Coordinates(row, col), black);
+                        numberOfPawns--;
+                    }
+                }
+            }
+        }
+
+        // other side of the board
+        numberOfPawns = whitePawnsCounter;
+        for (int row = sideLength - 1; row > sideLength - 5; row--) {
+            for (int col = 0; col < sideLength; col = col + 2) {
+                if (row % 2 == 0) {
+                    if (numberOfPawns > 0) {
+                        this.fields[row][col + 1] = new Pawn(new Coordinates(row, col + 1), white);
+                        numberOfPawns--;
+                    }
+                } else {
+                    if (numberOfPawns > 0) {
+                        this.fields[row][col] = new Pawn(new Coordinates(row, col), white);
+                        numberOfPawns--;
+                    }
+                }
+            }
+        }
     }
 
     /**
