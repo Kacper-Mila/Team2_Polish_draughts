@@ -169,6 +169,16 @@ public class Game {
                                 return true;
                         } catch (Exception ignored) {
                         }
+                        if(board.getFields()[row][col].isCrowned()){
+                            try {
+                                if (board.validateMove(board.getFields()[row][col], new Coordinates(row + moveFactor, col + moveFactor))) return true;
+                            } catch (Exception ignored) {
+                            }
+                            try {
+                                if (board.validateMove(board.getFields()[row][col], new Coordinates(row + moveFactor, col - moveFactor))) return true;
+                            } catch (Exception ignored) {
+                            }
+                        }
                     }
                 }
             }
@@ -229,13 +239,17 @@ public class Game {
         int[] startPawnCoordinates = {0, 0};
         int[] endPawnCoordinates = {0, 0};
         Coordinates newPawnPosition;
+        boolean isCapture = false;
+        Pawn pawn = null;
         do {
             startPawnCoordinates = getStartPawnPosition(player);
             endPawnCoordinates = getNewPawnPosition(false);
             newPawnPosition = new Coordinates(endPawnCoordinates[0], endPawnCoordinates[1]);
-        } while (!tryToMakeMove(board.getFields()[startPawnCoordinates[0]][startPawnCoordinates[1]], newPawnPosition));
+            pawn = board.getFields()[startPawnCoordinates[0]][startPawnCoordinates[1]];
+            isCapture = board.validateMoveWithCapture(pawn, newPawnPosition) != null;
+        } while (!tryToMakeMove(pawn, newPawnPosition));
 
-        if (isCaptureInPrevMove(startPawnCoordinates, endPawnCoordinates)) {
+        if (isCapture) {
             while(isNextCapturePossible(endPawnCoordinates)) {
                 startPawnCoordinates = endPawnCoordinates;
                 do {
@@ -249,39 +263,48 @@ public class Game {
         }
     }
 
-    private boolean isCaptureInPrevMove(int[] startPosition, int[] endPosition) {
-        return (startPosition[0] == endPosition[0] + 2 && startPosition[1] == endPosition[1] + 2
-                || startPosition[0] == endPosition[0] - 2 && startPosition[1] == endPosition[1] + 2
-                || startPosition[0] == endPosition[0] + 2 && startPosition[1] == endPosition[1] - 2
-                || startPosition[0] == endPosition[0] - 2 && startPosition[1] == endPosition[1] - 2);
+
+    private boolean isNextCapturePossible(int[] pawnCoordinates) {
+        Pawn pawn = board.getFields()[pawnCoordinates[0]][pawnCoordinates[1]];
+        if(pawn.isCrowned()) {
+            return isNextCapturePossibleQueen(pawn);
+        } else {
+            return isNextCapturePossiblePawn(pawn);
+        }
     }
 
-    private boolean isNextCapturePossible(int[] endPawnCoordinates) {
+    private boolean isNextCapturePossiblePawn(Pawn pawn) {
+        Coordinates pawnCoordinates = pawn.getPosition();
+        for (int row = pawnCoordinates.getRow() - 2; row <= pawnCoordinates.getRow() + 2; row += 4) {
+            for (int col = pawnCoordinates.getCol() - 2; col <= pawnCoordinates.getCol() + 2; col += 4) {
+                if (areCoordinatesInBoardRange(row, col) &&
+                    board.validateMoveWithCapture(pawn, new Coordinates(row, col)) != null
+                ) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 
-        if (areCoordinatesInBoardRange(endPawnCoordinates[0] - 2, endPawnCoordinates[1] - 2)) {
-            if (board.validateMoveWithCapture(board.getFields()[endPawnCoordinates[0]][endPawnCoordinates[1]], new Coordinates(endPawnCoordinates[0] - 2, endPawnCoordinates[1] - 2)) != null) {
-                return true;
-            }
-        }
-        if (areCoordinatesInBoardRange(endPawnCoordinates[0] - 2, endPawnCoordinates[1] + 2)) {
-            if (board.validateMoveWithCapture(
-                    board.getFields()[endPawnCoordinates[0]][endPawnCoordinates[1]],
-                    new Coordinates(endPawnCoordinates[0] - 2, endPawnCoordinates[1] + 2)
-            ) != null) {
-                return true;
-            }
-        }
-        if (areCoordinatesInBoardRange(endPawnCoordinates[0] + 2, endPawnCoordinates[1] - 2)) {
-            if (board.validateMoveWithCapture(board.getFields()[endPawnCoordinates[0]][endPawnCoordinates[1]], new Coordinates(endPawnCoordinates[0] + 2, endPawnCoordinates[1] - 2)) != null) {
+    private boolean isNextCapturePossibleQueen(Pawn pawn) {
+        Coordinates pawnCoordinates = pawn.getPosition();
+        for (int i = -board.getBoardSize(); i <= board.getBoardSize(); i++) {
+            // Check diagonal movements up-left to down-right
+            if (areCoordinatesInBoardRange(pawnCoordinates.getRow() + i, pawnCoordinates.getCol() + i) &&
+                    board.validateMoveWithCapture(pawn, new Coordinates(pawnCoordinates.getRow() + i, pawnCoordinates.getCol() + i)) != null
+            ) {
                 return true;
             }
 
-        }
-        if (areCoordinatesInBoardRange((endPawnCoordinates[0] + 2), (endPawnCoordinates[1] + 2))) {
-            if (board.validateMoveWithCapture(board.getFields()[endPawnCoordinates[0]][endPawnCoordinates[1]], new Coordinates((endPawnCoordinates[0] + 2), (endPawnCoordinates[1] + 2))) != null) {
+            // Check diagonal movements up-right to down-left
+            if (areCoordinatesInBoardRange(pawnCoordinates.getRow() + i, pawnCoordinates.getCol() - i) &&
+                    board.validateMoveWithCapture(pawn, new Coordinates(pawnCoordinates.getRow() + i, pawnCoordinates.getCol() - i)) != null
+            ) {
                 return true;
             }
         }
+
         return false;
     }
 
@@ -381,9 +404,10 @@ public class Game {
      * @return true if move is possible and executed, otherwise false.
      */
     public boolean tryToMakeMove(Pawn pawn, Coordinates movePosition) {
-
             if (this.board.validateMove(pawn, movePosition)) {
                 //nastepuje sam ruch, bez bicia
+                //check crown
+                if(this.board.validateCrowning(pawn,movePosition)) pawn.setCrowned(this.board);
                 this.board.movePawn(pawn, movePosition);
                 drawCondition--;
                 if(pawn.isCrowned()){
@@ -395,11 +419,13 @@ public class Game {
             }
             //sprawdz czy ruch jest o dwa pola a miedzy nimi jest pionek przeciwnika
             Pawn pawnToCapture = this.board.validateMoveWithCapture(pawn, movePosition);
-            if (pawnToCapture != null) {
+            if (pawnToCapture != null ) {
                 //wykonaj ruch z biciem
+                //check crown
+                if(this.board.validateCrowning(pawn,movePosition)&&!isNextCapturePossiblePawn(pawn)) pawn.setCrowned(this.board);
                 this.board.movePawn(pawn, movePosition);
                 this.board.removePawn(pawnToCapture);
-                drawCondition = 15; //TODO opracowac funkcje
+                drawCondition = 15;
                 if(pawn.isCrowned()){
                     int [][] tmpQueenFields = pawn.getFieldsPickedWhenCrowned();
                     tmpQueenFields[movePosition.getRow()][movePosition.getCol()] ++;
