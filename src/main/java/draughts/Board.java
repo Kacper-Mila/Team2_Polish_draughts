@@ -178,6 +178,7 @@ public class Board {
 //                }
 //            }
 //        }
+        //TODO: remove before pushing
         int row = 1;
         int col = 4;
         this.fields[row][col] = new Pawn(new Coordinates(row, col), white);
@@ -351,6 +352,13 @@ public class Board {
         }
     }
 
+    /**
+     * Method check if pawn should be crowned (pawn is on the edge) if is so then check if there is pawn blocking it.
+     * There shouldn't be enemy blocking pawn (that has to be captured) because such possibility should be prevented earlier.
+     * @param pawn Pawn object
+     * @param position position to move Pawn
+     * @return true if can be crowned
+     */
     public boolean validateCrowning(Pawn pawn, Coordinates position) {
         //Crown pawn if allowed (is on the correct edge of the board and is not forced to capture an enemy pawn
         if (!pawn.isCrowned()) {
@@ -370,13 +378,20 @@ public class Board {
                     //there is no possible capture -> return true
                     //there is optional capture not allowing to crown a pawn. -> return false
                 }
-
+                //it is the case when pawn moves to the corner
+                return true;
             }
         }
         //the Pawn can not be crowned
         return false;
     }
 
+    /**
+     * Method that return pawn blocking crowning if there is such
+     * @param pawn Pawn object
+     * @param position position to which move the pawn
+     * @return blocking pawn if exists otherwise return null
+     */
     public Pawn getPawnBlockingCrowning(Pawn pawn, Coordinates position) {
         int horizontalMoveDirection = position.getRow() - pawn.getPosition().getRow(); //get direction in which
         // should be checked field for blocking capture
@@ -391,4 +406,5 @@ public class Board {
             return null;
         }
     }
+
 }

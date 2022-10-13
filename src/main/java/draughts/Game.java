@@ -395,9 +395,10 @@ public class Game {
      */
     public boolean tryToMakeMove(Pawn pawn, Coordinates movePosition) {
             Coordinates originalPawnPosition = pawn.getPosition();
-            boolean wasMoveExecuted = false;
             if (this.board.validateMove(pawn, movePosition)) {
                 //nastepuje sam ruch, bez bicia
+                //check crown
+                if(this.board.validateCrowning(pawn,originalPawnPosition)) pawn.setCrowned(this.board);
                 this.board.movePawn(pawn, movePosition);
                 drawCondition--;
                 if(pawn.isCrowned()){
@@ -405,32 +406,25 @@ public class Game {
                     tmpQueenFields[movePosition.getRow()][movePosition.getCol()] ++;
                     pawn.setFieldsPickedWhenCrowned(tmpQueenFields);
                 }
-                wasMoveExecuted = true;
+                return true;
             }
             //sprawdz czy ruch jest o dwa pola a miedzy nimi jest pionek przeciwnika
             Pawn pawnToCapture = this.board.validateMoveWithCapture(pawn, movePosition);
-            if (pawnToCapture != null &&!wasMoveExecuted) {
+            if (pawnToCapture != null ) {
                 //wykonaj ruch z biciem
+                //check crown
+                if(this.board.validateCrowning(pawn,originalPawnPosition)) pawn.setCrowned(this.board);
                 this.board.movePawn(pawn, movePosition);
                 this.board.removePawn(pawnToCapture);
-                drawCondition = 15; //TODO opracowac funkcje
+                drawCondition = 15;
                 if(pawn.isCrowned()){
                     int [][] tmpQueenFields = pawn.getFieldsPickedWhenCrowned();
                     tmpQueenFields[movePosition.getRow()][movePosition.getCol()] ++;
                     pawn.setFieldsPickedWhenCrowned(tmpQueenFields);
                 }
-                wasMoveExecuted = true;
+                return true;
             }
-            if (wasMoveExecuted){
-                if(this.board.validateCrowning(pawn,originalPawnPosition)){
-                    if(this.board.getPawnBlockingCrowning(pawn,originalPawnPosition)==null){
-                        pawn.setCrowned(this.board);
-                    }
-//                    else{
-//                        //TODO: it should be verified before user make theirs move if there is possible crowning
-//                    };
-                }
-            }
+
         System.out.println("Your move is incorrect");
         return false;
     }
