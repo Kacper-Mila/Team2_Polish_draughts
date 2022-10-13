@@ -241,7 +241,7 @@ public class Game {
         return Pattern.compile("^((?i)([a-z])(\\d+))$").matcher(inputCoordinate).matches();
     }
 
-    public boolean isValidCoordinatewithEnd(String inputCoordinate) {
+    public boolean isValidCoordinateWithEnd(String inputCoordinate) {
         return (Pattern.compile("^((?i)([a-z])(\\d+))$").matcher(inputCoordinate).matches() || inputCoordinate.equals("end"));
     }
 
@@ -261,29 +261,24 @@ public class Game {
         int[] startPawnCoordinates = {0, 0};
         int[] endPawnCoordinates = {0, 0};
         Coordinates newPawnPosition;
-        boolean isFirstMovement = true;
-        boolean isNextCapturePossible = false;
         do {
-            do {
-                if (isFirstMovement) {
-                    startPawnCoordinates = getStartPawnPosition(player);
-                    endPawnCoordinates = getNewPawnPosition(isFirstMovement);
-                }
-                newPawnPosition = new Coordinates(endPawnCoordinates[0], endPawnCoordinates[1]);
-            } while (!tryToMakeMove(board.getFields()[startPawnCoordinates[0]][startPawnCoordinates[1]], newPawnPosition));
+            startPawnCoordinates = getStartPawnPosition(player);
+            endPawnCoordinates = getNewPawnPosition(true);
+            newPawnPosition = new Coordinates(endPawnCoordinates[0], endPawnCoordinates[1]);
+        } while (!tryToMakeMove(board.getFields()[startPawnCoordinates[0]][startPawnCoordinates[1]], newPawnPosition));
 
-            if (isCaptureInPrevMove(startPawnCoordinates, endPawnCoordinates)) {
-                isFirstMovement = false;
-                isNextCapturePossible = isNextCapturePossible(endPawnCoordinates);
-                if (isNextCapturePossible) {
-                    startPawnCoordinates = endPawnCoordinates;
-                    endPawnCoordinates = getNewPawnPosition(isFirstMovement);
-                }
-                if (endPawnCoordinates == null) {
-                    return;
-                }
+        if (isCaptureInPrevMove(startPawnCoordinates, endPawnCoordinates)) {
+            while(isNextCapturePossible(endPawnCoordinates)) {
+                startPawnCoordinates = endPawnCoordinates;
+                do {
+                    endPawnCoordinates = getNewPawnPosition(false);
+                    if (endPawnCoordinates == null) {
+                        return;
+                    }
+                    newPawnPosition = new Coordinates(endPawnCoordinates[0], endPawnCoordinates[1]);
+                } while (!tryToMakeMove(board.getFields()[startPawnCoordinates[0]][startPawnCoordinates[1]], newPawnPosition));
             }
-        } while (isNextCapturePossible);
+        }
     }
 
     private boolean isCaptureInPrevMove(int[] startPosition, int[] endPosition) {
@@ -355,12 +350,12 @@ public class Game {
         return pawnPosition;
     }
 
-    private int[] getNewPawnPosition(boolean isFirstNewPawnPosition) {
+    private int[] getNewPawnPosition(boolean isEndAccepted) {
         int[] newPawnPosition = null;
         Scanner scanner = new Scanner(System.in);
         String endCoordinate;
         do {
-            if (isFirstNewPawnPosition) {
+            if (!isEndAccepted) {
                 System.out.println("Enter coordinates where you want to move your pawn. (eg. B2)");
                 endCoordinate = scanner.nextLine();
                 if (!isValidCoordinate(endCoordinate)) {
@@ -371,7 +366,7 @@ public class Game {
                 System.out.println(board);
                 System.out.println("You have optional movement with capture (multicapture), if you want capture enter coordinate, else press 'end'");
                 endCoordinate = scanner.nextLine();
-                if (!isValidCoordinatewithEnd(endCoordinate)) {
+                if (!isValidCoordinateWithEnd(endCoordinate)) {
                     System.out.println("Incorrect value, enter coordinate or 'end'");
                     continue;
 
