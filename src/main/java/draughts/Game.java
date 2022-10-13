@@ -49,6 +49,7 @@ public class Game {
     public boolean playRound() {
         //ruch 1 gracza
         System.out.println("Player 1 move - white");
+        getStatusOfGame();
         checkStartingPosition(1);
         if (checkForTheDraw()){
             System.out.println("It's a draw!");
@@ -64,6 +65,7 @@ public class Game {
         }
         //ruch 2 gracza
         System.out.println("Player 2 move- black");
+        getStatusOfGame();
         checkStartingPosition(2);
         if (checkForTheDraw()){
             System.out.println("It's a draw!");
@@ -406,6 +408,13 @@ public class Game {
         }
         System.out.println("Your move is incorrect");
         return false;
+    }
+    public void getStatusOfGame(){
+        int numberOfPawnsAtTheBeginningOfGame = board.getBoardSize() *2;
+        int numberOfWhitePawnsCaptured = numberOfPawnsAtTheBeginningOfGame - board.getWhitePawnsCounter();
+        int numberOfBlackPawnsCaptured = numberOfPawnsAtTheBeginningOfGame - board.getBlackPawnsCounter();
+        System.out.println("There are " + numberOfWhitePawnsCaptured + " white pawns captured!");
+        System.out.println("There are " + numberOfBlackPawnsCaptured + " black pawns captured!");
     }
 }
 
