@@ -1,6 +1,8 @@
 package main.java.draughts;
 
 import java.awt.*;
+import java.util.InputMismatchException;
+import java.util.LinkedList;
 import java.util.Scanner;
 import java.util.regex.Pattern;
 
@@ -8,6 +10,7 @@ public class Game {
 
     private final Board board;
     private int drawCondition = 15;
+
 
     public Game() {
         this.board = new Board(getBoardSizeFromUser());
@@ -28,16 +31,47 @@ public class Game {
         return this.board;
     }
 
+
     /**
      * method that starts game between players.
      */
+
     public void start() {
         PrintingRules.showRulesForPlayers();
+        Scanner scanner = new Scanner(System.in);
         this.board.createBoard();
-        while (playRound()){
-            //within playRound() player's moves are played. If none of them wins, or it is draw then game is kept running
+        //System.out.println("Choose your opponent: \n1. human\n2. AI");
+        int opponent = 0;
+        //opponent = scanner.nextInt();
+
+        while (opponent != 1 && opponent != 2 && opponent != 3) {
+            try {
+                System.out.println("Choose your opponent: \n1. human\n2. AI");
+                opponent = scanner.nextInt();
+            } catch (InputMismatchException ex) {
+                scanner.nextLine();
+            }
         }
-        System.out.println(board);
+
+        switch (opponent) {
+            case 1: // human vs human
+                while (playRound()){
+                }
+                System.out.println(board);
+                break;
+
+                case 2: // human vs ai
+                    while (playRoundWithAI()){
+                    }
+                    System.out.println(board);
+                    break;
+
+            case 3:
+                while (playRoundAIvsAI()){
+                }
+                System.out.println(board);
+                break;
+        }
     }
 
     /**
@@ -51,37 +85,53 @@ public class Game {
         System.out.println("Player 1 move - white");
         getStatusOfGame();
         checkStartingPosition(1);
-        if (checkForTheDraw()){
-            System.out.println("It's a draw!");
-            return false;
-        }
-        if (checkForWinner(1)) {
-            System.out.println("Player 1 won. Congratulations!");
-            return false;
-        }
-        if(checkForWinner(2) ){
-            System.out.println("Player 2 won. Congratulations!");
-            return false;
-        }
+        if (isEndGame()) return false;
         //ruch 2 gracza
         System.out.println("Player 2 move- black");
         getStatusOfGame();
         checkStartingPosition(2);
+        return !isEndGame();
+    }
+
+    public boolean isEndGame() {
+
         if (checkForTheDraw()){
             System.out.println("It's a draw!");
-            return false;
+            return true;
         }
         if (checkForWinner(1)) {
             System.out.println("Player 1 won. Congratulations!");
-            return false;
+            return true;
         }
         if(checkForWinner(2) ){
             System.out.println("Player 2 won. Congratulations!");
-            return false;
+            return true;
         }
-        return true;
+        return false;
     }
 
+
+    public boolean playRoundWithAI() {
+        //ruch 1 gracza - human
+        System.out.println("Player 1 move - white");
+        checkStartingPosition(1);
+        if (isEndGame()) return false;
+        //ruch 2 gracza - ai
+        System.out.println("Player 2 move - black");
+        getAiMove(2);
+        return !isEndGame();
+    }
+
+    public boolean playRoundAIvsAI() {
+        //ruch 1 gracza - ai
+        System.out.println("Player 1 move - white");
+        getAiMove(1);
+        if (isEndGame()) return false;
+        //ruch 2 gracza - ai
+        System.out.println("Player 2 move - black");
+        getAiMove(2);
+        return !isEndGame();
+    }
     /**
      * method that checks whether there is a winner after each round.
      * also checks for draws.
@@ -443,6 +493,119 @@ public class Game {
         int numberOfBlackPawnsCaptured = numberOfPawnsAtTheBeginningOfGame - board.getBlackPawnsCounter();
         System.out.println("There are " + numberOfWhitePawnsCaptured + " white pawns captured!");
         System.out.println("There are " + numberOfBlackPawnsCaptured + " black pawns captured!");
+    }
+
+    public void getAiMove (int player) {
+        // create list with all current player's pawns
+        Color color;
+        if (player == 1) {
+            color = Color.white;
+        } else {
+            color = Color.black;
+        }
+        System.out.println(this.board);
+        LinkedList<Pawn> pawns = new LinkedList<Pawn>();
+        for (Pawn[] fields : this.board.getFields()) {
+            for (Pawn pawn : fields) {
+                if (pawn != null) {
+                    if (pawn.getColor().equals(color)) {
+                        pawns.add(pawn);
+                    }
+                }
+            }
+        }
+
+        // create lists with all possible pawn's moves
+        int[] tempCoordinates = {-1, -1};
+        LinkedList<Coordinates> possibleCaptureMoves = new LinkedList<>();
+        LinkedList<Coordinates> possibleMovesWithoutCapture = new LinkedList<>();
+
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException ie) {
+            Thread.currentThread().interrupt();
+        }
+
+        while (!pawns.isEmpty()){
+            // select one random pawn to move
+            int index = (int) (Math.random() * pawns.size());
+            Pawn chosenPawn = pawns.get(index);
+            // normal moves for white pawn
+            if (color.equals(Color.white)) {
+                tempCoordinates[0] = chosenPawn.getPosition().getRow() - 1;
+                tempCoordinates[1] = chosenPawn.getPosition().getCol() - 1;
+                if (areCoordinatesInBoardRange(tempCoordinates)) {
+                    possibleMovesWithoutCapture.add(new Coordinates(tempCoordinates[0], tempCoordinates[1]));
+                }
+
+                tempCoordinates[0] = chosenPawn.getPosition().getRow() - 1;
+                tempCoordinates[1] = chosenPawn.getPosition().getCol() + 1;
+                if (areCoordinatesInBoardRange(tempCoordinates)) {
+                    possibleMovesWithoutCapture.add(new Coordinates(tempCoordinates[0], tempCoordinates[1]));
+                }
+
+                // normal moves for black pawn
+            } else {
+                tempCoordinates[0] = chosenPawn.getPosition().getRow() + 1;
+                tempCoordinates[1] = chosenPawn.getPosition().getCol() - 1;
+                if (areCoordinatesInBoardRange(tempCoordinates)) {
+                    possibleMovesWithoutCapture.add(new Coordinates(tempCoordinates[0], tempCoordinates[1]));
+                }
+
+                tempCoordinates[0] = chosenPawn.getPosition().getRow() + 1;
+                tempCoordinates[1] = chosenPawn.getPosition().getCol() + 1;
+                if (areCoordinatesInBoardRange(tempCoordinates)) {
+                    possibleMovesWithoutCapture.add(new Coordinates(tempCoordinates[0], tempCoordinates[1]));
+                }
+            }
+
+            //capture moves
+            tempCoordinates[0] = chosenPawn.getPosition().getRow() + 2;
+            tempCoordinates[1] = chosenPawn.getPosition().getCol() + 2;
+            if (areCoordinatesInBoardRange(tempCoordinates)) {
+                possibleCaptureMoves.add(new Coordinates(tempCoordinates[0], tempCoordinates[1]));
+            }
+
+            tempCoordinates[0] = chosenPawn.getPosition().getRow() + 2;
+            tempCoordinates[1] = chosenPawn.getPosition().getCol() - 2;
+            if (areCoordinatesInBoardRange(tempCoordinates)) {
+                possibleCaptureMoves.add(new Coordinates(tempCoordinates[0], tempCoordinates[1]));
+            }
+
+            tempCoordinates[0] = chosenPawn.getPosition().getRow() - 2;
+            tempCoordinates[1] = chosenPawn.getPosition().getCol() + 2;
+            if (areCoordinatesInBoardRange(tempCoordinates)) {
+                possibleCaptureMoves.add(new Coordinates(tempCoordinates[0], tempCoordinates[1]));
+            }
+
+            tempCoordinates[0] = chosenPawn.getPosition().getRow() - 2;
+            tempCoordinates[1] = chosenPawn.getPosition().getCol() - 2;
+            if (areCoordinatesInBoardRange(tempCoordinates)) {
+                possibleCaptureMoves.add(new Coordinates(tempCoordinates[0], tempCoordinates[1]));
+            }
+
+
+            // if it is possible - make a random capture move, if not - remove move from the list
+            while (!possibleCaptureMoves.isEmpty()) {
+                int i = (int) (Math.random() * possibleCaptureMoves.size());
+                if (tryToMakeMove(chosenPawn, possibleCaptureMoves.get(i))) {
+                    return;
+                } else {
+                    possibleCaptureMoves.remove(i);
+                }
+            }
+
+            // if it is possible - make a random normal move, if not - remove move from the list
+            while (!possibleMovesWithoutCapture.isEmpty()) {
+                int i = (int) (Math.random() * possibleCaptureMoves.size());
+                if (tryToMakeMove(chosenPawn, possibleMovesWithoutCapture.get(i))) {
+                    return;
+                } else {
+                    possibleMovesWithoutCapture.remove(i);
+                }
+            }
+            pawns.remove(index);
+         }
     }
 }
 
