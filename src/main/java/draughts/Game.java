@@ -150,22 +150,22 @@ public class Game {
                         } catch (Exception ignored) {
                         }
                         try {
-                            if (board.validateMoveWithCapture(board.getFields()[row][col], new Coordinates(row - 2, col - 2)) != null)
+                            if (board.validateMoveWithCapture(board.getFields()[row][col], new Coordinates(row - 2, col - 2)) != null) //  ↖
                                 return true;
                         } catch (Exception ignored) {
                         }
                         try {
-                            if (board.validateMoveWithCapture(board.getFields()[row][col], new Coordinates(row - 2, col + 2)) != null)
+                            if (board.validateMoveWithCapture(board.getFields()[row][col], new Coordinates(row - 2, col + 2)) != null) //  ↙
                                 return true;
                         } catch (Exception ignored) {
                         }
                         try {
-                            if (board.validateMoveWithCapture(board.getFields()[row][col], new Coordinates(row + 2, col - 2)) != null)
+                            if (board.validateMoveWithCapture(board.getFields()[row][col], new Coordinates(row + 2, col - 2)) != null) //  ↗
                                 return true;
                         } catch (Exception ignored) {
                         }
                         try {
-                            if (board.validateMoveWithCapture(board.getFields()[row][col], new Coordinates(row + 2, col + 2)) != null)
+                            if (board.validateMoveWithCapture(board.getFields()[row][col], new Coordinates(row + 2, col + 2)) != null) //  ↘
                                 return true;
                         } catch (Exception ignored) {
                         }
@@ -381,31 +381,33 @@ public class Game {
      * @return true if move is possible and executed, otherwise false.
      */
     public boolean tryToMakeMove(Pawn pawn, Coordinates movePosition) {
-        if (this.board.validateMove(pawn, movePosition)) {
-            //nastepuje sam ruch, bez bicia
-            this.board.movePawn(pawn, movePosition);
-            drawCondition--;
-            if(pawn.isCrowned()){
-                int [][] tmpQueenFields = pawn.getFieldsPickedWhenCrowned();
-                tmpQueenFields[movePosition.getRow()][movePosition.getCol()] ++;
-                pawn.setFieldsPickedWhenCrowned(tmpQueenFields);
+
+            if (this.board.validateMove(pawn, movePosition)) {
+                //nastepuje sam ruch, bez bicia
+                this.board.movePawn(pawn, movePosition);
+                drawCondition--;
+                if(pawn.isCrowned()){
+                    int [][] tmpQueenFields = pawn.getFieldsPickedWhenCrowned();
+                    tmpQueenFields[movePosition.getRow()][movePosition.getCol()] ++;
+                    pawn.setFieldsPickedWhenCrowned(tmpQueenFields);
+                }
+                return true;
             }
-            return true;
-        }
-        //sprawdz czy ruch jest o dwa pola a miedzy nimi jest pionek przeciwnika
-        Pawn pawnToCapture = this.board.validateMoveWithCapture(pawn, movePosition);
-        if (pawnToCapture != null) {
-            //wykonaj ruch z biciem
-            this.board.movePawn(pawn, movePosition);
-            this.board.removePawn(pawnToCapture);
-            drawCondition = 15; //TODO opracowac funkcje
-            if(pawn.isCrowned()){
-                int [][] tmpQueenFields = pawn.getFieldsPickedWhenCrowned();
-                tmpQueenFields[movePosition.getRow()][movePosition.getCol()] ++;
-                pawn.setFieldsPickedWhenCrowned(tmpQueenFields);
+            //sprawdz czy ruch jest o dwa pola a miedzy nimi jest pionek przeciwnika
+            Pawn pawnToCapture = this.board.validateMoveWithCapture(pawn, movePosition);
+            if (pawnToCapture != null) {
+                //wykonaj ruch z biciem
+                this.board.movePawn(pawn, movePosition);
+                this.board.removePawn(pawnToCapture);
+                drawCondition = 15; //TODO opracowac funkcje
+                if(pawn.isCrowned()){
+                    int [][] tmpQueenFields = pawn.getFieldsPickedWhenCrowned();
+                    tmpQueenFields[movePosition.getRow()][movePosition.getCol()] ++;
+                    pawn.setFieldsPickedWhenCrowned(tmpQueenFields);
+                }
+                return true;
             }
-            return true;
-        }
+
         System.out.println("Your move is incorrect");
         return false;
     }
