@@ -190,21 +190,21 @@ public class Board {
             return false;
         }
 
-        int startX = pawn.getPosition().getRow();
-        int startY = pawn.getPosition().getCol();
-        int goalX = position.getRow();
-        int goalY = position.getCol();
+        int startRow = pawn.getPosition().getRow();
+        int startCol = pawn.getPosition().getCol();
+        int goalRow = position.getRow();
+        int goalCol = position.getCol();
         Color startColor = pawn.getColor();
 
         if (pawn.isCrowned()) {
             return validateQueenMove(pawn, position);
         } else {
             // if the goal field is empty check if move is diagonally by one square
-            if ((this.fields[goalX][goalY]) == null) {
+            if ((this.fields[goalRow][goalCol]) == null) {
                 if (startColor.equals(black)) {
-                    return ((goalX == startX + 1) && (goalY == startY - 1)) || ((goalX == startX + 1) && (goalY == startY + 1));
+                    return ((goalRow == startRow + 1) && (goalCol == startCol - 1)) || ((goalRow == startRow + 1) && (goalCol == startCol + 1));
                 } else if (startColor.equals(white)) {
-                    return ((goalX == startX - 1) && (goalY == startY - 1)) || ((goalX == startX - 1) && (goalY == startY + 1));
+                    return ((goalRow == startRow - 1) && (goalCol == startCol - 1)) || ((goalRow == startRow - 1) && (goalCol == startCol + 1));
                 }
             } else {
                 return false;
@@ -220,19 +220,19 @@ public class Board {
      * @return true if move is valid, otherwise false
      */
     public boolean validateQueenMove(Pawn pawn, Coordinates position) {
-        int startX = pawn.getPosition().getRow();
-        int startY = pawn.getPosition().getCol();
-        int goalX = position.getRow();
-        int goalY = position.getCol();
+        int startRow = pawn.getPosition().getRow();
+        int startCol = pawn.getPosition().getCol();
+        int goalRow = position.getRow();
+        int goalCol = position.getCol();
 
         //check if the field is empty
-        if (this.fields[goalX][goalY] != null) return false;
+        if (this.fields[goalRow][goalCol] != null) return false;
         //check if the move is diagonally
-        if (!(abs(goalX - startX) == abs(goalY - startY))) return false;
+        if (!(abs(goalRow - startRow) == abs(goalCol - startCol))) return false;
         int col = 0;
-        for (int row = (goalX - startX) / (abs(goalX - startX)); abs(row) < abs(goalX - startX); row += (goalX - startX) / (abs(goalX - startX))) {
-            col += (goalY - startY) / (abs(goalY - startY));
-            if (getFields()[startX + row][startY + col] != null) {
+        for (int row = (goalRow - startRow) / (abs(goalRow - startRow)); abs(row) < abs(goalRow - startRow); row += (goalRow - startRow) / (abs(goalRow - startRow))) {
+            col += (goalCol - startCol) / (abs(goalCol - startCol));
+            if (getFields()[startRow + row][startCol + col] != null) {
                 return false;
             }
         }
@@ -247,28 +247,28 @@ public class Board {
      * @return true if move is valid, otherwise false
      */
     public Pawn validateQueenMoveWithCapture(Pawn pawn, Coordinates position) {
-        int startX = pawn.getPosition().getRow();
-        int startY = pawn.getPosition().getCol();
-        int goalX = position.getRow();
-        int goalY = position.getCol();
+        int startRow = pawn.getPosition().getRow();
+        int startCol = pawn.getPosition().getCol();
+        int goalRow = position.getRow();
+        int goalCol = position.getCol();
         Color pawnColor = pawn.getColor();
         int numberOfEnemyPawnsOnTheQueenWay = 0;
         Pawn pawnToCapture = null;
         //check if the goal field is empty
-        if(this.fields[goalX][goalY] != null) return null;
+        if(this.fields[goalRow][goalCol] != null) return null;
         //check if the move is diagonally
-        if (!(abs(goalX - startX) == abs(goalY - startY))) return null;
+        if (!(abs(goalRow - startRow) == abs(goalCol - startCol))) return null;
         int col = 0;
-        for (int row = (goalX - startX) / (abs(goalX - startX)); abs(row) < abs(goalX - startX); row += (goalX - startX) / (abs(goalX - startX))) {
-            col += (goalY - startY) / (abs(goalY - startY));
-            if (getFields()[startX + row][startY + col] != null) {
-                if (getFields()[startX + row][startY + col].getColor() == pawnColor) {
+        for (int row = (goalRow - startRow) / (abs(goalRow - startRow)); abs(row) < abs(goalRow - startRow); row += (goalRow - startRow) / (abs(goalRow - startRow))) {
+            col += (goalCol - startCol) / (abs(goalCol - startCol));
+            if (getFields()[startRow + row][startCol + col] != null) {
+                if (getFields()[startRow + row][startCol + col].getColor() == pawnColor) {
                     // there is pawn with the same color as the queen on the way of the queen's move. It can't move so far.
                     return null;
                 }else {
                     //there is pawn with the opposite color on the way
                     numberOfEnemyPawnsOnTheQueenWay++;
-                    pawnToCapture = getFields()[startX+row][startY + col];
+                    pawnToCapture = getFields()[startRow+row][startCol + col];
                     //If on the way is more than one pawn then queen cant move.
                     if(numberOfEnemyPawnsOnTheQueenWay>1) return null;
                 }
