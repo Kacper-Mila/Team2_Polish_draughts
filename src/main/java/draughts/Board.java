@@ -3,6 +3,7 @@ package main.java.draughts;
 import java.awt.*;
 
 import static java.awt.Color.*;
+import static java.lang.Math.abs;
 
 public class Board {
     private Pawn[][] fields;
@@ -148,41 +149,45 @@ public class Board {
     public void createBoard(){
         // one side of the board
         int sideLength = this.getBoardSize();
-        int numberOfPawns = blackPawnsCounter;
-
-        for (int row = 0; row < sideLength; row++) {
-            for (int col = 0; col < sideLength; col = col + 2) {
-                if (row % 2 == 0) {
-                    if (numberOfPawns > 0) {
-                        this.fields[row][col + 1] = new Pawn(new Coordinates(row, col+1), black);
-                        numberOfPawns--;
-                    }
-                } else {
-                    if (numberOfPawns > 0) {
-                        this.fields[row][col] = new Pawn(new Coordinates(row, col), black);
-                        numberOfPawns--;
-                    }
-                }
-            }
-        }
-
-        // other side of the board
-        numberOfPawns = whitePawnsCounter;
-        for (int row = sideLength - 1; row > sideLength - 5; row--) {
-            for (int col = 0; col < sideLength; col = col + 2) {
-                if (row % 2 == 0) {
-                    if (numberOfPawns > 0) {
-                        this.fields[row][col + 1] = new Pawn(new Coordinates(row, col+1), white);
-                        numberOfPawns--;
-                    }
-                } else {
-                    if (numberOfPawns > 0) {
-                        this.fields[row][col] = new Pawn(new Coordinates(row, col), white);
-                        numberOfPawns--;
-                    }
-                }
-            }
-        }
+//        int numberOfPawns = blackPawnsCounter;
+//
+//        for (int row = 0; row < sideLength; row++) {
+//            for (int col = 0; col < sideLength; col = col + 2) {
+//                if (row % 2 == 0) {
+//                    if (numberOfPawns > 0) {
+//                        this.fields[row][col + 1] = new Pawn(new Coordinates(row, col+1), black);
+//                        numberOfPawns--;
+//                    }
+//                } else {
+//                    if (numberOfPawns > 0) {
+//                        this.fields[row][col] = new Pawn(new Coordinates(row, col), black);
+//                        numberOfPawns--;
+//                    }
+//                }
+//            }
+//        }
+//
+//        // other side of the board
+//        numberOfPawns = whitePawnsCounter;
+//        for (int row = sideLength - 1; row > sideLength - 5; row--) {
+//            for (int col = 0; col < sideLength; col = col + 2) {
+//                if (row % 2 == 0) {
+//                    if (numberOfPawns > 0) {
+//                        this.fields[row][col + 1] = new Pawn(new Coordinates(row, col+1), white);
+//                        numberOfPawns--;
+//                    }
+//                } else {
+//                    if (numberOfPawns > 0) {
+//                        this.fields[row][col] = new Pawn(new Coordinates(row, col), white);
+//                        numberOfPawns--;
+//                    }
+//                }
+//            }
+//        }
+        int row = 5;
+        int col = 4;
+        this.fields[row][col] = new Pawn(new Coordinates(row, col), white);
+        this.fields[row][col].setCrowned();
     }
 
     /**
@@ -213,52 +218,29 @@ public class Board {
         return false;
     }
 
-    //******** Queen Validation ********//
+    /**
+     * Check if Queen can move on the given field (coordinates). Can move if the field is empty, and it is diagonally.
+     * @param pawn pawn object that is crowned (queen)
+     * @param position coordinates of target pawn move
+     * @return true if move is valid, otherwise false
+     */
     public boolean validateQueenMove(Pawn pawn, Coordinates position){//TODO
         int startX = pawn.getPosition().getRow();
         int startY = pawn.getPosition().getCol();
         int goalX = position.getRow();
         int goalY = position.getCol();
-        Color startColor = pawn.getColor();
+        Color pawnColor = pawn.getColor();
 
-        if ((this.fields[goalX][goalY]) == null) {
-            // checks ↗
-            if (goalX > startX && goalY > startY){
-                for (int row = startX; row < goalX; row++){
-                    for(int col = startY; col < goalY; col++){
-                        if (getFields()[row][col] == null) return true;
-                    }
-                }
-            }
-            // checks ↙
-            if (goalX < startX && goalY < startY){
-                for (int row = startX; row < goalX; row--){
-                    for(int col = startY; col < goalY; col--){
-                        if (getFields()[row][col] == null) return true;
-                    }
-                }
-            }
-            // checks ↖
-            if (goalX < startX && goalY > startY){
-                for (int row = startX; row < goalX; row--){
-                    for(int col = startY; col < goalY; col++){
-                        if (getFields()[row][col] == null) return true;
-                    }
-                }
-            }
-            // checks ↘
-            if (goalX > startX && goalY < startY){
-                for (int row = startX; row < goalX; row++){
-                    for(int col = startY; col < goalY; col--){
-                        if (getFields()[row][col] == null) return true;
-                    }
-                }
-            }
-        } else {
-            return false;
+        //check if the field is empty
+        if(this.fields[goalX][goalY] != null) return false;
+        //check if the move is diagonally
+        if(!(abs(goalX-startX) == abs(goalY-startY))) return false;
+        int col = 0;
+        for (int row = -(goalX+1)/(abs(goalX)+1); abs(row) <= abs(goalX-startX); row +=-(goalX+1)/(abs(goalX)+1)){
+            col +=(goalY+1)/(abs(goalY)+1);
+            if (getFields()[startX+row][startY + col] != null) return false;
         }
-
-        return false;
+        return true;
     }
     public Pawn validateQueenMoveWithCapture(Pawn pawn, Coordinates position){
 
@@ -299,6 +281,8 @@ public class Board {
         }
         return null;
     }
+
+    //TODO: inside this method validate both pawn and queen
     public Pawn validateMoveWithCapture(Pawn pawn, Coordinates position) {
 
         // if goal field is empty
