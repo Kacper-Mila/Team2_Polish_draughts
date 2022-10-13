@@ -1,0 +1,31 @@
+			General rules
+
+1. The board is shaped like a chessboard.
+2. At the beginning of the game, each player has the same number of pawns.
+3. Players place their pawns and play on black fields.
+4. Board setup - the first space on the left of each player is a dark space.
+5. The first move belongs to the player using white pawns.
+6. The players take turns, one move at a time.
+7. Players can only move their pawns.
+8. Only diagonal movements are allowed, forward to the empty space in the next row.
+9. Backward movements with an ordinary pawn are not allowed. The exception is the queen, which can move backwards.
+
+			How to capture Polish draughts?
+
+1. All pawns can capture both forward and backward. Capture means that the pawn jumps over the opponent's pawn and stops in an empty field right behind him.
+2. You can also capture more than one pawn in one move (multiple capture), and even change the capture direction, provided that there is one empty space between the opponent's pawns (so that your pawn can freely jump between them.
+3. It is compulsory to capture in checkers.
+4. If we start a beating, it should be finished - you cannot stop halfway through the beating.
+5. If we have a choice of at least two beats, then you have complete freedom - it is up to you to decide which one you choose.
+
+			You will win if:
+
+7. You will capture all your opponent's pieces.
+8. If you manage to block the opponent's pawns in such a way that he will not be able to make any move.
+ 
+			Draw
+
+1. During the next 15 moves, only the pawns are rearranged, and none of the players capture.
+2. If neither player can make a move.
+3. If there are only two crowns left on the board.
+4. If the same position of the crown appeared on the board for the third time.
