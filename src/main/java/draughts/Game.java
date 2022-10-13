@@ -169,6 +169,16 @@ public class Game {
                                 return true;
                         } catch (Exception ignored) {
                         }
+                        if(board.getFields()[row][col].isCrowned()){
+                            try {
+                                if (board.validateMove(board.getFields()[row][col], new Coordinates(row + moveFactor, col + moveFactor))) return true;
+                            } catch (Exception ignored) {
+                            }
+                            try {
+                                if (board.validateMove(board.getFields()[row][col], new Coordinates(row + moveFactor, col - moveFactor))) return true;
+                            } catch (Exception ignored) {
+                            }
+                        }
                     }
                 }
             }
@@ -394,9 +404,10 @@ public class Game {
      * @return true if move is possible and executed, otherwise false.
      */
     public boolean tryToMakeMove(Pawn pawn, Coordinates movePosition) {
-
             if (this.board.validateMove(pawn, movePosition)) {
                 //nastepuje sam ruch, bez bicia
+                //check crown
+                if(this.board.validateCrowning(pawn,movePosition)) pawn.setCrowned(this.board);
                 this.board.movePawn(pawn, movePosition);
                 drawCondition--;
                 if(pawn.isCrowned()){
@@ -408,11 +419,13 @@ public class Game {
             }
             //sprawdz czy ruch jest o dwa pola a miedzy nimi jest pionek przeciwnika
             Pawn pawnToCapture = this.board.validateMoveWithCapture(pawn, movePosition);
-            if (pawnToCapture != null) {
+            if (pawnToCapture != null ) {
                 //wykonaj ruch z biciem
+                //check crown
+                if(this.board.validateCrowning(pawn,movePosition)&&!isNextCapturePossiblePawn(pawn)) pawn.setCrowned(this.board);
                 this.board.movePawn(pawn, movePosition);
                 this.board.removePawn(pawnToCapture);
-                drawCondition = 15; //TODO opracowac funkcje
+                drawCondition = 15;
                 if(pawn.isCrowned()){
                     int [][] tmpQueenFields = pawn.getFieldsPickedWhenCrowned();
                     tmpQueenFields[movePosition.getRow()][movePosition.getCol()] ++;
