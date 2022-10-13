@@ -10,6 +10,7 @@ public class Game {
 
     private final Board board;
     private int drawCondition = 15;
+    private boolean isAIPlaying = false;
 
     public Game() {
         //singleton pattern. Create new board object then, assign it to the Game.board.
@@ -29,7 +30,8 @@ public class Game {
     }
 
     /**
-     * method that starts game between players.
+     * Method that starts game between players.
+     * It allows us to choose game mode: human vs human or human vs AI player.
      */
     public void start() {
         PrintingRules.showRulesForPlayers();
@@ -41,7 +43,7 @@ public class Game {
 
         while (opponent != 1 && opponent != 2 && opponent != 3) {
             try {
-                System.out.println("Choose your opponent: \n1. human\n2. AI");
+                System.out.println("\nChoose your opponent: \n1. human\n2. AI");
                 opponent = scanner.nextInt();
             } catch (InputMismatchException ex) {
                 scanner.nextLine();
@@ -109,6 +111,10 @@ public class Game {
         return false;
     }
 
+    /**
+     * determines one-round actions between human player and AI player
+     * @return true if game is over, otherwise false
+     */
     public boolean playRoundWithAI() {
         //ruch 1 gracza - human
         System.out.println("Player 1 move - white");
@@ -120,6 +126,10 @@ public class Game {
         return !isEndGame();
     }
 
+    /**
+     * determines one-round actions between AI player and AI player
+     * @return true if game is over, otherwise false
+     */
     public boolean playRoundAIvsAI() {
         //ruch 1 gracza - ai
         System.out.println("Player 1 move - white");
@@ -282,6 +292,7 @@ public class Game {
     }
 
     public void checkStartingPosition(int player) {
+        isAIPlaying = false;
         int[] startPawnCoordinates = {0, 0};
         int[] endPawnCoordinates = {0, 0};
         Coordinates newPawnPosition;
@@ -470,7 +481,10 @@ public class Game {
             return true;
         }
 
-        System.out.println("Your move is incorrect");
+        if (!isAIPlaying) {
+            System.out.println("Your move is incorrect");
+        }
+
         return false;
     }
 
@@ -482,8 +496,14 @@ public class Game {
         System.out.println("\tThere are " + numberOfBlackPawnsCaptured + " black pawns captured!");
     }
 
+    /**
+     * Selects random AI player's pawn, looking for valid capture and non-capture moves and
+     * selects one of them, then makes chosen move.
+     * @param player
+     */
     public void getAiMove(int player) {
         // create list with all current player's pawns
+        isAIPlaying = true;
         Color color;
         if (player == 1) {
             color = Color.white;

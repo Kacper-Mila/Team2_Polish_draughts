@@ -171,6 +171,10 @@ public class Board {
         }
     }
 
+    /**
+     * Creates proper number of white and black pawns and places them on
+     * appropriate fields of the board.
+     */
     public void createBoard() {
         // one side of the board
         int sideLength = this.getBoardSize();
@@ -212,13 +216,13 @@ public class Board {
     }
 
     /**
+     * Checks if pawn can move on the given position.
+     * Goal position has to be empty and one square diagonally away.
      * @param pawn     pawn object
      * @param position coordinates of pawn move
      * @return true if move is valid, otherwise false
      */
     public boolean validateMove(Pawn pawn, Coordinates position) {
-        //czy wybrane pole jest puste i jest w zasiegu
-        // jednego pola po przekatnej do przodu
         if (pawn == null) {
             return false;
         }
@@ -312,15 +316,28 @@ public class Board {
         return pawnToCapture;
     }
 
+    /**
+     * Checks for possible capture moves for chosen pawn.
+     * Goal position has to be two squares diagonally away,
+     * on the field between chosen pawn and goal position has to be opponent's pawn.
+     * @param pawn     pawn object
+     * @param position coordinates of pawn move
+     * @param color    color of the pawn
+     * @return Pawn to capture if move is valid, null otherwise
+     */
     public Pawn checkForPossibleMoves(Pawn pawn, Coordinates position, Color color) {
         int startRow = pawn.getPosition().getRow();
         int startCol = pawn.getPosition().getCol();
         int goalRow = position.getRow();
         int goalCol = position.getCol();
 
+        // if goal field is two squares diagonally away
         if ((goalRow == startRow - 2) && (goalCol == startCol - 2)) {
+            // if field between my pawn and goal field is not empty
             if (this.fields[startRow - 1][startCol - 1] != null) {
+                // if on the field between my pawn and goal field is pawn of given (opponent's) color
                 if (this.fields[startRow - 1][startCol - 1].getColor().equals(color)) {
+                    // return opponent's pawn to capture
                     return this.fields[startRow - 1][startCol - 1];
                 }
             }
@@ -346,6 +363,13 @@ public class Board {
         return null;
     }
 
+    /**
+     * Checks if chosen pawn can capture another pawn on the given position.
+     * Goal position has to be empty.
+     * @param pawn     pawn object
+     * @param position coordinates of pawn move
+     * @return captured Pawn if move is valid, null otherwise
+     */
     public Pawn validateMoveWithCapture(Pawn pawn, Coordinates position) {
         if (pawn == null) {
             return null;
