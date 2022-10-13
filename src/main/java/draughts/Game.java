@@ -394,7 +394,8 @@ public class Game {
      * @return true if move is possible and executed, otherwise false.
      */
     public boolean tryToMakeMove(Pawn pawn, Coordinates movePosition) {
-
+            Coordinates originalPawnPosition = pawn.getPosition();
+            boolean wasMoveExecuted = false;
             if (this.board.validateMove(pawn, movePosition)) {
                 //nastepuje sam ruch, bez bicia
                 this.board.movePawn(pawn, movePosition);
@@ -404,11 +405,11 @@ public class Game {
                     tmpQueenFields[movePosition.getRow()][movePosition.getCol()] ++;
                     pawn.setFieldsPickedWhenCrowned(tmpQueenFields);
                 }
-                return true;
+                wasMoveExecuted = true;
             }
             //sprawdz czy ruch jest o dwa pola a miedzy nimi jest pionek przeciwnika
             Pawn pawnToCapture = this.board.validateMoveWithCapture(pawn, movePosition);
-            if (pawnToCapture != null) {
+            if (pawnToCapture != null &&!wasMoveExecuted) {
                 //wykonaj ruch z biciem
                 this.board.movePawn(pawn, movePosition);
                 this.board.removePawn(pawnToCapture);
@@ -418,9 +419,18 @@ public class Game {
                     tmpQueenFields[movePosition.getRow()][movePosition.getCol()] ++;
                     pawn.setFieldsPickedWhenCrowned(tmpQueenFields);
                 }
-                return true;
+                wasMoveExecuted = true;
             }
-
+            if (wasMoveExecuted){
+                if(this.board.validateCrowning(pawn,originalPawnPosition)){
+                    if(this.board.getPawnBlockingCrowning(pawn,originalPawnPosition)==null){
+                        pawn.setCrowned(this.board);
+                    }
+//                    else{
+//                        //TODO: it should be verified before user make theirs move if there is possible crowning
+//                    };
+                }
+            }
         System.out.println("Your move is incorrect");
         return false;
     }
