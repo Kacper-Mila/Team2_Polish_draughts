@@ -228,7 +228,7 @@ public class Game {
         Coordinates newPawnPosition;
         do {
             startPawnCoordinates = getStartPawnPosition(player);
-            endPawnCoordinates = getNewPawnPosition(true);
+            endPawnCoordinates = getNewPawnPosition(false);
             newPawnPosition = new Coordinates(endPawnCoordinates[0], endPawnCoordinates[1]);
         } while (!tryToMakeMove(board.getFields()[startPawnCoordinates[0]][startPawnCoordinates[1]], newPawnPosition));
 
@@ -236,7 +236,7 @@ public class Game {
             while(isNextCapturePossible(endPawnCoordinates)) {
                 startPawnCoordinates = endPawnCoordinates;
                 do {
-                    endPawnCoordinates = getNewPawnPosition(false);
+                    endPawnCoordinates = getNewPawnPosition(true);
                     if (endPawnCoordinates == null) {
                         return;
                     }
