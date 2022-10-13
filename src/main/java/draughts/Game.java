@@ -383,9 +383,7 @@ public class Game {
      * @return true if move is possible and executed, otherwise false.
      */
     public boolean tryToMakeMove(Pawn pawn, Coordinates movePosition) {
-        if(pawn.isCrowned()){
-            return (this.board.validateQueenMove(pawn,movePosition));
-        }else{
+
             if (this.board.validateMove(pawn, movePosition)) {
                 //nastepuje sam ruch, bez bicia
                 this.board.movePawn(pawn, movePosition);
@@ -411,7 +409,6 @@ public class Game {
                 }
                 return true;
             }
-        }
 
         System.out.println("Your move is incorrect");
         return false;

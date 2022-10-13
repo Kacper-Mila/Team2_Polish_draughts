@@ -198,6 +198,9 @@ public class Board {
     public boolean validateMove(Pawn pawn, Coordinates position) {
         //czy wybrane pole jest puste i jest w zasiegu
         // jednego pola po przekatnej do przodu
+        if (pawn == null) {
+            return false;
+        }
 
         int startX = pawn.getPosition().getRow();
         int startY = pawn.getPosition().getCol();
@@ -205,17 +208,21 @@ public class Board {
         int goalY = position.getCol();
         Color startColor = pawn.getColor();
 
-        // if the goal field is empty check if move is diagonally by one square
-        if ((this.fields[goalX][goalY]) == null) {
-            if (startColor.equals(black)) {
-                return ((goalX == startX + 1) && (goalY == startY - 1)) || ((goalX == startX + 1) && (goalY == startY + 1));
-            } else if (startColor.equals(white)) {
-                return ((goalX == startX - 1) && (goalY == startY - 1)) || ((goalX == startX - 1) && (goalY == startY + 1));
-            }
+        if (pawn.isCrowned()) {
+            return validateQueenMove(pawn, position);
         } else {
+            // if the goal field is empty check if move is diagonally by one square
+            if ((this.fields[goalX][goalY]) == null) {
+                if (startColor.equals(black)) {
+                    return ((goalX == startX + 1) && (goalY == startY - 1)) || ((goalX == startX + 1) && (goalY == startY + 1));
+                } else if (startColor.equals(white)) {
+                    return ((goalX == startX - 1) && (goalY == startY - 1)) || ((goalX == startX - 1) && (goalY == startY + 1));
+                }
+            } else {
+                return false;
+            }
             return false;
         }
-        return false;
     }
 
     /**
@@ -229,7 +236,6 @@ public class Board {
         int startY = pawn.getPosition().getCol();
         int goalX = position.getRow();
         int goalY = position.getCol();
-        Color pawnColor = pawn.getColor();
 
         //check if the field is empty
         if(this.fields[goalX][goalY] != null) return false;
@@ -324,6 +330,9 @@ public class Board {
     }
 
     public Pawn validateMoveWithCapture(Pawn pawn, Coordinates position) {
+        if(pawn == null) {
+            return null;
+        }
         if (pawn.isCrowned()){
             return validateQueenMoveWithCapture(pawn,position);
         }else{
